@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -150,8 +150,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				ORGANIZATIONNAME = "Swiftbook-Middle-iOS";
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 395B29EAB07768BD4B943111 /* Build configuration list for PBXProject "MdEditor" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -187,7 +185,7 @@
 		5D06D2518EF2C71CB836B596 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -199,9 +197,9 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\nswiftlint\nelse\n\techo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n\texit 1\n\tfi";
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n\tswiftlint\nelse\n\techo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n\texit 1\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
