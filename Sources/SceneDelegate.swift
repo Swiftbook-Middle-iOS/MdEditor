@@ -3,7 +3,6 @@
 
 import UIKit
 
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	// MARK: - Public properties
@@ -21,7 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let window = UIWindow(windowScene: scene)
 
 		let navigationController = UINavigationController()
-		
 		window.rootViewController = navigationController
 		window.makeKeyAndVisible()
 
