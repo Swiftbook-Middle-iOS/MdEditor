@@ -1,10 +1,18 @@
 import ProjectDescription
 
-public var scripts: [TargetScript] {
+public var myScripts: [TargetScript] {
 	var scripts = [TargetScript]()
 	
-	let swiftLintScriptString = "SwiftLint"
-	let swiftLintScript = TargetScript.post(script: swiftLintScriptString, name: "SwiftLint")
+	let swiftLintScriptString = """
+								export PATH="$PATH:/opt/homebrew/bin"
+								if which swiftlint > /dev/null; then
+									swiftlint
+								else
+									echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+									exit 1
+								fi
+								"""
+	let swiftLintScript = TargetScript.post(script: swiftLintScriptString, name: "SwiftLint", basedOnDependencyAnalysis: false)
 	
 	scripts.append(swiftLintScript)
 	return scripts
@@ -22,12 +30,7 @@ let project = Project(
 			infoPlist: "Info.plist",
 			sources: ["Sources/**"],
 			resources: ["Resources/**"],
-			headers: .headers(
-				public: ["Sources/public/A/**", "Sources/public/B/**"],
-				private: "Sources/private/**",
-				project: ["Sources/project/A/**", "Sources/project/B/**"]
-			),
-			scripts: scripts,
+			scripts: myScripts,
 			dependencies: [
 				/* Target dependencies can be defined here */
 				/* .framework(path: "framework") */
