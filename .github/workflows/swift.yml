@@ -11,5 +11,5 @@ build:
 	steps:
 		- uses: actions/checkout@v3
 		- name: Build
-		- run: exec ./.github/build.sh
+			run: exec ./.github/build.sh
 
