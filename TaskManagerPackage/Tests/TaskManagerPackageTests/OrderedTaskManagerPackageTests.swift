@@ -9,7 +9,6 @@ import XCTest
 @testable import TaskManagerPackage
 
 final class OrderedTaskManagerPackageTests: XCTestCase {
-
 	///Создание перечисления для удобного использования наименований заданий
 	enum TaskTitles: String {
 		case regular = "Regular"
@@ -20,10 +19,10 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 
 	// MARK: - Public properties
 	///Создание тестового задания
-	var task = ImportantTask(title: TaskTitles.high.rawValue, date: .distantPast, taskPriority: .high)
+	private let task = ImportantTask(title: TaskTitles.high.rawValue, date: .distantPast, taskPriority: .high)
 
 	///Создание нескольких тестовых заданий
-	var tasks = [
+	private let tasks = [
 		ImportantTask(title: TaskTitles.high.rawValue, date: .distantPast, taskPriority: .high),
 		ImportantTask(title: TaskTitles.medium.rawValue, date: .distantPast, taskPriority: .medium),
 		ImportantTask(title: TaskTitles.low.rawValue, date: .distantPast, taskPriority: .low),
@@ -31,20 +30,20 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 	]
 
 	///Создание нескольких заданий с разными статусами выполнения
-	var tasksToCheckCompletion = [
+	private let tasksToCheckCompletion = [
 		Task(title: "Test task", completed: true),
 		Task(title: "Test task", completed: false)
 	]
 
 	///Создание переменной возвращающей результат проверки на отсутствие заданий
-	var isEmpty: Bool {
+	private var isEmpty: Bool {
 		sut.allTasks().isEmpty
 	}
 
 	// MARK: - Dependencies
 	///Инъекция классов OrderedTaskManager и TaskManager
-	var sut: OrderedTaskManager!
-	var taskManager: TaskManager!
+	private var sut: OrderedTaskManager!
+	private var taskManager: TaskManager!
 
 	// MARK: - Lifecycle
 	override func setUp() {
@@ -60,7 +59,7 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 
 	// MARK: - Public methods
 	///Тестирование функции получения всех отсортированных заданий
-	func test_getAllTasks_ShouldBeSuccess() {
+	func test_allTasks_whenTasksAdded_ShouldBeSuccess() {
 		taskManager.addTasks(tasks: tasks)
 
 		let result = sut.allTasks()
@@ -89,7 +88,7 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 	}
 
 	///Тестирование функции получения всех отсортированных выполненных заданий
-	func test_getCompletedTasks_ShouldBeSuccess() {
+	func test_completedTasks_whenTasksAdded_ShouldBeSuccess() {
 		taskManager.addTasks(tasks: tasksToCheckCompletion)
 
 		let result = sut.completedTasks()
@@ -101,11 +100,11 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 	}
 
 	///Тестирование функции получения всех отсортированных не выполненных заданий
-	func test_getUncompletedTasks_ShouldBeSuccess() {
+	func test_uncompletedTasks_whenTasksAdded_ShouldBeSuccess() {
 		taskManager.addTasks(tasks: tasksToCheckCompletion)
 
 		let result = sut.uncompletedTasks()
-		
+
 		XCTAssertFalse(
 			result.contains(where: { $0.completed }),
 			"Результат проверки наличия выполненных заданий должен быть - False"
@@ -113,14 +112,14 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 	}
 
 	///Тестирование функции добавления одного задания
-	func test_addOneTask_ShouldBeSuccess() {
+	func test_addTask_whenAddingSingleTask_ShouldBeSuccess() {
 		taskManager.addTask(task: task)
 
 		XCTAssertFalse(isEmpty, "Результат проверки отсутствия значения должен быть - False")
 	}
 
 	///Тестирование функции добавления нескольких заданий
-	func test_addTasks_ShouldBeSuccess() {
+	func test_addTasks_whenAddingMultipleTasks_ShouldBeSuccess() {
 		taskManager.addTasks(tasks: tasks)
 
 		XCTAssertFalse(isEmpty, "Результат проверки отсутствия значения должен быть - False")
