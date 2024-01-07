@@ -202,17 +202,5 @@ extension DoublyLinkedList: CustomStringConvertible {
         return values.joined(separator: " -> ")
 
     }
-
-    public var reverseDescription: String {
-        var values = [String]()
-        var current = tail
-
-        while current != nil {
-            values.append("\(current!)")
-            current = current?.prev
-        }
-
-        return values.joined(separator: " <- ")
-    }
 }
 

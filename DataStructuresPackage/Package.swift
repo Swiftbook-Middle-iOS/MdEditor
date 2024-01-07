@@ -21,8 +21,8 @@ let package = Package(
         .target(
             name: "DataStructuresPackage",
             dependencies: []),
-//        .testTarget(
-//            name: "DataStructuresPackageTests",
-//            dependencies: ["DataStructuresPackage"]),
+        .testTarget(
+            name: "DataStructuresPackageTests",
+            dependencies: ["DataStructuresPackage"]),
     ]
 )
