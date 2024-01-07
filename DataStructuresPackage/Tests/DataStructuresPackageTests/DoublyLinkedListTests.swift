@@ -22,6 +22,24 @@ final class DoublyLinkedListTests: XCTestCase {
         XCTAssertEqual(sut.count, 1)
     }
     
+    func test_description_ofEmptyList_shouldBeEmpty() {
+        let sut = makeEmptyIntSut()
+        
+        XCTAssertEqual(sut.description, "", "Description of empty list should be empty")
+    }
+    
+    func test_description_ofOneElementList() {
+        let sut = makeIntSutWithOneValue()
+        
+        XCTAssertEqual(sut.description, "4", "Description should be '4'")
+    }
+    
+    func test_description_ofThreeElementList_shouldMatchExpected() {
+        let sut = makeIntSutWithThreeValues()
+        
+        XCTAssertEqual(sut.description, "6 -> 5 -> 4", "Description should be '6 -> 5 -> 4'")
+    }
+    
     func test_push_shouldIncreaseCountByOne() {
         var sut = makeIntSutWithOneValue()
         
