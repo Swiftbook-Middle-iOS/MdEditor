@@ -113,14 +113,14 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 
 	///Тестирование функции добавления одного задания
 	func test_addTask_whenAddingSingleTask_ShouldBeSuccess() {
-		taskManager.addTask(task: task)
+		sut.addTask(task: task)
 
 		XCTAssertFalse(isEmpty, "Результат проверки отсутствия значения должен быть - False")
 	}
 
 	///Тестирование функции добавления нескольких заданий
 	func test_addTasks_whenAddingMultipleTasks_ShouldBeSuccess() {
-		taskManager.addTasks(tasks: tasks)
+		sut.addTasks(tasks: tasks)
 
 		XCTAssertFalse(isEmpty, "Результат проверки отсутствия значения должен быть - False")
 	}
