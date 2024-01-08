@@ -80,15 +80,15 @@ final class TaskManagerPackageTests: XCTestCase {
 	}
 
 	///Тестирование функции получения всех выполненных заданий.
-	func ttest_completedTasks_whenTasksAdded_shouldBeSuccess() {
+	func test_getCompletedTasks_whenTasksAdded_shouldBeSuccess() {
 		sut.addTasks(tasks: tasksToCheckCompletion)
 
-		let result = sut.uncompletedTasks()
+		let result = sut.completedTasks()
 
 		XCTAssertFalse(isEmpty, "Результат проверки отсутствия задания должен быть - False")
 		XCTAssertFalse(
-			result.contains(where: { $0.completed }),
-			"Результат проверки наличия выполненных заданий должен быть - False"
+			result.contains(where: { !$0.completed }),
+			"Результат проверки наличия не выполненных заданий должен быть - False"
 		)
 	}
 
