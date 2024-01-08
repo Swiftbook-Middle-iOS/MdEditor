@@ -16,10 +16,22 @@ final class DoublyLinkedListTests: XCTestCase {
         XCTAssertEqual(sut.count, 0, "В пустом списке должно быть 0 элементов")
     }
     
+    func test_initIntList_withoutArguments_shouldCreateEmptyList() {
+        let sut = makeEmptyIntSut()
+        
+        XCTAssertTrue(sut.isEmpty, "Created list with no arguments should be empty")
+    }
+    
     func test_initIntList_withValue_shouldCreateOneCountList() {
         let sut = makeIntSutWithOneValue()
         
         XCTAssertEqual(sut.count, 1)
+    }
+    
+    func test_initIntList_withValue_shouldCreateNonEmptyList() {
+        let sut = makeIntSutWithOneValue()
+        
+        XCTAssertFalse(sut.isEmpty, "List created wit one value should not be empty")
     }
     
     func test_description_ofEmptyList_shouldBeEmpty() {
