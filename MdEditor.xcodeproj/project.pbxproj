@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,6 +37,7 @@
 		B64FAFD73B05D174B4BB4FE9 /* TuistBundle+MdEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+MdEditor.swift"; sourceTree = "<group>"; };
 		E309FE4100B60251AA15E612 /* TuistAssets+MdEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+MdEditor.swift"; sourceTree = "<group>"; };
 		ED1A89501A0F60B37E83BF58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F0FF64382B52C19C0036E4AC /* TaskManagerPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TaskManagerPackage; path = ../TaskManagerPackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,10 +97,19 @@
 		CE42BE24DBE28F652C9D2B8C = {
 			isa = PBXGroup;
 			children = (
+				F0FF64372B52C19C0036E4AC /* Packages */,
 				AF6501DB0322CD156914F714 /* Project */,
 				8BA3BE3B4138BD2DB6D7E76C /* Compiled */,
 				09433757354D2414908D4E3B /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		F0FF64372B52C19C0036E4AC /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				F0FF64382B52C19C0036E4AC /* TaskManagerPackage */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 		F5D39AECB5C649C340C71EED /* Resources */ = {
@@ -150,8 +160,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				ORGANIZATIONNAME = "Swiftbook-Middle-iOS";
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 395B29EAB07768BD4B943111 /* Build configuration list for PBXProject "MdEditor" */;
 			compatibilityVersion = "Xcode 14.0";
