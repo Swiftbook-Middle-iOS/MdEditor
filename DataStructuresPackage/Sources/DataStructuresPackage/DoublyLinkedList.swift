@@ -152,6 +152,21 @@ public struct DoublyLinkedList<T> {
     }
 }
 
+extension DoublyLinkedList {
+    /// Значение начала списка.
+    var headValue: T? {
+        head?.value
+    }
+
+    /// Значение конца списка.
+    var tailValue: T? {
+        tail?.value
+    }
+    
+    func value(at index: Int) -> T? {
+        node(at: index)?.value
+    }
+}
 
 private extension DoublyLinkedList {
 
@@ -203,4 +218,3 @@ extension DoublyLinkedList: CustomStringConvertible {
 
     }
 }
-

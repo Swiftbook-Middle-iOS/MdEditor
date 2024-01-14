@@ -10,272 +10,187 @@ import XCTest
 
 final class DoublyLinkedListTests: XCTestCase {
     
-    func test_initIntList_withoutArguments_shouldCreateZeroCountList() {
-        let sut = makeEmptyIntSut()
+    func test_init_withoutArguments_shouldBeEmpty() {
+        let sut = DoublyLinkedList<Int>()
         
-        XCTAssertEqual(sut.count, 0, "В пустом списке должно быть 0 элементов")
+        XCTAssertTrue(sut.isEmpty, "Ожидался пустой список")
+        XCTAssertEqual(sut.count, 0, "Ожидалась длина списка 0")
+        XCTAssertNil(sut.headValue, "Ожидалось отсутствие head")
+        XCTAssertNil(sut.tailValue, "Ожидалось отсутствие tail")
     }
     
-    func test_initIntList_withoutArguments_shouldCreateEmptyList() {
-        let sut = makeEmptyIntSut()
+    func test_init_withValue_shouldBeCorrect() {
+        let expectedValue = 5
         
-        XCTAssertTrue(sut.isEmpty, "Created list with no arguments should be empty")
+        let sut = DoublyLinkedList(value: expectedValue)
+        
+        XCTAssertFalse(sut.isEmpty, "Ожидалось создание не пустого списка")
+        XCTAssertEqual(sut.count, 1, "Ожидался список из 1 элемента")
+        XCTAssertEqual(sut.headValue, expectedValue, "Head списка пуст")
+        XCTAssertEqual(sut.tailValue, expectedValue, "Tail списка пуст")
     }
     
-    func test_initIntList_withValue_shouldCreateOneCountList() {
-        let sut = makeIntSutWithOneValue()
-        
-        XCTAssertEqual(sut.count, 1)
-    }
-    
-    func test_initIntList_withValue_shouldCreateNonEmptyList() {
-        let sut = makeIntSutWithOneValue()
-        
-        XCTAssertFalse(sut.isEmpty, "List created wit one value should not be empty")
-    }
-    
-    func test_description_ofEmptyList_shouldBeEmpty() {
-        let sut = makeEmptyIntSut()
-        
-        XCTAssertEqual(sut.description, "", "Description of empty list should be empty")
-    }
-    
-    func test_description_ofOneElementList() {
-        let sut = makeIntSutWithOneValue()
-        
-        XCTAssertEqual(sut.description, "4", "Description should be '4'")
-    }
-    
-    func test_description_ofThreeElementList_shouldMatchExpected() {
-        let sut = makeIntSutWithThreeValues()
-        
-        XCTAssertEqual(sut.description, "6 -> 5 -> 4", "Description should be '6 -> 5 -> 4'")
-    }
-    
-    func test_push_shouldIncreaseCountByOne() {
-        var sut = makeIntSutWithOneValue()
-        
-        let initialCount = sut.count
-        sut.push(5)
-        
-        XCTAssertEqual(sut.count, initialCount + 1, "Push should increase list's count by one")
-    }
-    
-    func test_push_multipleTimes_popShouldReturnLastPushed() {
-        var sut = makeEmptyIntSut()
+    func test_push_twoTimesOnEmptryList_shouldHaveCorrectCount() {
+        var sut = DoublyLinkedList<Int>()
         
         sut.push(5)
-        let lastPush = 6
-        sut.push(lastPush)
+        sut.push(0)
         
-        XCTAssertEqual(sut.pop(), 6, "Push should add elements to beginning of array")
+        XCTAssertFalse(sut.isEmpty, "Список из двух элементов не должен быть пуст")
+        XCTAssertEqual(sut.count, 2, "Ожидался список из двух элементов")
     }
     
-    func test_append_shouldIncreaseCountByOne() {
-        var sut = makeIntSutWithOneValue()
+    func test_append_twoTimesOnEmptyList_shouldHaveCorrectCount() {
+        var sut = DoublyLinkedList<Int>()
         
-        let initialCount = sut.count
-        sut.append(7)
+        sut.append(5)
+        sut.append(0)
         
-        XCTAssertEqual(sut.count, initialCount + 1, "Append should increase list's count by one")
+        XCTAssertFalse(sut.isEmpty, "Список из двух элементов не должен быть пуст")
+        XCTAssertEqual(sut.count, 2, "Ожидался список из двух элементов")
     }
     
-    func test_append_multipleTimes_removeLastShouldReturnLastAppended() {
-        var sut = makeEmptyIntSut()
+    func test_insert_intoMiddle_shouldBeCorrect() {
+        var sut = DoublyLinkedList<Int>()
+        sut.append(3)
+        sut.append(5)
         
-        sut.append(10)
-        let lastAppend = 0
-        sut.append(lastAppend)
+        sut.insert(6, after: 0)
         
-        XCTAssertEqual(sut.removeLast(), lastAppend, "Append should add elements to end of array")
+        XCTAssertEqual(sut.count, 3, "Ожидался список из 3х элементов")
+        XCTAssertEqual(sut.headValue, 3, "Значение head неверно")
+        XCTAssertEqual(sut.tailValue, 5, "Значение tail неверно")
     }
     
-    func test_insert_shouldIncreaseCountByOne() {
-        var sut = makeIntSutWithOneValue()
+    func test_insert_afterInvalidIndex_shouldBeCorrect() {
+        var sut = DoublyLinkedList<Int>()
+        sut.append(3)
+        sut.append(5)
         
-        let initialCount = sut.count
-        sut.insert(10, after: 0)
+        sut.insert(6, after: 3)
         
-        XCTAssertEqual(sut.count, initialCount + 1, "Insert should increase element count by one")
+        XCTAssertEqual(sut.count, 2, "Ожидался список из 2х элементов")
+        XCTAssertEqual(sut.headValue, 3, "Значение head неверно")
+        XCTAssertEqual(sut.tailValue, 5, "Значение tail неверно")
     }
     
-    func test_insert_afterNonExistentIndex_shouldNotIncreaseCount() {
-        var sut = makeIntSutWithOneValue()
+    func test_insert_afterTail_shouldHaveCorrectValuesAndCount() {
+        var sut = DoublyLinkedList<Int>()
+        sut.append(3)
+        sut.append(5)
         
-        let initialCount = sut.count
-        sut.insert(5, after: -10)
+        sut.insert(6, after: 1)
         
-        XCTAssertEqual(sut.count, initialCount, "Insert after non-existent index should not increase count")
+        XCTAssertEqual(sut.count, 3, "Ожидался список из 3х элементов")
+        XCTAssertEqual(sut.headValue, 3, "Значение head неверно")
+        XCTAssertEqual(sut.tailValue, 6, "Значение tail неверно")
     }
     
-    func test_insert_afterLastIndex_shouldMatchReturnLast() {
-        var sut = makeIntSutWithOneValue()
+    func test_removeAfter_fromThreeElementList_shouldHaveCorrectCountAndValue() {
+        var sut = DoublyLinkedList<Int>()
+        sut.append(3)
+        sut.append(5)
+        sut.append(6)
         
-        sut.append(20)
-        let valueToInsertAtEnd = 45
-        sut.insert(valueToInsertAtEnd, after: sut.count - 1)
+        let removedValue = sut.remove(after: 0)
         
-        XCTAssertEqual(valueToInsertAtEnd, sut.removeLast(), "Inserted value at end should be the last")
+        XCTAssertEqual(sut.count, 2, "Ожидался список из 2 значений")
+        XCTAssertEqual(removedValue, 5, "RemoveLast вернул неверное значение")
+        XCTAssertEqual(sut.headValue, 3, "Неверное значение 3")
+        XCTAssertEqual(sut.tailValue, 6, "Неверное значение 6")
     }
     
-    func test_insert_inMiddle() {
-        var sut = makeIntSutWithThreeValues()
+    func test_removeAfter_fromEmptyList_shouldBeCorrect() {
+        var sut = DoublyLinkedList<Int>()
         
-        sut.insert(7, after: 1)
+        let removedValue = sut.remove(after: 0)
         
-        XCTAssertEqual(sut.description, "6 -> 5 -> 7 -> 4", "7 should be added after 5")
+        XCTAssertTrue(sut.isEmpty, "Список не пустой")
+        XCTAssertEqual(sut.count, 0, "Количество элементов не 0")
+        XCTAssertNil(removedValue, "Ожидалось пустое значение")
     }
     
-    func test_insert_afterZero_shouldBeSecond() {
-        var sut = makeIntSutWithThreeValues()
+    func test_removeAfter_tailFromTwoElementList_shouldBeCorrect() {
+        var sut = DoublyLinkedList<Int>()
+        sut.push(3)
+        sut.push(5)
         
-        sut.insert(7, after: 0)
+        let removedValue = sut.remove(after: 1)
         
-        XCTAssertEqual(sut.description, "6 -> 7 -> 5 -> 4", "7 should bethe second value in list)")
+        XCTAssertEqual(sut.count, 2, "Количество элементов было изменено")
+        XCTAssertNil(removedValue, "Ожидалось пустое значение")
     }
     
-    func test_pop_fromEmptyList_shouldReturnNil() {
-        var sut = makeEmptyIntSut()
+    func test_pop_fromTwoElementList_shouldHaveCorrectCountAndValue() {
+        var sut = DoublyLinkedList<Int>()
+        sut.append(3)
+        sut.append(5)
         
-        XCTAssertNil(sut.pop(), "Pop from empty list should return nil")
+        let popValue = sut.pop()
+        
+        XCTAssertEqual(sut.count, 1, "Ожидался список из 1 элемента")
+        XCTAssertEqual(popValue, 3, "Pop вернул неверное значение")
+        XCTAssertEqual(sut.headValue, 5, "Неверное значение head")
+        XCTAssertEqual(sut.headValue, 5, "Неверное значение tail")
     }
     
-    func test_pop_fromNonEmptyList_shouldDecreaseCount() {
-        var sut = makeIntSutWithOneValue()
+    func test_pop_fromEmptyList_shouldBeCorrect() {
+        var sut = DoublyLinkedList<Int>()
         
-        let initialCount = sut.count
-        _ = sut.pop()
+        let popValue = sut.pop()
         
-        XCTAssertEqual(sut.count, initialCount - 1, "Pop from non-empty list should decrease count")
+        XCTAssertTrue(sut.isEmpty, "Список не пустой")
+        XCTAssertEqual(sut.count, 0, "Количество элементов списка не 0")
+        XCTAssertNil(popValue, "Pop вернул не пустое значение")
     }
     
-    func test_pop_fromNonEmptyList_shouldRemoveFirstValue() {
-        var sut = makeIntSutWithThreeValues()
+    func test_removeLast_fromTwoElementList_shouldHaveCorrectCountAndValue() {
+        var sut = DoublyLinkedList<Int>()
+        sut.append(3)
+        sut.append(5)
         
-        _ = sut.pop()
+        let removedValue = sut.removeLast()
         
-        XCTAssertEqual(sut.description, "5 -> 4", "6 should be removed (as the first value)")
+        XCTAssertEqual(sut.count, 1, "Ожидался список из 1 элемента")
+        XCTAssertEqual(removedValue, 5, "Pop вернул неверное значение")
+        XCTAssertEqual(sut.headValue, 3, "Неверное значение head")
+        XCTAssertEqual(sut.headValue, 3, "Неверное значение tail")
     }
     
-    func test_pop_fromOneElementList_listShoudBeEmpty() {
-        var sut = makeIntSutWithOneValue()
+    func test_removeLast_fromEmptyList_shouldBeCorrect() {
+        var sut = DoublyLinkedList<Int>()
         
-        _ = sut.pop()
+        let removedValue = sut.removeLast()
         
-        XCTAssertTrue(sut.isEmpty, "List should remain empty after the only item is removed")
+        XCTAssertEqual(sut.count, 0, "Количество элементов списка не 0")
+        XCTAssertTrue(sut.isEmpty, "Список не пуст")
+        XCTAssertNil(removedValue, "Возвращено не пустое значение")
     }
     
-    func test_removeLast_fromEmptyList_shouldReturnNil() {
-        var sut = makeEmptyIntSut()
+    func test_valueAtIndex_shouldReturnCorrectValue() {
+        var sut = DoublyLinkedList<Int>()
+        sut.append(1)
+        sut.append(2)
+        sut.append(3)
+        sut.append(4)
+        sut.append(5)
         
-        XCTAssertNil(sut.removeLast(), "Remove last from empty list should return nil")
-    }
-    
-    func test_removeLast_fromNonEmptyList_shouldDecreaseCount() {
-        var sut = makeIntSutWithThreeValues()
+        let valueAtNegativeOne = sut.value(at: -1)
+        let valueAt0 = sut.value(at: 0)
+        let valueAt1 = sut.value(at: 1)
+        let valueAt2 = sut.value(at: 2)
+        let valueAt3 = sut.value(at: 3)
+        let valueAt4 = sut.value(at: 4)
+        let valueAt5 = sut.value(at: 5)
         
-        let initialCount = sut.count
-        _ = sut.removeLast()
-        
-        XCTAssertEqual(sut.count, initialCount - 1, "removeLast from non-empty list should decrease count")
-    }
-    
-    func test_removeLast_fromNonEmptyList_shouldRemoveLastElement() {
-        var sut = makeIntSutWithThreeValues()
-        
-        _ = sut.removeLast()
-        
-        XCTAssertEqual(sut.description, "6 -> 5", "4 should be removed (as the last value)")
-    }
-    
-    func test_removeLast_fromOneElementList_listShoudBeEmpty() {
-        var sut = makeIntSutWithOneValue()
-        
-        _ = sut.removeLast()
-        
-        XCTAssertTrue(sut.isEmpty, "List should remain empty after the only item is removed")
-    }
-    
-    func test_removeAfter_fromEmptyList_shouldReturnNil() {
-        var sut = makeEmptyIntSut()
-        
-        XCTAssertNil(sut.remove(after: 0), "Remove from empty list should return nil")
-    }
-    
-    func test_removeAfter_fromEmptyList_countShouldRemainZero() {
-        var sut = makeEmptyIntSut()
-        
-        _ = sut.remove(after: 0)
-        
-        XCTAssertEqual(sut.count, 0, "Remove from empty list should leave list with 0 count")
-    }
-    
-    func test_removeAfter_tail_shouldReturnNil() {
-        var sut = makeIntSutWithThreeValues()
-        
-        XCTAssertNil(sut.remove(after: 2), "Remove from after tail should return nil")
-    }
-    
-    func test_removeAfter_tail_shouldNotDecreaseCount() {
-        var sut = makeIntSutWithThreeValues()
-        
-        let initialCount = sut.count
-        _ = sut.remove(after: 2)
-        
-        XCTAssertEqual(initialCount, sut.count, "Removing element after tail should not decrease count")
-    }
-    
-    func test_removeAfter_firstElementFromThreeElemenentList_shouldReduceCount() {
-        var sut = makeIntSutWithThreeValues()
-        
-        let initialCount = sut.count
-        _ = sut.remove(after: 0)
-        
-        XCTAssertEqual(initialCount - 1, sut.count, "Removing after first element should decrease count")
-    }
-    
-    func test_removeAfter_secondElementFromThreeElemenentList_shouldRemoveLast() {
-        var sut = makeIntSutWithThreeValues()
-        
-        _ = sut.remove(after: 1)
-        
-        XCTAssertEqual(sut.description, "6 -> 5", "Removing element after after second should remove 4 and leave 6 -> 5")
-    }
-    
-    func test_removeAfter_negativeIndex_shouldNotReduceCount() {
-        var sut = makeIntSutWithThreeValues()
-        
-        let initialCount = sut.count
-        _ = sut.remove(after: -1)
-        
-        XCTAssertEqual(initialCount, sut.count, "Removing after invalid index should not decrease count")
-    }
-    
-    func test_removeAfter_negativeIndex_shouldNotChangeList() {
-        var sut = makeIntSutWithThreeValues()
-        
-        let initialDesc = sut.description
-        _ = sut.remove(after: -1)
-        
-        XCTAssertEqual(initialDesc, sut.description, "Removing after invalid index should not change list")
+        XCTAssertEqual(valueAt0, 1, "Неверное значение по запрошенному индексу")
+        XCTAssertEqual(valueAt1, 2, "Неверное значение по запрошенному индексу")
+        XCTAssertEqual(valueAt2, 3, "Неверное значение по запрошенному индексу")
+        XCTAssertEqual(valueAt3, 4, "Неверное значение по запрошенному индексу")
+        XCTAssertEqual(valueAt4, 5, "Неверное значение по запрошенному индексу")
+        XCTAssertNil(valueAt5, "Список вернул несуществующее значение")
+        XCTAssertNil(valueAtNegativeOne, "Список вернул несуществующее значение")
     }
 }
 
-extension DoublyLinkedListTests {
-    func makeEmptyIntSut() -> DoublyLinkedList<Int> {
-        DoublyLinkedList<Int>()
-    }
-    
-    func makeIntSutWithOneValue() -> DoublyLinkedList<Int> {
-        DoublyLinkedList(value: 4)
-    }
-    
-    func makeIntSutWithThreeValues() -> DoublyLinkedList<Int> {
-        /// returns 6 -> 5 -> 4 list
-        var list = DoublyLinkedList(value: 4)
-        list.push(5)
-        list.push(6)
-        
-        return list
-    }
-}
+
