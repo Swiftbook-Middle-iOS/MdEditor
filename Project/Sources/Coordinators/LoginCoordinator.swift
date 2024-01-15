@@ -18,7 +18,7 @@ final class LoginCoordinator: ILoginCoordinator {
 
 	// MARK: Dependencies
 	var navigationController: UINavigationController
-	
+
 	// MARK: Initialization
 	init(navigationController: UINavigationController) {
 		self.navigationController = navigationController

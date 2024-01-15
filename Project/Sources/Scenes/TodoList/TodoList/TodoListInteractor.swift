@@ -15,9 +15,6 @@ protocol ITodoListInteractor {
 	/// Событие, что задание было выбрано.
 	/// - Parameter request: Запрос, содержащий информацию о выбранном задании.
 	func didTaskSelected(request: TodoListModel.Request.TaskSelected)
-
-	/// Событие на выбор "создать новую задачу"
-	func addTaskSelected()
 }
 
 final class TodoListInteractor: ITodoListInteractor {
@@ -57,9 +54,5 @@ final class TodoListInteractor: ITodoListInteractor {
 		let task = sectionManager.getTasksForSection(section: section)[request.indexPath.row]
 		task.completed.toggle()
 		fetchData()
-	}
-
-	func addTaskSelected() {
-		taskAddedClosure?()
 	}
 }

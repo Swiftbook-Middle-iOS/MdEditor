@@ -22,12 +22,11 @@ final class TodoListAssembler {
 
 	// MARK: - Public methods
 
-	func assembly(taskAddedClosure: @escaping () -> Void) -> TodoListViewController {
+	func assembly() -> TodoListViewController {
 		let viewController = TodoListViewController()
 		let sectionForTaskManagerAdapter = SectionForTaskManagerAdapter(taskManager: taskManager)
 		let presenter = TodoListPresenter(viewController: viewController)
 		let interactor = TodoListInteractor(presenter: presenter, sectionManager: sectionForTaskManagerAdapter)
-		interactor.taskAddedClosure = taskAddedClosure
 		viewController.interactor = interactor
 
 		return viewController

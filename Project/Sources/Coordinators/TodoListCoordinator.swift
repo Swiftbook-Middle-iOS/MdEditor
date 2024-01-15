@@ -10,7 +10,6 @@ import TaskManagerPackage
 
 protocol ITodoListCoordinator: ICoordinator {
 	func showTodoListScene()
-	func showCreateTaskScene()
 }
 
 final class TodoListCoordinator: ITodoListCoordinator {
@@ -34,25 +33,7 @@ final class TodoListCoordinator: ITodoListCoordinator {
 	}
 
 	func showTodoListScene() {
-		let viewController = TodoListAssembler(taskManager: taskManager).assembly { [weak self] in
-			guard let self = self else { return }
-			self.showCreateTaskScene()
-		}
+        let viewController = TodoListAssembler(taskManager: taskManager).assembly()
 		navigationController.setViewControllers([viewController], animated: true)
-	}
-
-	func showCreateTaskScene() {
-		let viewController = CreateTaskAssembler(taskManager: taskManager).assembly { [weak self] in
-			guard let self = self else { return }
-			self.finishTaskCreation()
-		}
-		navigationController.pushViewController(viewController, animated: true)
-	}
-
-	// MARK: Private functions
-	private func finishTaskCreation() {
-		if navigationController.topViewController is ICreateTaskViewController {
-			navigationController.popViewController(animated: true)
-		}
 	}
 }
