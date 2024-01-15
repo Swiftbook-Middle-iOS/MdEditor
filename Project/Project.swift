@@ -78,22 +78,22 @@ let project = Project(
 				.package(product: "TaskManagerPackage")
 			]
 		),
-//		Target(
-//			name: "\(ProjectSettings.projectName)Tests",
-//			platform: .iOS,
-//			product: .app,
-//			bundleId: "ru.\(ProjectSettings.bundleId)Tests",
-//			deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
-//			infoPlist: .none,
-//			sources: ["Tests/**"],
-//			resources: ["Resources/**"],
-//			scripts: myScripts,
-//			dependencies: [
-//				/* Target dependencies can be defined here */
-//				/* .framework(path: "framework") */
-//				.target(name: "\(ProjectSettings.projectName)")
-//			],
-//			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
-//		)
+		Target(
+			name: "\(ProjectSettings.projectName)Tests",
+			platform: .iOS,
+			product: .unitTests,
+			bundleId: "ru.\(ProjectSettings.bundleId)Tests",
+			deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
+			infoPlist: .none,
+			sources: ["Tests/**"],
+			resources: ["Resources/**"],
+			scripts: myScripts,
+			dependencies: [
+				/* Target dependencies can be defined here */
+				/* .framework(path: "framework") */
+				.target(name: "\(ProjectSettings.projectName)")
+			],
+			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+		)
 	]
 )
