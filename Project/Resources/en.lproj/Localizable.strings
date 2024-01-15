@@ -1,0 +1,31 @@
+/* 
+  Localizable.strings
+  MdEditor
+
+  Created by Aleksandr Mamlygo on 15.01.24.
+  Copyright © 2024 Swiftbook-Middle-iOS. All rights reserved.
+*/
+
+//MARK: Login Screen
+"loginButton.title" = "Login";
+"loginView.title" = "Authorization";
+"loginTextField.placeholder" = "Login";
+"passTextField.placeholder" = "Password";
+
+// MARK: TodoList View
+"todoListView.title" = "TodoList";
+"todoListView.deadline.description" = "Deadline %@";
+
+//MARK: Task manager sections
+"taskManager.sectionTitles.complete" = "Complete";
+"taskManager.sectionTitles.incomplete" = "Uncompleted";
+"taskManager.sectionTitles.allTasks" = "All";
+"taskManager.sectionTitles.important" = "Important";
+"taskManager.sectionTitles.regular" = "Regular";
+
+//MARK: Stub task titles
+"stubTasks.title0" = "Do homework";
+"stubTasks.title1" = "Do Workout";
+"stubTasks.title2" = "Write new tasks";
+"stubTasks.title3" = "Solve 3 algorithms";
+"stubTasks.title4" = "Go shopping";
