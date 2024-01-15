@@ -19,13 +19,13 @@ final class OrderedTaskManagerPackageTests: XCTestCase {
 
 	// MARK: - Public properties
 	///Создание тестового задания
-	private let task = ImportantTask(title: TaskTitles.high.rawValue, date: .distantPast, taskPriority: .high)
+	private let task = ImportantTask(title: TaskTitles.high.rawValue, taskPriority: .high)
 
 	///Создание нескольких тестовых заданий
 	private let tasks = [
-		ImportantTask(title: TaskTitles.high.rawValue, date: .distantPast, taskPriority: .high),
-		ImportantTask(title: TaskTitles.medium.rawValue, date: .distantPast, taskPriority: .medium),
-		ImportantTask(title: TaskTitles.low.rawValue, date: .distantPast, taskPriority: .low),
+		ImportantTask(title: TaskTitles.high.rawValue, taskPriority: .high),
+		ImportantTask(title: TaskTitles.medium.rawValue, taskPriority: .medium),
+		ImportantTask(title: TaskTitles.low.rawValue, taskPriority: .low),
 		RegularTask(title: TaskTitles.regular.rawValue)
 	]
 
