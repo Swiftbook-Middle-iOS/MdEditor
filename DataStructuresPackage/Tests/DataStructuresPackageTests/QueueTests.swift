@@ -10,110 +10,73 @@ import XCTest
 
 final class QueueTests: XCTestCase {
 
-    func test_initIntQueue_shouldCreateEmptyQueue() {
-        let sut = makeEmptyIntSut()
+    func test_init_emptryQueue_shouldBeEmpty() {
+        let sut = Queue<Int>()
         
-        XCTAssertTrue(sut.isEmpty, "Queue should be empty when initialized with no arguments")
+        XCTAssertTrue(sut.isEmpty, "Созданная очередь не пустая")
+        XCTAssertEqual(sut.count, 0, "Количество элементов в пустой очереди не равно 0")
+        XCTAssertNil(sut.peek, "Удается получить элемент из пустой очереди")
     }
     
-    func test_initIntQueue_shouldHaveZeroCount() {
-        let sut = makeEmptyIntSut()
+    func test_enqueue_twoValues_shouldHaveCorrectCountAndValue() {
+        var sut = Queue<Int>()
         
-        XCTAssertEqual(sut.count, 0, "Queue should have 0 count when initialized with no arguments")
-    }
-    
-    func test_enqueue_shouldIncreaseCount() {
-        var sut = makeEmptyIntSut()
+        sut.enqueue(1)
+        sut.enqueue(2)
         
-        let initialCount = sut.count
-        sut.enqueue(10)
-        
-        XCTAssertEqual(initialCount + 1, sut.count, "Enqueue on empty queue should increase count by 1")
-    }
-    
-    func test_enqueue_tenTimes_shouldIncreaseCountByTen() {
-        var sut = makeEmptyIntSut()
-        
-        let initialCount = sut.count
-        let count = 10
-        for n in 1...count {
-            sut.enqueue(n)
-        }
-        
-        XCTAssertEqual(initialCount + count, sut.count, "Enqueue 10 times on empty queue should increase count by 10")
+        XCTAssertEqual(sut.count, 2, "Неверное количество значений в очереди")
+        XCTAssertEqual(sut.peek, 1, "Некорректен первый элемент очереди")
     }
 
-    func test_dequeue_onEmptyQueue_shouldReturnNil() {
-        var sut = makeEmptyIntSut()
+    func test_dequeue_oneValue_shouldHaveCorrectCountAndReturnedValue() {
+        var sut = Queue<Int>()
+        sut.enqueue(1)
+        sut.enqueue(2)
         
-        XCTAssertNil(sut.dequeue(), "Dequeue from empty queue should return nil")
+        let dequeuedValue = sut.dequeue()
+        
+        XCTAssertEqual(dequeuedValue, 1, "Очередь вернула некорректное значение")
+        XCTAssertEqual(sut.count, 1, "Количество значений в очереди неверно")
+        XCTAssertEqual(sut.peek, 2, "Первый элемент в очереди после выполнения dequeue некорректен")
     }
     
-    func test_dequeue_onEmptyQueue_shouldNotChangeCount() {
-        var sut = makeEmptyIntSut()
+    func test_dequeue_twoTimes_shouldHaveCorrectCountAndReturnedValue() {
+        var sut = Queue<Int>()
+        sut.enqueue(1)
+        sut.enqueue(2)
         
-        let initialCount = sut.count
         _ = sut.dequeue()
+        let secondDequeuedValue = sut.dequeue()
         
-        XCTAssertEqual(initialCount, sut.count, "Dequeue from empty queue should not decrease count")
+        XCTAssertEqual(secondDequeuedValue, 2, "Очередь вернула некорректное значение")
+        XCTAssertTrue(sut.isEmpty, "Очередь не пуста")
+        XCTAssertEqual(sut.count, 0, "Количество значений в пустой очереди не 0")
+        XCTAssertNil(sut.peek, "Удается получить элемент из пустой очереди")
     }
     
-    func test_dequeue_afterEnqueue_shouldReturnSameElement() {
-        var sut = makeEmptyIntSut()
+    func test_dequeue_fromEmptyQueue_shouldBeCorrect() {
+        var sut = Queue<Int>()
         
-        let elementToEnqueue = 143
-        sut.enqueue(elementToEnqueue)
+        let dequeuedValue = sut.dequeue()
         
-        XCTAssertEqual(sut.dequeue(), elementToEnqueue, "Element to enqueue should match the dequeued")
+        XCTAssertNil(dequeuedValue, "Удалось получить значение из пустой очереди")
+        XCTAssertEqual(sut.count, 0, "Количество значений в пустой очереди не 0")
+        XCTAssertTrue(sut.isEmpty, "Очередь не пуста")
     }
     
-    func test_dequeue_afterOneEnqueue_shouldReduceCountByOne() {
-        var sut = makeEmptyIntSut()
+    func test_peek_onTwoValues_shouldReturnCorrectValues() {
+        var sut = Queue<Int>()
+        sut.enqueue(1)
+        sut.enqueue(2)
         
-        sut.enqueue(143)
-        let initialCount = sut.count
+        let firstPeek = sut.peek
         _ = sut.dequeue()
+        let secondPeek = sut.peek
         
-        XCTAssertEqual(sut.count, initialCount - 1, "Dequeue from non-empty queue should reduce count by one")
-    }
-    
-    func test_dequeue_twoTimesAfterMultipleEnqueue_shouldReduceCountByTwo() {
-        var sut = makeEmptyIntSut()
-        
-        for n in (1...100) {
-            sut.enqueue(n)
-        }
-        
-        let initialCount = sut.count
-        
-        _ = sut.dequeue()
-        _ = sut.dequeue()
-        
-        XCTAssertEqual(sut.count, initialCount - 2, "Dequeue two times from non-empty queue should reduce count by two")
-    }
-    
-    func test_dequeue_twoTimes_shouldReturnSecondToLastElement() {
-        var sut = makeEmptyIntSut()
-        
-        let firstElement = 4
-        let secondElement = 5
-        let thirdElement = 6
-        let fourthElement = 8
-        
-        sut.enqueue(firstElement)
-        sut.enqueue(secondElement)
-        sut.enqueue(thirdElement)
-        sut.enqueue(fourthElement)
-        
-        _ = sut.dequeue()
-        let secondDequeued = sut.dequeue()
-        
-        XCTAssertEqual(secondDequeued, secondElement, "Second dequeued should match third added for 4-element queue")
+        XCTAssertEqual(firstPeek, 1, "Очередь вернула некорректное значение")
+        XCTAssertEqual(secondPeek, 2, "Очередь вернула некорректное значение")
+        XCTAssertEqual(sut.count, 1, "Количество значений в очереди неверно")
     }
 }
 
-extension QueueTests {
-    func makeEmptyIntSut() -> Queue<Int> {
-        Queue<Int>()
-    }
-}
+

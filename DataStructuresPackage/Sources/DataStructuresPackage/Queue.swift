@@ -28,4 +28,8 @@ public struct Queue<T> {
         }
         return elements.pop()
     }
+    
+    var peek: T? {
+        elements.value(at: 0)
+    }
 }
