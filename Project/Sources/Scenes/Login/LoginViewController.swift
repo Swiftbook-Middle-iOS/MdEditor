@@ -89,7 +89,7 @@ private extension LoginViewController {
 		button.configuration = .filled()
 		button.configuration?.cornerStyle = .medium
 		button.configuration?.baseBackgroundColor = Theme.accentColor
-		button.configuration?.title = "Login"
+		button.configuration?.title = L10n.LoginButton.title
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
 
 		button.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +99,7 @@ private extension LoginViewController {
 
 	func setupUI() {
 		view.backgroundColor = Theme.white
-		title = "Authorization"
+		title = L10n.LoginView.title
 		navigationController?.navigationBar.prefersLargeTitles = true
 
 		// Кастомная конфигурация наших полей
