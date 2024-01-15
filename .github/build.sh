@@ -1,3 +1,4 @@
+cd ./Project
 curl -Ls https://install.tuist.io | bash
 tuist install 3.36
 tuist fetch
