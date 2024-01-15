@@ -69,11 +69,11 @@ private extension LoginViewController {
 	func makeTextField() -> UITextField {
 		let textField = UITextField()
 
-		textField.backgroundColor = .white
-		textField.textColor = .black
+		textField.backgroundColor = Theme.backgroundColor
+		textField.textColor = Theme.mainColor
 		textField.layer.borderWidth = Sizes.borderWidth
 		textField.layer.cornerRadius = Sizes.cornerRadius
-		textField.layer.borderColor = UIColor.lightGray.cgColor
+		textField.layer.borderColor = Theme.mainColor.cgColor
 		textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Sizes.Padding.half, height: textField.frame.height))
 		textField.leftViewMode = .always
 		textField.translatesAutoresizingMaskIntoConstraints = false
@@ -88,8 +88,8 @@ private extension LoginViewController {
 
 		button.configuration = .filled()
 		button.configuration?.cornerStyle = .medium
-		button.configuration?.baseBackgroundColor = .red
-		button.configuration?.title = "Login"
+		button.configuration?.baseBackgroundColor = Theme.accentColor
+		button.configuration?.title = L10n.LoginButton.title
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
 
 		button.translatesAutoresizingMaskIntoConstraints = false
@@ -98,13 +98,13 @@ private extension LoginViewController {
 	}
 
 	func setupUI() {
-		view.backgroundColor = .white
-		title = "Authorization"
+		view.backgroundColor = Theme.white
+		title = L10n.LoginView.title
 		navigationController?.navigationBar.prefersLargeTitles = true
 
 		// Кастомная конфигурация наших полей
-		textFieldLogin.placeholder = "Login"
-		textFieldPass.placeholder = "Password"
+        textFieldLogin.placeholder = L10n.LoginTextField.placeholder
+        textFieldPass.placeholder = L10n.PassTextField.placeholder
 		textFieldPass.isSecureTextEntry = true
 
 		view.addSubview(textFieldLogin)

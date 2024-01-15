@@ -28,8 +28,22 @@ public var swiftLintTargetScript: TargetScript {
 	)
 }
 
+public var swiftGenTargetScript: TargetScript {
+    let swiftGenScriptString = """
+                                cd ./swiftgen-6.6.2/bin/
+                                ./swiftgen
+                                """
+
+    return TargetScript.pre(
+        script: swiftGenScriptString,
+        name: "Run SwiftGen",
+        basedOnDependencyAnalysis: false
+    )
+}
+
 private let myScripts: [TargetScript] = [
-	swiftLintTargetScript
+	swiftLintTargetScript,
+    swiftGenTargetScript
 ]
 
 let project = Project(
@@ -64,22 +78,22 @@ let project = Project(
 				.package(product: "TaskManagerPackage")
 			]
 		),
-//		Target(
-//			name: "\(ProjectSettings.projectName)Tests",
-//			platform: .iOS,
-//			product: .app,
-//			bundleId: "ru.\(ProjectSettings.bundleId)Tests",
-//			deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
-//			infoPlist: .none,
-//			sources: ["Tests/**"],
-//			resources: ["Resources/**"],
-//			scripts: myScripts,
-//			dependencies: [
-//				/* Target dependencies can be defined here */
-//				/* .framework(path: "framework") */
-//				.target(name: "\(ProjectSettings.projectName)")
-//			],
-//			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
-//		)
+		Target(
+			name: "\(ProjectSettings.projectName)Tests",
+			platform: .iOS,
+			product: .unitTests,
+			bundleId: "ru.\(ProjectSettings.bundleId)Tests",
+			deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
+			infoPlist: .none,
+			sources: ["Tests/**"],
+			resources: ["Resources/**"],
+			scripts: myScripts,
+			dependencies: [
+				/* Target dependencies can be defined here */
+				/* .framework(path: "framework") */
+				.target(name: "\(ProjectSettings.projectName)")
+			],
+			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+		)
 	]
 )
