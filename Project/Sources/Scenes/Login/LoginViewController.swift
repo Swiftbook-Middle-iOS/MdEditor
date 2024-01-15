@@ -69,11 +69,11 @@ private extension LoginViewController {
 	func makeTextField() -> UITextField {
 		let textField = UITextField()
 
-		textField.backgroundColor = .white
-		textField.textColor = .black
+		textField.backgroundColor = Theme.backgroundColor
+		textField.textColor = Theme.mainColor
 		textField.layer.borderWidth = Sizes.borderWidth
 		textField.layer.cornerRadius = Sizes.cornerRadius
-		textField.layer.borderColor = UIColor.lightGray.cgColor
+		textField.layer.borderColor = Theme.mainColor.cgColor
 		textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Sizes.Padding.half, height: textField.frame.height))
 		textField.leftViewMode = .always
 		textField.translatesAutoresizingMaskIntoConstraints = false
@@ -88,7 +88,7 @@ private extension LoginViewController {
 
 		button.configuration = .filled()
 		button.configuration?.cornerStyle = .medium
-		button.configuration?.baseBackgroundColor = .red
+		button.configuration?.baseBackgroundColor = Theme.accentColor
 		button.configuration?.title = "Login"
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
 
@@ -98,7 +98,7 @@ private extension LoginViewController {
 	}
 
 	func setupUI() {
-		view.backgroundColor = .white
+		view.backgroundColor = Theme.white
 		title = "Authorization"
 		navigationController?.navigationBar.prefersLargeTitles = true
 
