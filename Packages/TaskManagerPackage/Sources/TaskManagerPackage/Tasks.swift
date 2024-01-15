@@ -36,7 +36,7 @@ final public class ImportantTask: Task {
 	public var date: Date
 	public var taskPriority: TaskPriority
 
-	public init(title: String, date: Date, taskPriority: TaskPriority) {
+	public init(title: String, date: Date = Date(), taskPriority: TaskPriority) {
 		self.taskPriority = taskPriority
 		self.date = date
 		super.init(title: title)
