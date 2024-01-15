@@ -15,7 +15,7 @@
      - ../../Resources/en.lproj
    outputs:
      - templateName: structured-swift5
-       output: ../../Resources/Strings+Generated.swift
+       output: ../../Sources/Strings+Generated.swift
 
 
 ## Generate constants for your Assets Catalogs, including constants for images, colors, ARKit resources, etc.
