@@ -28,8 +28,22 @@ public var swiftLintTargetScript: TargetScript {
 	)
 }
 
+public var swiftGenTargetScript: TargetScript {
+    let swiftGenScriptString = """
+                                cd ./swiftgen-6.6.2/bin/
+                                ./swiftgen
+                                """
+
+    return TargetScript.pre(
+        script: swiftGenScriptString,
+        name: "Run SwiftGen",
+        basedOnDependencyAnalysis: false
+    )
+}
+
 private let myScripts: [TargetScript] = [
-	swiftLintTargetScript
+	swiftLintTargetScript,
+    swiftGenTargetScript
 ]
 
 let project = Project(
