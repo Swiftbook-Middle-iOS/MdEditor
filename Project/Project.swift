@@ -95,5 +95,6 @@ let project = Project(
 			],
 			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
 		)
-	]
+	],
+    resourceSynthesizers: []
 )
