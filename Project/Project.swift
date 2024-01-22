@@ -28,27 +28,17 @@ public var swiftLintTargetScript: TargetScript {
 	)
 }
 
-public var swiftGenTargetScript: TargetScript {
-    let swiftGenScriptString = """
-                                cd ./swiftgen-6.6.2/bin/
-                                ./swiftgen
-                                """
-
-    return TargetScript.pre(
-        script: swiftGenScriptString,
-        name: "Run SwiftGen",
-        basedOnDependencyAnalysis: false
-    )
-}
-
 private let myScripts: [TargetScript] = [
-	swiftLintTargetScript,
-    swiftGenTargetScript
+	swiftLintTargetScript
 ]
 
 let project = Project(
 	name: ProjectSettings.projectName,
 	organizationName: ProjectSettings.organizationName,
+    options: .options(
+        defaultKnownRegions: ["en", "ru"],
+        developmentRegion: "en"
+    ),
 	packages: [
 		.local(path: .relativeToManifest("../Packages/TaskManagerPackage"))
 	],
@@ -96,5 +86,5 @@ let project = Project(
 			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
 		)
 	],
-    resourceSynthesizers: []
+    resourceSynthesizers: [.strings()]
 )
