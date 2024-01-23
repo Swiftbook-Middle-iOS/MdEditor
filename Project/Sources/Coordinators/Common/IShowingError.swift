@@ -15,8 +15,12 @@ protocol IShowingError {
 extension IShowingError where Self: ICoordinator {
 	func showError(message: String) {
 		let alert: UIAlertController
-		alert = UIAlertController(title: "Error", message: message, preferredStyle: UIAlertController.Style.alert)
-		let action = UIAlertAction(title: "Ok", style: .default)
+        alert = UIAlertController(
+            title: L10n.Error.text,
+            message: message,
+            preferredStyle: UIAlertController.Style.alert
+        )
+        let action = UIAlertAction(title: L10n.Ok.text, style: .default)
 		alert.addAction(action)
 		navigationController.present(alert, animated: true, completion: nil)
 	}
