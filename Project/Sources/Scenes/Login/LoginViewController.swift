@@ -77,8 +77,8 @@ private extension LoginViewController {
 		textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Sizes.Padding.half, height: textField.frame.height))
 		textField.leftViewMode = .always
 		textField.translatesAutoresizingMaskIntoConstraints = false
-
-		textField.translatesAutoresizingMaskIntoConstraints = false
+		textField.font = UIFont.preferredFont(forTextStyle: .body)
+		textField.adjustsFontForContentSizeCategory = true
 
 		return textField
 	}
@@ -91,8 +91,9 @@ private extension LoginViewController {
 		button.configuration?.baseBackgroundColor = Theme.accentColor
 		button.configuration?.title = L10n.LoginButton.title
 		button.addTarget(self, action: #selector(login), for: .touchUpInside)
-
 		button.translatesAutoresizingMaskIntoConstraints = false
+		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+		button.titleLabel?.adjustsFontForContentSizeCategory = true
 
 		return button
 	}
