@@ -32,6 +32,55 @@ private let myScripts: [TargetScript] = [
 	swiftLintTargetScript
 ]
 
+let target = Target(
+    name: ProjectSettings.projectName,
+    platform: .iOS,
+    product: .app,
+    bundleId: "ru.\(ProjectSettings.bundleId)",
+    deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
+    infoPlist: "Info.plist",
+    sources: ["Sources/**", "Shared/**"],
+    resources: ["Resources/**"],
+    scripts: myScripts,
+    dependencies: [
+        .package(product: "TaskManagerPackage")
+    ]
+)
+
+let testTarget = Target(
+    name: "\(ProjectSettings.projectName)Tests",
+    platform: .iOS,
+    product: .unitTests,
+    bundleId: "ru.\(ProjectSettings.bundleId)Tests",
+    deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
+    infoPlist: .none,
+    sources: ["Tests/**", "Shared/**"],
+    resources: ["Resources/**"],
+    scripts: myScripts,
+    dependencies: [
+        /* Target dependencies can be defined here */
+        /* .framework(path: "framework") */
+        .target(name: "\(ProjectSettings.projectName)")
+    ],
+    settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+)
+
+let uiTestTarget = Target(
+    name: "\(ProjectSettings.projectName)UITests",
+    platform: .iOS,
+    product: .uiTests,
+    bundleId: "ru.\(ProjectSettings.bundleId)UITests",
+    deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
+    infoPlist: .none,
+    sources: ["UITests/Sources/**", "Shared/**"],
+    resources: ["Resources/**"],
+    scripts: myScripts,
+    dependencies: [
+        .target(name: "\(ProjectSettings.projectName)")
+    ],
+    settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
+)
+
 let project = Project(
 	name: ProjectSettings.projectName,
 	organizationName: ProjectSettings.organizationName,
@@ -51,40 +100,29 @@ let project = Project(
 		],
 		defaultSettings: .recommended()
 	),
-	targets: [
-		Target(
-			name: ProjectSettings.projectName,
-			platform: .iOS,
-			product: .app,
-			bundleId: "ru.\(ProjectSettings.bundleId)",
-			deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
-			infoPlist: "Info.plist",
-			sources: ["Sources/**"],
-			resources: ["Resources/**"],
-			scripts: myScripts,
-			dependencies: [
-				/* Target dependencies can be defined here */
-				/* .framework(path: "framework") */
-				.package(product: "TaskManagerPackage")
-			]
-		),
-		Target(
-			name: "\(ProjectSettings.projectName)Tests",
-			platform: .iOS,
-			product: .unitTests,
-			bundleId: "ru.\(ProjectSettings.bundleId)Tests",
-			deploymentTarget: .iOS(targetVersion: ProjectSettings.targetVersion, devices: .iphone),
-			infoPlist: .none,
-			sources: ["Tests/**"],
-			resources: ["Resources/**"],
-			scripts: myScripts,
-			dependencies: [
-				/* Target dependencies can be defined here */
-				/* .framework(path: "framework") */
-				.target(name: "\(ProjectSettings.projectName)")
-			],
-			settings: .settings(base: ["GENERATE_INFOPLIST_FILE": "YES"])
-		)
-	],
+	targets: [target, testTarget, uiTestTarget],
+    schemes: [
+        Scheme(
+            name: "MdEditor",
+            shared: true,
+            buildAction: .buildAction(targets: [TargetReference(stringLiteral: ProjectSettings.projectName)]),
+            testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
+            runAction: .runAction(executable: TargetReference(stringLiteral: ProjectSettings.projectName))
+        ),
+        Scheme(
+            name: "MdEditorTests",
+            shared: true,
+            buildAction: .buildAction(targets: [TargetReference(stringLiteral: "\(ProjectSettings.projectName)Tests")]),
+            testAction: .targets(["\(ProjectSettings.projectName)Tests"]),
+            runAction: .runAction(executable: TargetReference(stringLiteral: "\(ProjectSettings.projectName)Tests"))
+        ),
+        Scheme(
+            name: "MdEditorUITests",
+            shared: true,
+            buildAction: .buildAction(targets: [TargetReference(stringLiteral: "\(ProjectSettings.projectName)UITests")]),
+            testAction: .targets(["\(ProjectSettings.projectName)UITests"]),
+            runAction: .runAction(executable: TargetReference(stringLiteral: "\(ProjectSettings.projectName)UITests"))
+        )
+    ],
     resourceSynthesizers: [.strings()]
 )

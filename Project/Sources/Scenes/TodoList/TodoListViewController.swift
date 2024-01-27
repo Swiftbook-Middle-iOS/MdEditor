@@ -38,6 +38,7 @@ final class TodoListViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+        tableView.accessibilityIdentifier = AccessibilityIdentifier.todoListTableView.rawValue
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

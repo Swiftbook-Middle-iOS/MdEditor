@@ -22,6 +22,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: scene)
 
         let navigationController = UINavigationController()
+    
+        #if DEBUG
+        if CommandLine.arguments.contains(CommandLineArguments.skipLogin.rawValue) {
+            window.rootViewController = UINavigationController(rootViewController: TodoListAssembler(taskManager: buildTaskManager()).assembly())
+            window.makeKeyAndVisible()
+            self.window = window
+        }
+        #endif
+
+        guard window.rootViewController == nil else { return }
 
         appCoordinator = AppCoordinator(navigationController: navigationController, taskManager: buildTaskManager())
         appCoordinator.start()
