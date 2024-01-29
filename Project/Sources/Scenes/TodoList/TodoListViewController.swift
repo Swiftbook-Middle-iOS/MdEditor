@@ -65,7 +65,6 @@ extension TodoListViewController {
         return label
     }
 
-
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		let section = viewModel.tasksBySections[section]
 		return section.tasks.count
@@ -75,7 +74,10 @@ extension TodoListViewController {
 		let task = getTaskForIndex(indexPath)
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
-        cell.accessibilityIdentifier = AccessibilityIdentifier.cell(section: indexPath.section, index: indexPath.row).description
+        cell.accessibilityIdentifier = AccessibilityIdentifier.cell(
+            section: indexPath.section,
+            index: indexPath.row
+        ).description
 
 		configureCell(cell, with: task)
 		return cell
