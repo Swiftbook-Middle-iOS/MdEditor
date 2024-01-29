@@ -32,9 +32,9 @@ final class LoginCoordinator: ILoginCoordinator {
 			guard let self = self else { return }
 			switch result {
 			case .success:
-				finishFlow?()
+                self.finishFlow?()
 			case .failure(let error):
-				showError(message: error.localizedDescription)
+                self.showError(message: error.localizedDescription)
 			}
 		}
 		navigationController.setViewControllers([viewController], animated: true)
