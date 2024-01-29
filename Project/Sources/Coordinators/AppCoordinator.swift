@@ -8,52 +8,42 @@
 import UIKit
 import TaskManagerPackage
 
-protocol IAppCoordinator: ICoordinator {
-	func startLoginFlow()
-	func startTodoListFlow()
-}
-
-final class AppCoordinator: IAppCoordinator {
-	// MARK: Public properties
-	var childCoordinators: [ICoordinator] = []
-	var finishDelegate: ICoordinatorFinishDelegate?
+final class AppCoordinator: BaseCoordinator {
 
 	// MARK: Dependencies
-	var navigationController: UINavigationController
-	private let taskManager: ITaskManager
+	private var navigationController: UINavigationController
+    private var window: UIWindow?
 
-	init(navigationController: UINavigationController, taskManager: ITaskManager) {
-		self.navigationController = navigationController
-		self.taskManager = taskManager
+    init(window: UIWindow?) {
+		self.navigationController = UINavigationController()
+		self.window = window
 	}
 
 	// MARK: Public properties
-	func start() {
-		startLoginFlow()
+	override func start() {
+		runLoginFlow()
 	}
 
-	func startLoginFlow() {
+	func runLoginFlow() {
 		let coordinator = LoginCoordinator(navigationController: navigationController)
-		coordinator.finishDelegate = self
-		childCoordinators.append(coordinator)
+        addDependency(coordinator)
+
+        coordinator.finishFlow = { [weak self] in
+            guard let self = self else { return }
+			self.startTodoListFlow()
+			self.removeDependency(coordinator)
+        }
+
 		coordinator.start()
+
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
 	}
 
 	func startTodoListFlow() {
-		let coordinator = TodoListCoordinator(navigationController: navigationController, taskManager: taskManager)
-		coordinator.finishDelegate = self
-		childCoordinators.append(coordinator)
+		let coordinator = TodoListCoordinator(navigationController: navigationController)
+        addDependency(coordinator)
+
 		coordinator.start()
-	}
-}
-
-// MARK: ICoordinatorFinishDelegate
-
-extension AppCoordinator: ICoordinatorFinishDelegate {
-	func didFinish(_ coordinator: ICoordinator) {
-		if coordinator is ILoginCoordinator {
-			startTodoListFlow()
-			childCoordinators.removeAll { $0 === coordinator }
-		}
 	}
 }

@@ -122,8 +122,15 @@ private extension TodoListViewController {
 		case .regularTask(let task):
 			contentConfiguration.text = task.title
 			cell.accessoryType = task.completed ? .checkmark : .none
+			contentConfiguration.secondaryTextProperties.font = UIFont.preferredFont(
+				forTextStyle: .caption2
+			)
+			contentConfiguration.secondaryTextProperties.adjustsFontForContentSizeCategory = true
+			contentConfiguration.textProperties.font = UIFont.preferredFont(
+				forTextStyle: .body
+			)
+			contentConfiguration.textProperties.adjustsFontForContentSizeCategory = true
 		}
-
 		cell.contentConfiguration = contentConfiguration
 	}
 }
