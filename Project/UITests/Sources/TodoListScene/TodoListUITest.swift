@@ -25,7 +25,7 @@ final class TodoListUITest: XCTestCase {
         
         todoListScreen
             .isTodoListScreen()
-            .hasExactlyTwoSections()
+            .hasCorrectSectionCount()
     }
     
     func test_todoListSectionTitles_shouldBeCorrect() {
@@ -35,5 +35,16 @@ final class TodoListUITest: XCTestCase {
             .isTodoListScreen()
             .hasCompleteSection()
             .hasIncompleteSection()
+    }
+    
+    func test_changeTaskStatus_shouldBeCorrect() {
+        app.launch()
+        
+        todoListScreen
+            .isTodoListScreen()
+            .tapFirstIncompleteTask()
+            .completeSectionHasCorrectTaskCountAfterTap()
+            .incompleteSectionHasCorrectTaskCountAfterTap()
+            .completedSectionHasExpectedTaskTitle()
     }
 }
