@@ -30,8 +30,8 @@ final class AppCoordinator: BaseCoordinator {
 
         coordinator.finishFlow = { [weak self] in
             guard let self = self else { return }
-            startTodoListFlow()
-            removeDependency(coordinator)
+			self.startTodoListFlow()
+			self.removeDependency(coordinator)
         }
 
 		coordinator.start()
