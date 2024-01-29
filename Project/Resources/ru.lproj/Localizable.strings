@@ -6,15 +6,31 @@
   Copyright © 2024 Swiftbook-Middle-iOS. All rights reserved.
 */
 
+//MARK: Common strings
+"Yes.text" = "Да";
+"No.text" = "Нет";
+"Return.text" = "Вернуться";
+"Ok.text" = "Ok";
+"Error.text" = "Ошибка";
+
 //MARK: Login Screen
 "loginButton.title" = "Логин";
 "loginView.title" = "Авторизация";
 "loginTextField.placeholder" = "Логин";
 "passTextField.placeholder" = "Пароль";
 
-// MARK: TodoList View
-"todoListView.title" = "Список задач";
-"todoListView.deadline.description" = "Срок выполнения %@";
+//MARK: Login errors
+"loginError.wrongPassword" = "Неправильный пароль";
+"loginError.wrongLogin" = "Неправильный логин";
+"loginError.emptyFields" = "Пустые поля логин или пароль";
+"loginError.errorAuth" = "Неправильный пароль и логин";
+
+// MARK: TodoList
+"todoList.title" = "Список задач";
+"todoList.deadline.description" = "Срок выполнения %@";
+"todoList.taskPriority.high" = "!!!";
+"todoList.taskPriority.medium" = "!!";
+"todoList.taskPriority.low" = "!";
 
 //MARK: Task manager sections
 "taskManager.sectionTitles.complete" = "Завершенные";
