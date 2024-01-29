@@ -13,18 +13,14 @@ protocol ITodoListCoordinator: ICoordinator {
 }
 
 final class TodoListCoordinator: ITodoListCoordinator {
-	// MARK: Public properties
-	var childCoordinators: [ICoordinator] = []
-	weak var finishDelegate: ICoordinatorFinishDelegate?
 
 	// MARK: Dependencies
 	var navigationController: UINavigationController
-	private let taskManager: ITaskManager
+	private let taskManager: ITaskManager = TaskManager()
 
 	// MARK: Initialization
-	init(navigationController: UINavigationController, taskManager: ITaskManager) {
+	init(navigationController: UINavigationController) {
 		self.navigationController = navigationController
-		self.taskManager = taskManager
 	}
 
 	// MARK: Public functions
@@ -33,7 +29,11 @@ final class TodoListCoordinator: ITodoListCoordinator {
 	}
 
 	func showTodoListScene() {
-        let viewController = TodoListAssembler(taskManager: taskManager).assembly()
+        let repository = TaskRepositoryStub()
+        let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
+        orderedTaskManager.addTasks(tasks: repository.getTasks())
+
+        let viewController = TodoListAssembler(taskManager: orderedTaskManager).assembly()
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 }
