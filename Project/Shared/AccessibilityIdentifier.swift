@@ -16,11 +16,11 @@ enum AccessibilityIdentifier {
     var description: String {
         switch self {
         case .todoListTableView:
-            "todoListTableView"
+            return "todoListTableView"
         case .cell(let section, let index):
-            "cell-\(section)-\(index)"
+            return "cell-\(section)-\(index)"
         case .sectionLabel(let section):
-            "sectionLabel-\(section)"
+            return "sectionLabel-\(section)"
         }
     }
 }
