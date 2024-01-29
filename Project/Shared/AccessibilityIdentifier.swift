@@ -8,6 +8,19 @@
 
 import Foundation
 
-enum AccessibilityIdentifier: String {
+enum AccessibilityIdentifier {
     case todoListTableView
+    case cell(section: Int, index: Int)
+    case sectionLabel(section: Int)
+    
+    var description: String {
+        switch self {
+        case .todoListTableView:
+            "todoListTableView"
+        case .cell(let section, let index):
+            "cell-\(section)-\(index)"
+        case .sectionLabel(let section):
+            "sectionLabel-\(section)"
+        }
+    }
 }

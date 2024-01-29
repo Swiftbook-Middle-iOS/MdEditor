@@ -16,13 +16,24 @@ final class TodoListUITest: XCTestCase {
     
     override func setUp() async throws {
         app.launchArguments = [CommandLineArguments.skipLogin.rawValue]
+        app.launchArguments += ["-AppleLanguages", "(en)"]
         todoListScreen = TodoListScreenObject(app: app)
     }
     
-    func test_todoList() {
+    func test_todoListSectionCount_shouldBeTwo() {
         app.launch()
         
         todoListScreen
             .isTodoListScreen()
+            .hasExactlyTwoSections()
+    }
+    
+    func test_todoListSectionTitles_shouldBeCorrect() {
+        app.launch()
+        
+        todoListScreen
+            .isTodoListScreen()
+            .hasCompleteSection()
+            .hasIncompleteSection()
     }
 }
