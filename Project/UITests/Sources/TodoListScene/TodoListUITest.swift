@@ -20,6 +20,22 @@ final class TodoListUITest: XCTestCase {
         todoListScreen = TodoListScreenObject(app: app)
     }
     
+    func test_todoListTaskTitles_shouldExist() {
+        app.launch()
+        
+        todoListScreen
+            .isTodoListScreen()
+            .initialCellsHaveTitles()
+    }
+    
+    func test_todoListCheckedTaskCount_initially_shouldBeOne() {
+        app.launch()
+        
+        todoListScreen
+            .isTodoListScreen()
+            .hasExpectedCountOfChecked(1)
+    }
+    
     func test_todoListSectionCount_shouldBeTwo() {
         app.launch()
         
@@ -46,5 +62,6 @@ final class TodoListUITest: XCTestCase {
             .completeSectionHasCorrectTaskCountAfterTap()
             .incompleteSectionHasCorrectTaskCountAfterTap()
             .completedSectionHasExpectedTaskTitle()
+            .hasExpectedCountOfChecked(2)
     }
 }

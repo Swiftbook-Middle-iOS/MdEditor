@@ -25,6 +25,25 @@ final class TodoListScreenObject: BaseScreenObject {
         return self
     }
     
+    @discardableResult
+    func initialCellsHaveTitles() -> Self {
+        for index in 0..<expectedStartingIncompleteTaskCount {
+            XCTAssertFalse(getCellTitle(cell: getCell(section: 0, index: index)).isEmpty, "Обнаружена ячейка с пустым наименованием")
+        }
+        
+        for index in 0..<expectedStartingCompleteTaskCount {
+            XCTAssertFalse(getCellTitle(cell: getCell(section: 1, index: index)).isEmpty, "Обнаружена ячейка с пустым наименованием")
+        }
+        
+        return self
+    }
+    
+    func hasExpectedCountOfChecked(_ count: Int) {
+        let selected = tableView.element.children(matching: .cell).allElementsBoundByIndex.filter { $0.isSelected }
+        
+        XCTAssertEqual(selected.count, count, "Количество завершенных задач не соответствует ожидаемому")
+    }
+    
     func hasCorrectSectionCount() {
         assert(getSectionLabel(section: expectedSectionCount - 1), [.exists])
         assert(getSectionLabel(section: expectedSectionCount), [.doesNotExist])
@@ -72,12 +91,14 @@ final class TodoListScreenObject: BaseScreenObject {
         return self
     }
     
-    func completedSectionHasExpectedTaskTitle() {
+    @discardableResult
+    func completedSectionHasExpectedTaskTitle() -> Self {
         let hasExpectedTitle = (0...expectedStartingCompleteTaskCount).map {
             getCellTitle(cell: getCell(section: 1, index: $0))
         }.contains("!!! Do homework")
         
         XCTAssertTrue(hasExpectedTitle, "Секция завершенных задач не содержит задачу с ожидаемым названием")
+        return self
     }
     
     // MARK: Private methods
