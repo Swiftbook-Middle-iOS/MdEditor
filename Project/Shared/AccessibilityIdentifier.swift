@@ -13,6 +13,10 @@ enum AccessibilityIdentifier {
     case cell(section: Int, index: Int)
     case sectionLabel(section: Int)
     
+    case textFieldLogin
+    case textFieldPass
+    case buttonLogin
+    
     var description: String {
         switch self {
         case .todoListTableView:
@@ -21,6 +25,12 @@ enum AccessibilityIdentifier {
             return "cell-\(section)-\(index)"
         case .sectionLabel(let section):
             return "sectionLabel-\(section)"
+        case .textFieldLogin:
+            return "textFieldLogin"
+        case .textFieldPass:
+            return "textFieldPass"
+        case .buttonLogin:
+            return "loginButton"
         }
     }
 }

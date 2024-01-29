@@ -21,8 +21,12 @@ final class LoginViewController: UIViewController, ILoginViewController {
 
 	// MARK: - Private properties
 
-	private lazy var textFieldLogin: UITextField = makeTextField()
-	private lazy var textFieldPass: UITextField = makeTextField()
+    private lazy var textFieldLogin: UITextField = makeTextField(
+        accessibilityIdentifier: AccessibilityIdentifier.textFieldLogin.description
+    )
+    private lazy var textFieldPass: UITextField = makeTextField(
+        accessibilityIdentifier: AccessibilityIdentifier.textFieldPass.description
+    )
 	private lazy var buttonLogin: UIButton = makeButtonLogin()
 
 	private var constraints = [NSLayoutConstraint]()
@@ -66,7 +70,7 @@ private extension LoginViewController {
 
 private extension LoginViewController {
 
-	func makeTextField() -> UITextField {
+    func makeTextField(accessibilityIdentifier: String) -> UITextField {
 		let textField = UITextField()
 
 		textField.backgroundColor = Theme.backgroundColor
@@ -79,6 +83,7 @@ private extension LoginViewController {
 		textField.translatesAutoresizingMaskIntoConstraints = false
 		textField.font = UIFont.preferredFont(forTextStyle: .body)
 		textField.adjustsFontForContentSizeCategory = true
+        textField.accessibilityIdentifier = accessibilityIdentifier
 
 		return textField
 	}
@@ -94,6 +99,8 @@ private extension LoginViewController {
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
 		button.titleLabel?.adjustsFontForContentSizeCategory = true
+        
+        button.accessibilityIdentifier = AccessibilityIdentifier.buttonLogin.description
 
 		return button
 	}
