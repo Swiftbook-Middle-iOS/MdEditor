@@ -25,6 +25,12 @@ final class LoginScreenObject: BaseScreenObject {
 		
 		return self
 	}
+    
+    func isNotLoginScreen() {
+        assert(textFieldLogin, [.doesNotExist])
+        assert(textFieldPass, [.doesNotExist])
+        assert(loginButton, [.doesNotExist])
+    }
 	
 	@discardableResult
 	func set(login: String) -> Self {
