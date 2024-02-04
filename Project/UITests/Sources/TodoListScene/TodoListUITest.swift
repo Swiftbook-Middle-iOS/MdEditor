@@ -10,58 +10,65 @@ import Foundation
 import XCTest
 
 final class TodoListUITest: XCTestCase {
-    
-    var todoListScreen: TodoListScreenObject!
-    private let app = XCUIApplication()
-    
-    override func setUp() async throws {
-        app.launchArguments = [CommandLineArguments.skipLogin.rawValue]
-        app.launchArguments += ["-AppleLanguages", "(en)"]
-        todoListScreen = TodoListScreenObject(app: app)
-    }
-    
-    func test_todoListTaskTitles_shouldExist() {
-        app.launch()
-        
-        todoListScreen
-            .isTodoListScreen()
-            .initialCellsHaveTitles()
-    }
-    
-    func test_todoListCheckedTaskCount_initially_shouldBeOne() {
-        app.launch()
-        
-        todoListScreen
-            .isTodoListScreen()
-            .hasExpectedCountOfChecked(1)
-    }
-    
-    func test_todoListSectionCount_shouldBeTwo() {
-        app.launch()
-        
-        todoListScreen
-            .isTodoListScreen()
-            .hasCorrectSectionCount()
-    }
-    
-    func test_todoListSectionTitles_shouldBeCorrect() {
-        app.launch()
-        
-        todoListScreen
-            .isTodoListScreen()
-            .hasCompleteSection()
-            .hasIncompleteSection()
-    }
-    
-    func test_changeTaskStatus_shouldBeCorrect() {
-        app.launch()
-        
-        todoListScreen
-            .isTodoListScreen()
-            .tapFirstIncompleteTask()
-            .completeSectionHasCorrectTaskCountAfterTap()
-            .incompleteSectionHasCorrectTaskCountAfterTap()
-            .completedSectionHasExpectedTaskTitle()
-            .hasExpectedCountOfChecked(2)
-    }
+	
+	var todoListScreen: TodoListScreenObject!
+	private let app = XCUIApplication()
+	
+	override func setUp() async throws {
+		app.launchArguments = [CommandLineArguments.skipLogin.rawValue]
+		todoListScreen = TodoListScreenObject(app: app)
+	}
+	
+	func test_initialTasks_mustBeValid() {
+		app.launch()
+		
+		todoListScreen
+			.isTodoListScreen()
+			.hasExpectedCountOfChecked(1)
+			.hasExpectedCountOfUnchecked(4)
+			.checkCellTitle(section: 0, index: 0, expectedTitle: L10n.StubTasks.doHomework)
+			.checkCellTitle(section: 0, index: 1, expectedTitle: L10n.StubTasks.goShopping)
+			.checkCellTitle(section: 0, index: 2, expectedTitle: L10n.StubTasks.writeTasks)
+			.checkCellTitle(section: 0, index: 3, expectedTitle: L10n.StubTasks.solve)
+			.checkCellTitle(section: 1, index: 0, expectedTitle: L10n.StubTasks.doWorkout)
+	}
+	
+	func test_sectionTitles_mustBeValid() {
+		app.launch()
+		
+		todoListScreen
+			.isTodoListScreen()
+			.checkSectionTitle(index: 0, expectedTitle: L10n.TaskManager.SectionTitles.incomplete)
+			.checkSectionTitle(index: 1, expectedTitle: L10n.TaskManager.SectionTitles.complete)
+	}
+	
+	func test_completeTask_mustBeValid() {
+		app.launch()
+		
+		todoListScreen
+			.isTodoListScreen()
+			.tapCell(section: 0, index: 0)
+			.hasExpectedCountOfChecked(2)
+			.hasExpectedCountOfUnchecked(3)
+			.checkCellTitle(section: 0, index: 0, expectedTitle: L10n.StubTasks.goShopping)
+			.checkCellTitle(section: 0, index: 1, expectedTitle: L10n.StubTasks.writeTasks)
+			.checkCellTitle(section: 0, index: 2, expectedTitle: L10n.StubTasks.solve)
+			.checkCellTitle(section: 1, index: 0, expectedTitle: L10n.StubTasks.doHomework)
+			.checkCellTitle(section: 1, index: 1, expectedTitle: L10n.StubTasks.doWorkout)
+	}
+
+	func test_undoTask_mustBeValid() {
+		app.launch()
+
+		todoListScreen
+			.isTodoListScreen()
+			.tapCell(section: 1, index: 0)
+			.hasExpectedCountOfChecked(0)
+			.hasExpectedCountOfUnchecked(5)
+			.checkCellTitle(section: 0, index: 0, expectedTitle: L10n.StubTasks.doHomework)
+			.checkCellTitle(section: 0, index: 1, expectedTitle: L10n.StubTasks.goShopping)
+			.checkCellTitle(section: 0, index: 2, expectedTitle: L10n.StubTasks.writeTasks)
+			.checkCellTitle(section: 0, index: 3, expectedTitle: L10n.StubTasks.doWorkout)
+			.checkCellTitle(section: 0, index: 4, expectedTitle: L10n.StubTasks.solve)
+	}
 }

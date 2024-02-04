@@ -40,8 +40,8 @@
 "taskManager.sectionTitles.regular" = "Обычный";
 
 //MARK: Stub task titles
-"stubTasks.title0" = "Сделать домашку";
-"stubTasks.title1" = "Заняться спортом";
-"stubTasks.title2" = "Написать новые задачи";
-"stubTasks.title3" = "Решить 3 задачи на алгоритмы";
-"stubTasks.title4" = "Сходить в магазин";
+"stubTasks.doHomework" = "Сделать домашку";
+"stubTasks.doWorkout" = "Заняться спортом";
+"stubTasks.writeTasks" = "Написать новые задачи";
+"stubTasks.solve" = "Решить 3 задачи на алгоритмы";
+"stubTasks.goShopping" = "Сходить в магазин";

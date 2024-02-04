@@ -9,116 +9,77 @@
 import XCTest
 
 final class TodoListScreenObject: BaseScreenObject {
-    
-    // MARK: Private properties
-    
-    private lazy var tableView = app.tables.matching(identifier: AccessibilityIdentifier.todoListTableView.description)
-    private let expectedSectionCount = 2
-    private let expectedStartingCompleteTaskCount = 1
-    private let expectedStartingIncompleteTaskCount = 4
-    
-    // MARK: ScreenObject methods
-    
-    @discardableResult
-    func isTodoListScreen() -> Self {
-        assert(tableView.element, [.exists])
-        return self
-    }
-    
-    @discardableResult
-    func initialCellsHaveTitles() -> Self {
-        for index in 0..<expectedStartingIncompleteTaskCount {
-            XCTAssertFalse(getCellTitle(cell: getCell(section: 0, index: index)).isEmpty, "Обнаружена ячейка с пустым наименованием")
-        }
-        
-        for index in 0..<expectedStartingCompleteTaskCount {
-            XCTAssertFalse(getCellTitle(cell: getCell(section: 1, index: index)).isEmpty, "Обнаружена ячейка с пустым наименованием")
-        }
-        
-        return self
-    }
-    
-    func hasExpectedCountOfChecked(_ count: Int) {
-        let selected = tableView.element.children(matching: .cell).allElementsBoundByIndex.filter { $0.isSelected }
-        
-        XCTAssertEqual(selected.count, count, "Количество завершенных задач не соответствует ожидаемому")
-    }
-    
-    func hasCorrectSectionCount() {
-        assert(getSectionLabel(section: expectedSectionCount - 1), [.exists])
-        assert(getSectionLabel(section: expectedSectionCount), [.doesNotExist])
-    }
-    
-    @discardableResult
-    func hasCompleteSection() -> Self {
-        XCTAssertTrue(getSectionTitles(count: expectedSectionCount).contains("Complete"), "В названиях секций отсутствует Complete")
-        return self
-    }
-    
-    @discardableResult
-    func hasIncompleteSection() -> Self {
-        XCTAssertTrue(getSectionTitles(count: expectedSectionCount).contains("Uncompleted"), "В названиях секций отсутствует Uncompleted")
-        return self
-    }
-    
-    @discardableResult
-    func tapFirstIncompleteTask() -> Self {
-        let firstCell = getCell(section: 0, index: 0)
-        firstCell.tap()
+	
+	// MARK: Private properties
+	
+	private lazy var tableView = app.tables.matching(identifier: AccessibilityIdentifier.todoListTableView.description)
+	private let expectedSectionCount = 2
+	private let expectedStartingCompleteTaskCount = 1
+	private let expectedStartingIncompleteTaskCount = 4
+	
+	// MARK: ScreenObject methods
+	
+	@discardableResult
+	func isTodoListScreen() -> Self {
+		assert(tableView.element, [.exists])
+		checkTitle(contains: L10n.TodoList.title)
+		return self
+	}
 
-        return self
-    }
-    
-    @discardableResult
-    func incompleteSectionHasCorrectTaskCountAfterTap() -> Self {
-        // Correcting for 0 based index + one removed task
-        let lastIndex = expectedStartingIncompleteTaskCount - 2
-        
-        assert(getCell(section: 0, index: lastIndex), [.exists])
-        assert(getCell(section: 0, index: lastIndex + 1), [.doesNotExist])
-        
-        return self
-    }
-    
-    @discardableResult
-    func completeSectionHasCorrectTaskCountAfterTap() -> Self {
-        // Correcting for 0 based index + one added task
-        let lastIndex = expectedStartingCompleteTaskCount
-        
-        assert(getCell(section: 1, index: lastIndex), [.exists])
-        assert(getCell(section: 1, index: lastIndex + 1), [.doesNotExist])
-        
-        return self
-    }
-    
-    @discardableResult
-    func completedSectionHasExpectedTaskTitle() -> Self {
-        let hasExpectedTitle = (0...expectedStartingCompleteTaskCount).map {
-            getCellTitle(cell: getCell(section: 1, index: $0))
-        }.contains("!!! Do homework")
-        
-        XCTAssertTrue(hasExpectedTitle, "Секция завершенных задач не содержит задачу с ожидаемым названием")
-        return self
-    }
-    
-    // MARK: Private methods
-    private func getSectionLabel(section: Int) -> XCUIElement {
-        tableView.staticTexts.matching(
-            identifier: AccessibilityIdentifier.sectionLabel(section: section).description
-        ).element
-    }
-    
-    private func getSectionTitles(count: Int) -> [String] {
-        return (0..<count).map { getSectionLabel(section: $0).label }
-    }
-    
-    private func getCell(section: Int, index: Int) -> XCUIElement {
-        tableView.cells.element(matching: .cell, identifier: AccessibilityIdentifier.cell(section: section, index: index).description)
-    }
-    
-    private func getCellTitle(cell: XCUIElement) -> String {
-        cell.staticTexts.firstMatch.label
-    }
+	@discardableResult
+	func checkCellTitle(section: Int, index: Int, expectedTitle: String) -> Self {
+		let cell = getCell(section: section, index: index)
+		assert(cell, [.exists])
+
+		let titleLabel = cell.staticTexts.firstMatch.label
+		let contains = titleLabel.contains(expectedTitle)
+
+		XCTAssertTrue(contains, "Название ячейки \(titleLabel) не содержит ожидаемое значение \(expectedTitle)")
+		return self
+	}
+
+	@discardableResult
+	func hasExpectedCountOfChecked(_ count: Int) -> Self {
+		assert(tableView.element, [.exists])
+		let selected = tableView.element.children(matching: .cell).allElementsBoundByIndex.filter { $0.isSelected }
+		
+		XCTAssertEqual(selected.count, count, "Количество завершенных задач не соответствует ожидаемому")
+
+		return self
+	}
+
+	func hasExpectedCountOfUnchecked(_ count: Int) -> Self {
+		assert(tableView.element, [.exists])
+		let selected = tableView.element.children(matching: .cell).allElementsBoundByIndex.filter { !$0.isSelected }
+
+		XCTAssertEqual(selected.count, count, "Количество завершенных задач не соответствует ожидаемому")
+
+		return self
+	}
+
+	@discardableResult
+	func checkSectionTitle(index: Int, expectedTitle: String) -> Self {
+		let section = getSection(at: index)
+		XCTAssertEqual(section.label, expectedTitle, "Заголовок секции \(index) должен быть \(expectedTitle)")
+
+		return self
+	}
+
+	@discardableResult
+	func tapCell(section: Int, index: Int) -> Self {
+		let cell = getCell(section: section, index: index)
+		assert(cell, [.exists])
+		cell.tap()
+
+		return self
+	}
+	
+	// MARK: Private methods
+	private func getSection(at index: Int) -> XCUIElement {
+		tableView.otherElements[AccessibilityIdentifier.section(section: index).description]
+	}
+	
+	private func getCell(section: Int, index: Int) -> XCUIElement {
+		tableView.cells.element(matching: .cell, identifier: AccessibilityIdentifier.cell(section: section, index: index).description)
+	}
 }
-
-

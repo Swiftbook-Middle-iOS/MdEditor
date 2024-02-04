@@ -8,14 +8,14 @@
 import UIKit
 
 protocol ILoginCoordinator: ICoordinator {
-    var finishFlow: (() -> Void)? { get set }
+	var finishFlow: (() -> Void)? { get set }
 }
 
 final class LoginCoordinator: ILoginCoordinator {
 
 	// MARK: Dependencies
 	var navigationController: UINavigationController
-    var finishFlow: (() -> Void)?
+	var finishFlow: (() -> Void)?
 
 	// MARK: Initialization
 	init(navigationController: UINavigationController) {
@@ -32,24 +32,24 @@ final class LoginCoordinator: ILoginCoordinator {
 			guard let self = self else { return }
 			switch result {
 			case .success:
-                self.finishFlow?()
+				self.finishFlow?()
 			case .failure(let error):
-                self.showError(message: error.localizedDescription)
+				self.showError(message: error.localizedDescription)
 			}
 		}
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 
-    // MARK: Private functions
-    private func showError(message: String) {
-        let alert: UIAlertController
-        alert = UIAlertController(
-            title: L10n.Error.text,
-            message: message,
-            preferredStyle: UIAlertController.Style.alert
-        )
-        let action = UIAlertAction(title: L10n.Ok.text, style: .default)
-        alert.addAction(action)
-        navigationController.present(alert, animated: true, completion: nil)
-    }
+	// MARK: Private functions
+	private func showError(message: String) {
+		let alert: UIAlertController
+		alert = UIAlertController(
+			title: L10n.Error.text,
+			message: message,
+			preferredStyle: UIAlertController.Style.alert
+		)
+		let action = UIAlertAction(title: L10n.Ok.text, style: .default)
+		alert.addAction(action)
+		navigationController.present(alert, animated: true, completion: nil)
+	}
 }

@@ -38,7 +38,7 @@ final class TodoListViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
-        tableView.accessibilityIdentifier = AccessibilityIdentifier.todoListTableView.description
+		tableView.accessibilityIdentifier = AccessibilityIdentifier.todoListTableView.description
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -55,15 +55,11 @@ extension TodoListViewController {
 		viewModel.tasksBySections.count
 	}
 
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let label = UILabel()
-        label.textColor = Colors.dark
-        label.text = viewModel.tasksBySections[section].title
-
-        label.accessibilityIdentifier = AccessibilityIdentifier.sectionLabel(section: section).description
-
-        return label
-    }
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		let sectionView = tableView.headerView(forSection: section)
+		sectionView?.accessibilityIdentifier = AccessibilityIdentifier.section(section: section).description
+		return viewModel.tasksBySections[section].title
+	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		let section = viewModel.tasksBySections[section]
@@ -74,10 +70,10 @@ extension TodoListViewController {
 		let task = getTaskForIndex(indexPath)
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
-        cell.accessibilityIdentifier = AccessibilityIdentifier.cell(
-            section: indexPath.section,
-            index: indexPath.row
-        ).description
+		cell.accessibilityIdentifier = AccessibilityIdentifier.cell(
+			section: indexPath.section,
+			index: indexPath.row
+		).description
 
 		configureCell(cell, with: task)
 		return cell

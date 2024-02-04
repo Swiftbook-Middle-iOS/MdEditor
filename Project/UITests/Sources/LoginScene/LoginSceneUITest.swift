@@ -8,15 +8,19 @@
 import XCTest
 
 final class LoginSceneUITest: XCTestCase {
-    
-    private let app = XCUIApplication()
-    private var loginScreen: LoginScreenObject!
-    
-    override func setUp() {
-        app.launchArguments = ["-AppleLanguages", "(en)"]
-        loginScreen = LoginScreenObject(app: app)
-    }
+	
+	private let app = XCUIApplication()
+	private var loginScreen: LoginScreenObject!
 
+	private enum LoginCredentials {
+		static let valid: (login: String, password: String) = ("Admin", "pa$$32!")
+		static let invalid: (login: String, password: String) = ("wrongLogin", "wrongPass")
+	}
+
+	override func setUp() {
+		loginScreen = LoginScreenObject(app: app)
+	}
+	
 	override func tearDown() {
 		// Taking screenshot after test
 		let screenshot = XCUIScreen.main.screenshot()
@@ -28,60 +32,62 @@ final class LoginSceneUITest: XCTestCase {
 	
 	func test_login_withValidCred_mustBeSuccess() {
 		app.launch()
-	
+		let todoListScreenObject = TodoListScreenObject(app: app)
+
 		loginScreen
 			.isLoginScreen()
-			.set(password: "pa$$32!")
-			.set(login: "Admin")
+			.set(password: LoginCredentials.valid.password)
+			.set(login: LoginCredentials.valid.login)
 			.login()
-            .isNotLoginScreen()
+
+		todoListScreenObject.isTodoListScreen()
 	}
-    
-    func test_login_withInvalidPassword_shouldBeCorrect() {
-        app.launch()
-    
-        loginScreen
-            .isLoginScreen()
-            .set(password: "invalidpass")
-            .set(login: "Admin")
-            .login()
-            .handleAlert(withExpectedError: "Wrong Password")
-            .isLoginScreen()
-    }
-    
-    func test_login_withInvalidLogin_shouldBeCorrect() {
-        app.launch()
-        
-        loginScreen
-            .isLoginScreen()
-            .set(password: "pa$$32!")
-            .set(login: "invalidlogin")
-            .login()
-            .handleAlert(withExpectedError: "Wrong Login")
-            .isLoginScreen()
-    }
-    
-    func test_login_withInvalidCreds_shouldBeCorrect() {
-        app.launch()
-        
-        loginScreen
-            .isLoginScreen()
-            .set(password: "invalidpass")
-            .set(login: "invalidlogin")
-            .login()
-            .handleAlert(withExpectedError: "Wrong login and password")
-            .isLoginScreen()
-    }
-    
-    func test_login_withEmptyCreds_shouldBeCorrect() {
-        app.launch()
-        
-        loginScreen
-            .isLoginScreen()
-            .set(password: "")
-            .set(login: "")
-            .login()
-            .handleAlert(withExpectedError: "Empty login or password")
-            .isLoginScreen()
-    }
+	
+	func test_login_withInvalidPassword_mustBeSuccess() {
+		app.launch()
+		
+		loginScreen
+			.isLoginScreen()
+			.set(password: LoginCredentials.invalid.password)
+			.set(login: LoginCredentials.valid.login)
+			.login()
+			.handleAlert(withExpectedError: L10n.LoginError.wrongPassword)
+			.isLoginScreen()
+	}
+	
+	func test_login_withInvalidLogin_mustBeSuccess() {
+		app.launch()
+		
+		loginScreen
+			.isLoginScreen()
+			.set(password: LoginCredentials.valid.password)
+			.set(login: LoginCredentials.invalid.login)
+			.login()
+			.handleAlert(withExpectedError: L10n.LoginError.wrongLogin)
+			.isLoginScreen()
+	}
+	
+	func test_login_withInvalidCreds_mustBeSuccess() {
+		app.launch()
+		
+		loginScreen
+			.isLoginScreen()
+			.set(password: LoginCredentials.invalid.password)
+			.set(login: LoginCredentials.invalid.login)
+			.login()
+			.handleAlert(withExpectedError: L10n.LoginError.errorAuth)
+			.isLoginScreen()
+	}
+	
+	func test_login_withEmptyCreds_mustBeSuccess() {
+		app.launch()
+		
+		loginScreen
+			.isLoginScreen()
+			.set(password: "")
+			.set(login: "")
+			.login()
+			.handleAlert(withExpectedError: L10n.LoginError.emptyFields)
+			.isLoginScreen()
+	}
 }
