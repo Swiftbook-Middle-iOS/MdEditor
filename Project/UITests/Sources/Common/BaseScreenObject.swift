@@ -8,6 +8,8 @@
 import XCTest
 
 class BaseScreenObject {
+
+	// Comment
 	
 	// MARK: - Dependencies
 	
