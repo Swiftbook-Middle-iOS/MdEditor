@@ -28,7 +28,6 @@ final class TodoListPresenter: ITodoListPresenter {
 	}
 
 	// MARK: - Public methods
-
 	func present(response: TodoListModel.Response) {
 		var sections = [TodoListModel.ViewModel.Section]()
 		for sectionWithTask in response.data {
@@ -52,14 +51,14 @@ final class TodoListPresenter: ITodoListPresenter {
 	/// - Returns: Преобразованный результат.
 	private func mapTaskData(task: Task) -> TodoListModel.ViewModel.Task {
 		if let task = task as? ImportantTask {
-            let result = TodoListModel.ViewModel.ImportantTask(
-                title: task.title,
-                completed: task.completed,
-                deadLine: L10n.TodoList.Deadline.description(
-                    task.deadLine
-                ),
-                priority: "\(task.taskPriority)"
-            )
+			let result = TodoListModel.ViewModel.ImportantTask(
+				title: task.title,
+				completed: task.completed,
+				deadLine: L10n.TodoList.Deadline.description(
+					task.deadLine
+				),
+				priority: "\(task.taskPriority)"
+			)
 			return .importantTask(result)
 		} else {
 			return .regularTask(

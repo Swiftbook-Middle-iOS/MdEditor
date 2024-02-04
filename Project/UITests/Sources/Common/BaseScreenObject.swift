@@ -63,19 +63,27 @@ class BaseScreenObject {
 		
 		return self
 	}
-    
-    @discardableResult
-    func handleAlert(withExpectedError errorTitle: String) -> Self {
-        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 5))
-        XCTAssertTrue(alert.exists, "Ожидалось появление alert")
-        
-        let errorMessage = alert.staticTexts[errorTitle]
-        
-        XCTAssertTrue(errorMessage.exists, "Ожидаемое сообщение об ошибке не найдено")
-        alertButton.tap()
-        
-        return self
-    }
+	
+	@discardableResult
+	func handleAlert(withExpectedError errorTitle: String) -> Self {
+		XCTAssertTrue(app.wait(for: .runningForeground, timeout: 5))
+		XCTAssertTrue(alert.exists, "Ожидалось появление alert")
+		
+		let errorMessage = alert.staticTexts[errorTitle]
+		
+		XCTAssertTrue(errorMessage.exists, "Ожидаемое сообщение об ошибке не найдено")
+		alertButton.tap()
+		
+		return self
+	}
+
+	@discardableResult
+	func checkTitle(contains text: String, timeout: TimeInterval = BaseScreenObject.defaultTimeout) -> Self {
+		assert(navigationBar, [.exists], timeout: timeout)
+		assert(navigationBarTitle, [.contains(text)], timeout: timeout)
+
+		return self
+	}
 }
 
 // MARK: - Keyboard
