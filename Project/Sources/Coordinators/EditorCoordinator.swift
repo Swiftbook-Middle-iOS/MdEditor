@@ -24,9 +24,15 @@ class EditorCoordinator: IEditorCoordinator {
 
 	// MARK: Public functions
 	func start() {
-		let viewController = EditorHomeAssembly().assembly { [weak self] in
+		let openFileClosure: () -> Void = { [weak self] in
 			self?.openBrowserScreen(at: L10n.FileBrowser.filePath)
 		}
+
+		let aboutAppClosure: () -> Void = { [weak self] in
+			self?.openAboutAppScreen()
+		}
+
+		let viewController = EditorHomeAssembly().assembly(openFileClosure: openFileClosure, aboutAppClosure: aboutAppClosure)
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 
@@ -37,5 +43,9 @@ class EditorCoordinator: IEditorCoordinator {
 			},
 			animated: true
 		)
+	}
+
+	private func openAboutAppScreen() {
+		navigationController.pushViewController(AboutAppViewController(), animated: true)
 	}
 }

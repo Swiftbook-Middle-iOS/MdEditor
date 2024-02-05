@@ -42,9 +42,19 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 	private func mapFileData(file: File) -> FileBrowserModel.ViewModel.ItemModel {
 		switch file.type {
 		case .file:
-			return .file(FileBrowserModel.ViewModel.FileModel(title: file.name))
+			return .file(
+				FileBrowserModel.ViewModel.FileModel(
+					title: file.name,
+					attributes: file.getFormattedAttributes()
+				)
+			)
 		case .dir:
-			return .dir(FileBrowserModel.ViewModel.DirModel(title: "dir \(file.name)"))
+			return .dir(
+				FileBrowserModel.ViewModel.DirModel(
+					title: "dir \(file.name)",
+					attributes: file.getFormattedAttributes()
+				)
+			)
 		}
 	}
 }

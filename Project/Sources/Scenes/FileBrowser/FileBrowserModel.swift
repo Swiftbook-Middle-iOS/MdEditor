@@ -20,10 +20,12 @@ enum FileBrowserModel {
 
 		struct FileModel {
 			let title: String
+			let attributes: String
 		}
 
 		struct DirModel {
 			let title: String
+			let attributes: String
 		}
 	}
 

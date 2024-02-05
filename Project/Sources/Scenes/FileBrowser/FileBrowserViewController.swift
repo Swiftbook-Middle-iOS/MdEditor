@@ -64,9 +64,11 @@ private extension FileBrowserViewController {
 		case .file(let fileModel):
 			contentConfiguration.text = fileModel.title
 			contentConfiguration.image = UIImage(systemName: "doc.richtext")
+			contentConfiguration.secondaryText = fileModel.attributes
 		case .dir(let dirModel):
 			contentConfiguration.text = dirModel.title
 			contentConfiguration.image = UIImage(systemName: "folder")
+			contentConfiguration.secondaryText = dirModel.attributes
 		}
 		cell.contentConfiguration = contentConfiguration
 	}

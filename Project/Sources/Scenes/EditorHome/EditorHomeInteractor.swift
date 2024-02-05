@@ -10,16 +10,23 @@ import Foundation
 
 protocol IEditorHomeInteractor {
 	func openDocumentSelected()
+	func aboutAppSelected()
 }
 
 final class EditorHomeInteractor: IEditorHomeInteractor {
 	var openFileClosure: (() -> Void)?
+	var aboutAppClosure: (() -> Void)?
 
-	init(openFileClosure: (() -> Void)? = nil) {
+	init(openFileClosure: (() -> Void)? = nil, aboutAppClosure: (() -> Void)?) {
 		self.openFileClosure = openFileClosure
+		self.aboutAppClosure = aboutAppClosure
 	}
 
 	func openDocumentSelected() {
 		openFileClosure?()
+	}
+
+	func aboutAppSelected() {
+		aboutAppClosure?()
 	}
 }
