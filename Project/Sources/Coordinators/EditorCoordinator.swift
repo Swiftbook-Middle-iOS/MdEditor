@@ -32,8 +32,8 @@ class EditorCoordinator: IEditorCoordinator {
 
 	private func openBrowserScreen(at filePath: String) {
 		navigationController.pushViewController(
-			FileBrowserAssembler().assembly(fileExplorer: fileExplorer, currentPath: filePath) { [weak self] path in
-				self?.openBrowserScreen(at: path)
+			FileBrowserAssembler().assembly(fileExplorer: fileExplorer, currentPath: filePath) { [weak self] newPath in
+				self?.openBrowserScreen(at: newPath)
 			},
 			animated: true
 		)

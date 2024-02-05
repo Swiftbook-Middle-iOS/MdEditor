@@ -11,6 +11,7 @@ import Foundation
 enum FileBrowserModel {
 	struct ViewModel {
 		let items: [ItemModel]
+		let title: String
 
 		enum ItemModel {
 			case file(FileModel)
@@ -28,5 +29,6 @@ enum FileBrowserModel {
 
 	struct Response {
 		let files: [File]
+		let currentPath: String
 	}
 }

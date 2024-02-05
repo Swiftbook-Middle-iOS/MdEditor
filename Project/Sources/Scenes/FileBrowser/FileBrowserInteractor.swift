@@ -37,7 +37,7 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	// MARK: Public methods
 	func fetchData() {
 		fileExplorer.scan(path: currentPath)
-		presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files))
+		presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files, currentPath: currentPath))
 	}
 
 	func didSelectItem(at index: Int) {

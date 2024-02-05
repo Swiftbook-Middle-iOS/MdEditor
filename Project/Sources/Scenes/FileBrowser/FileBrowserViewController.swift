@@ -18,7 +18,7 @@ class FileBrowserViewController: UITableViewController {
 	var interactor: IFileBrowserInteractor?
 
 	// MARK: Private properties
-	private var viewModel = FileBrowserModel.ViewModel(items: [])
+	private var viewModel = FileBrowserModel.ViewModel(items: [], title: "")
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -47,6 +47,7 @@ extension FileBrowserViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		interactor?.didSelectItem(at: indexPath.row)
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 }
 
@@ -54,7 +55,6 @@ extension FileBrowserViewController {
 private extension FileBrowserViewController {
 	func setupUI() {
 		view.backgroundColor = Theme.white
-		title = L10n.FileBrowser.title
 		self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 	}
 
@@ -76,6 +76,7 @@ private extension FileBrowserViewController {
 extension FileBrowserViewController: IFileBrowserViewController {
 	func render(viewModel: FileBrowserModel.ViewModel) {
 		self.viewModel = viewModel
+		title = viewModel.title
 		tableView.reloadData()
 	}
 }
