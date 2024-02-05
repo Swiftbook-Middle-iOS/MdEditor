@@ -13,13 +13,15 @@ protocol IFileBrowserInteractor {
 }
 
 final class FileBrowserInteractor: IFileBrowserInteractor {
-	var fileExplorer: IFileExplorer
+	private var fileExplorer: IFileExplorer
+	private var presenter: IFileBrowserPresenter
 
-	init(fileExplorer: IFileExplorer) {
+	init(fileExplorer: IFileExplorer, presenter: IFileBrowserPresenter) {
 		self.fileExplorer = fileExplorer
+		self.presenter = presenter
 	}
 
 	func fetchData() {
-		fileExplorer.scan(path: "")
+		fileExplorer.scan(path: L10n.FileBrowser.filePath)
 	}
 }

@@ -11,7 +11,8 @@ import Foundation
 final class FileBrowserAssembler {
 	func assembly(fileExplorer: IFileExplorer) -> FileBrowserViewController {
 		let viewController = FileBrowserViewController()
-		let interactor = FileBrowserInteractor(fileExplorer: fileExplorer)
+		let presenter = FileBrowserPresenter(viewController: viewController)
+		let interactor = FileBrowserInteractor(fileExplorer: fileExplorer, presenter: presenter)
 
 		viewController.interactor = interactor
 

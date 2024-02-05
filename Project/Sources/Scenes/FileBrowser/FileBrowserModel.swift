@@ -16,4 +16,8 @@ enum FileBrowserModel {
 			let title: String
 		}
 	}
+
+	struct Response {
+		let files: [File]
+	}
 }

@@ -8,7 +8,10 @@
 
 import UIKit
 
-class FileBrowserViewController: UITableViewController {
+protocol IFileBrowserViewController: AnyObject {
+}
+
+class FileBrowserViewController: UITableViewController, IFileBrowserViewController {
 
 	// MARK: Dependencies
 	var interactor: IFileBrowserInteractor?
@@ -22,6 +25,7 @@ class FileBrowserViewController: UITableViewController {
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
 		interactor?.fetchData()
 	}
 }
