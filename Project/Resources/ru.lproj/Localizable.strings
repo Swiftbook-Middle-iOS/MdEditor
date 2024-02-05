@@ -54,4 +54,8 @@
 
 // MARK: FileBroswer
 "fileBrowser.title" = "Примеры файлов";
-"fileBrowser.filePath" = "Assets";
+"fileBrowser.baseAssetsPath" = "Assets";
+
+// MARK: AboutApp
+"aboutApp.title"= "О приложении";
+"aboutApp.aboutFileName" = "about.md";

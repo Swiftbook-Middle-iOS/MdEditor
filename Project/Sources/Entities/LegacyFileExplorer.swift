@@ -11,6 +11,7 @@ import Foundation
 protocol IFileExplorer {
 	var files: [File] { get }
 	func scan(path: String)
+	func getFile(withName name: String, atPath: String) -> File?
 }
 
 class File {
@@ -86,7 +87,7 @@ class FileExplorer: IFileExplorer {
 		do {
 			let items = try fileManager.contentsOfDirectory(atPath: fullPath)
 			for item in items {
-				if let file = getFile(withNAme: item, atPath: path) {
+				if let file = getFile(withName: item, atPath: path) {
 					if file.type == .dir {
 						onlyFolders.append(file)
 					} else {
@@ -102,7 +103,7 @@ class FileExplorer: IFileExplorer {
 		files.append(contentsOf: onlyFiles)
 	}
 
-	func getFile(withNAme name: String, atPath: String) -> File? {
+	func getFile(withName name: String, atPath: String) -> File? {
 		let fileManager = FileManager.default
 		guard let resourcePath = Bundle.main.resourcePath else { return nil }
 		let fullPath = resourcePath + "/\(atPath)"

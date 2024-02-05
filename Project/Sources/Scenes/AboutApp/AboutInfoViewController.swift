@@ -8,11 +8,49 @@
 
 import UIKit
 
-class AboutAppViewController: UIViewController {
+final class AboutAppViewController: UIViewController {
+
+	private lazy var label: UILabel = makeLabel(text: labelText ?? "")
+	var labelText: String?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		setupUI()
+	}
 
-		// Do any additional setup after loading the view.
+	override func viewWillLayoutSubviews() {
+		super.viewWillLayoutSubviews()
+		layout()
+	}
+}
+
+// MARK: Setup UI
+private extension AboutAppViewController {
+	func setupUI() {
+		view.backgroundColor = Theme.white
+		view.addSubview(label)
+		title = L10n.AboutApp.title
+	}
+
+	func makeLabel(text: String) -> UILabel {
+		let label = UILabel()
+		label.textColor = Theme.black
+		label.text = text
+		label.numberOfLines = 0
+		label.translatesAutoresizingMaskIntoConstraints = false
+		return label
+	}
+}
+
+// MARK: Layout
+private extension AboutAppViewController {
+	func layout() {
+		NSLayoutConstraint.activate([
+			label.topAnchor.constraint(
+				equalTo: navigationController?.navigationBar.bottomAnchor ?? view.topAnchor,
+				constant: Sizes.Padding.double
+			),
+			label.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+		])
 	}
 }

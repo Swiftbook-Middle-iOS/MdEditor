@@ -25,7 +25,7 @@ class EditorCoordinator: IEditorCoordinator {
 	// MARK: Public functions
 	func start() {
 		let openFileClosure: () -> Void = { [weak self] in
-			self?.openBrowserScreen(at: L10n.FileBrowser.filePath)
+			self?.openBrowserScreen(at: L10n.FileBrowser.baseAssetsPath)
 		}
 
 		let aboutAppClosure: () -> Void = { [weak self] in
@@ -36,6 +36,7 @@ class EditorCoordinator: IEditorCoordinator {
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 
+	// MARK: Private functions
 	private func openBrowserScreen(at filePath: String) {
 		navigationController.pushViewController(
 			FileBrowserAssembler().assembly(fileExplorer: fileExplorer, currentPath: filePath) { [weak self] newPath in
@@ -46,6 +47,9 @@ class EditorCoordinator: IEditorCoordinator {
 	}
 
 	private func openAboutAppScreen() {
-		navigationController.pushViewController(AboutAppViewController(), animated: true)
+		let viewController = AboutAppViewController()
+		let aboutFile = fileExplorer.getFile(withName: L10n.AboutApp.aboutFileName, atPath: L10n.FileBrowser.baseAssetsPath)
+		viewController.labelText = aboutFile?.loadFileBody()
+		navigationController.pushViewController(viewController, animated: true)
 	}
 }
