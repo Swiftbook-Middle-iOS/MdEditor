@@ -9,9 +9,17 @@
 import Foundation
 
 final class AboutScreenAssembly {
-	func assembly(openFileClosure: (() -> Void)?) -> AboutScreenViewController {
+	func assembly(
+		fileExplorer: IFileExplorer,
+		currentPath: String
+	) -> AboutScreenViewController {
 		let viewController = AboutScreenViewController()
-		let interactor = AboutScreenInteractor()
+		let presenter = AboutScreenPresenter(viewController: viewController)
+		let interactor = AboutScreenInteractor(
+			fileExplorer: fileExplorer,
+			currentPath: currentPath,
+			presenter: presenter
+		)
 
 		viewController.interactor = interactor
 		return viewController

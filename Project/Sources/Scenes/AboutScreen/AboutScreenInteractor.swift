@@ -11,5 +11,20 @@ import Foundation
 protocol IAboutScreenInteractor {}
 
 final class AboutScreenInteractor: IAboutScreenInteractor {
+	
+	// MARK: Dependencies
+	private var fileExplorer: IFileExplorer
+	private var currentPath: String
+	private var presenter: IAboutScreenPresenter
 
+	// MARK: Initialization
+	init(
+		fileExplorer: IFileExplorer,
+		currentPath: String,
+		presenter: IAboutScreenPresenter
+	) {
+		self.fileExplorer = fileExplorer
+		self.currentPath = currentPath
+		self.presenter = presenter
+	}
 }

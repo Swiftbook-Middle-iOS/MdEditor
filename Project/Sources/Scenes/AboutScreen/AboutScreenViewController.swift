@@ -8,10 +8,17 @@
 
 import UIKit
 
+protocol IAboutScreenViewController: AnyObject {
+	func render(viewModel: AboutScreenModel.ViewModel)
+}
+
 final class AboutScreenViewController: UIViewController {
 
 	// MARK: Dependencies
 	var interactor: AboutScreenInteractor?
+
+	// MARK: Private properties
+	private var viewModel = AboutScreenModel.ViewModel(file: File())
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -28,7 +35,7 @@ final class AboutScreenViewController: UIViewController {
 private extension AboutScreenViewController {
 	func setupUI() {
 		view.backgroundColor = Theme.mainColor
-		title = L10n.AboutScreen.aboutScreenTitle
+		title = L10n.AboutScreen.title
 		navigationController?.navigationBar.prefersLargeTitles = true
 	}
 }
@@ -36,23 +43,14 @@ private extension AboutScreenViewController {
 // MARK: Layout UI
 private extension AboutScreenViewController {
 	func layout() {
-//		let constraints = [
-//			newDocumentButton.topAnchor.constraint(
-//				equalTo: navigationController?.navigationBar.bottomAnchor ?? view.topAnchor,
-//				constant: Sizes.Padding.double
-//			),
-//			newDocumentButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal),
-//			newDocumentButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Sizes.Padding.normal),
-//
-//			openFileButton.topAnchor.constraint(equalTo: newDocumentButton.bottomAnchor, constant: Sizes.Padding.normal),
-//			openFileButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal),
-//			openFileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Sizes.Padding.normal),
-//
-//			aboutButton.topAnchor.constraint(equalTo: openFileButton.bottomAnchor, constant: Sizes.Padding.normal),
-//			aboutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal),
-//			aboutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Sizes.Padding.normal)
-//		]
-//
-//		NSLayoutConstraint.activate(constraints)
+
+	}
+}
+
+// MARK: IFileBrowserViewController
+extension AboutScreenViewController: IAboutScreenViewController {
+	func render(viewModel: AboutScreenModel.ViewModel) {
+		self.viewModel = viewModel
+		view.reloadInputViews()
 	}
 }
