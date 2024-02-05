@@ -8,12 +8,25 @@
 
 import UIKit
 
-class EditorHomeViewController: UIViewController {
+final class EditorHomeViewController: UIViewController {
+
+	// MARK: Dependencies
+	var interactor: IEditorHomeInteractor?
 
 	// MARK: Private properties
 	private lazy var newDocumentButton: UIButton = makeButton(imageName: "doc", title: L10n.EditorHome.newButtonTitle)
-	private lazy var openFileButton: UIButton = makeButton(imageName: "folder", title: L10n.EditorHome.openButtonTitle)
-	private lazy var aboutButton: UIButton = makeButton(imageName: "info.circle", title: L10n.EditorHome.aboutButtonTitle)
+
+	private lazy var openFileButton: UIButton = {
+		let button = makeButton(imageName: "folder", title: L10n.EditorHome.openButtonTitle)
+		button.addTarget(nil, action: #selector(openDocumentTapped), for: .touchUpInside)
+		return button
+	}()
+
+	private lazy var aboutButton: UIButton = {
+		let button = makeButton(imageName: "info.circle", title: L10n.EditorHome.aboutButtonTitle)
+		button.addTarget(nil, action: #selector(aboutAppTapped), for: .touchUpInside)
+		return button
+	}()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -23,6 +36,16 @@ class EditorHomeViewController: UIViewController {
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		layout()
+	}
+
+	@objc
+	func openDocumentTapped() {
+		interactor?.openDocumentSelected()
+	}
+
+	@objc
+	func aboutAppTapped() {
+		interactor?.aboutAppSelected()
 	}
 }
 

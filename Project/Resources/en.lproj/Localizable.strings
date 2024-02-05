@@ -51,3 +51,13 @@
 "editorHome.newButtonTitle" = "New";
 "editorHome.openButtonTitle" = "Open";
 "editorHome.aboutButtonTitle" = "About";
+
+// MARK: FileBroswer
+"fileBrowser.title" = "Example files";
+"fileBrowser.baseAssetsPath" = "Assets";
+"fileBrowser.accessError" = "Do not have access to read files";
+"fileBrowser.loadError" = "Could not load file %@ at %@";
+
+// MARK: AboutApp
+"aboutApp.title"= "About app";
+"aboutApp.aboutFileName" = "about.md";

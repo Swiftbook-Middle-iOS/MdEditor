@@ -14,11 +14,13 @@ final class AppCoordinator: BaseCoordinator {
 	private var navigationController: UINavigationController
 	private var window: UIWindow?
 	private var taskManager: ITaskManager
+	private var fileExplorer: IFileExplorer
 
-	init(window: UIWindow?, taskManager: ITaskManager) {
+	init(window: UIWindow?, taskManager: ITaskManager, fileExplorer: IFileExplorer) {
 		self.navigationController = UINavigationController()
 		self.window = window
 		self.taskManager = taskManager
+		self.fileExplorer = fileExplorer
 	}
 
 	// MARK: Public properties
@@ -59,7 +61,7 @@ final class AppCoordinator: BaseCoordinator {
 	}
 
 	func runEditorFlow() {
-		let coordinator = EditorCoordinator(navigationController: navigationController)
+		let coordinator = EditorCoordinator(navigationController: navigationController, fileExplorer: fileExplorer)
 		addDependency(coordinator)
 
 		coordinator.start()
