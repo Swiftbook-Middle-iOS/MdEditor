@@ -31,6 +31,7 @@ class FileBrowserViewController: UITableViewController {
 	}
 }
 
+// MARK: UITableViewController
 extension FileBrowserViewController {
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		viewModel.items.count
@@ -43,8 +44,13 @@ extension FileBrowserViewController {
 
 		return cell
 	}
+
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		interactor?.didSelectItem(at: indexPath.row)
+	}
 }
 
+// MARK: UI Setup
 private extension FileBrowserViewController {
 	func setupUI() {
 		view.backgroundColor = Theme.white
@@ -66,6 +72,7 @@ private extension FileBrowserViewController {
 	}
 }
 
+// MARK: IFileBrowserViewController
 extension FileBrowserViewController: IFileBrowserViewController {
 	func render(viewModel: FileBrowserModel.ViewModel) {
 		self.viewModel = viewModel
