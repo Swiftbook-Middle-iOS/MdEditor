@@ -31,14 +31,6 @@ final class AppCoordinator: BaseCoordinator {
 			window?.makeKeyAndVisible()
 			return
 		}
-
-		if CommandLine.arguments.contains("-skipToEditor") {
-			runEditorFlow()
-
-			window?.rootViewController = navigationController
-			window?.makeKeyAndVisible()
-			return
-		}
 #endif
 		runLoginFlow()
 	}
