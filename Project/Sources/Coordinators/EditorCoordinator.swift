@@ -29,5 +29,6 @@ class EditorCoordinator: IEditorCoordinator {
 	}
 
 	private func openBrowserScreen() {
+		navigationController.pushViewController(FileBrowserViewController(), animated: true)
 	}
 }
