@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol IFileExplorer {
+	var files: [File] { get }
+}
+
 class File {
 	var name = ""
 	var path = ""
@@ -18,13 +22,11 @@ class File {
 	var creationDate = Date()
 	var modificationDate = Date()
 	var fullname: String {
-		get {
-			return "\(path)/\(name)"
-		}
+		"\(path)/\(name)"
 	}
 
 	func getFormattedSize(with size: UInt64) -> String {
-		var convertedValue: Double = Double(size)
+		var convertedValue = Double(size)
 		var multiplyFactor = 0
 		let tokens = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
 		while convertedValue > 1024 {
@@ -52,7 +54,8 @@ class File {
 
 	func loadFileBody() -> String {
 		var text = ""
-		let fullPath = Bundle.main.resourcePath! + "/\(path)/\(name)"
+		guard let resourcePath = Bundle.main.resourcePath else { return text }
+		let fullPath = resourcePath + "/\(path)/\(name)"
 		do {
 			text = try String(contentsOfFile: fullPath, encoding: String.Encoding.utf8)
 		} catch {
@@ -63,17 +66,17 @@ class File {
 	}
 }
 
-class FileExplorer {
+class FileExplorer: IFileExplorer {
 	var files = [File]()
 
 	func scan(path: String) {
 		let fileManager = FileManager.default
-		let fullPath = Bundle.main.resourcePath! + "/\(path)"
+		guard let resourcePath = Bundle.main.resourcePath else { return }
+		let fullPath = resourcePath + "/\(path)"
 		files.removeAll()
 
 		var onlyFiles = [File]()
 		var onlyFolders = [File]()
-
 
 		do {
 			let items = try fileManager.contentsOfDirectory(atPath: fullPath)
@@ -95,66 +98,74 @@ class FileExplorer {
 	}
 
 	func getFile(withNAme name: String, atPath: String) -> File? {
-		let fm = FileManager.default
-		let fullPath = Bundle.main.resourcePath! + "/\(atPath)"
+		let fileManager = FileManager.default
+		guard let resourcePath = Bundle.main.resourcePath else { return nil }
+		let fullPath = resourcePath + "/\(atPath)"
 		do {
-			let attr = try fm.attributesOfItem(atPath: fullPath + "/" + name)
+			let attr = try fileManager.attributesOfItem(atPath: fullPath + "/" + name)
 
 			let file = File()
 			file.name = name
 			file.path = atPath
-			file.isDir = (attr[FileAttributeKey.type] as! FileAttributeType) == FileAttributeType.typeDirectory
-			file.isFile = (attr[FileAttributeKey.type] as! FileAttributeType) == FileAttributeType.typeRegular
-			file.size = (attr[FileAttributeKey.size] as! UInt64)
-			file.creationDate = (attr[FileAttributeKey.creationDate] as! Date)
-			file.modificationDate = (attr[FileAttributeKey.modificationDate] as! Date)
+			if let fileType = attr[FileAttributeKey.type] as? FileAttributeType {
+				file.isDir = fileType == .typeDirectory
+				file.isFile = fileType == .typeRegular
+			}
+			if let fileSize = attr[FileAttributeKey.size] as? UInt64 {
+				file.size = fileSize
+			}
+			if let creationDate = attr[FileAttributeKey.creationDate] as? Date {
+				file.creationDate = creationDate
+			}
+			if let modificationDate = attr[FileAttributeKey.modificationDate] as? Date {
+				file.modificationDate = modificationDate
+			}
 
 			if file.isDir {
 				file.ext = ""
 			} else {
-				file.ext = String(describing: name.split(separator: ".").last!)
+				file.ext = String(describing: name.split(separator: ".").last ?? "")
 			}
 
 			return file
 		} catch {
-
 		}
 
 		return nil
 	}
 
 	static func createFile(withName name: String) -> Bool {
-		let fullName = Bundle.main.resourcePath! + "/\(name)"
+		guard let resourcePath = Bundle.main.resourcePath else { return false }
+		let fullName = resourcePath + "/\(name)"
 		let empty = ""
 		do {
 			try empty.write(toFile: fullName, atomically: false, encoding: .utf8)
 			print("Filename created \(fullName)")
 			return true
-		}
-		catch {/* error handling here */
+		} catch {/* error handling here */
 			print("Error, can not create file \(fullName)")
 			return false
 		}
 	}
 
 	static func createFile2(withName name: String) {
-		let fullPath = Bundle.main.resourcePath! + "/\(name)"
+		guard let resourcePath = Bundle.main.resourcePath else { return }
+		let fullPath = resourcePath + "/\(name)"
 		let data = "Created on \(Date())".data(using: String.Encoding.utf8)
-		let fm = FileManager.default
-		fm.createFile(atPath: fullPath, contents: data, attributes: [:])
+		let fileManager = FileManager.default
+		fileManager.createFile(atPath: fullPath, contents: data, attributes: [:])
 	}
-
 
 	/// Создание папки.
 	/// - Parameter name: Имя папки.
 	static func createFolder(withName name: String) {
-		let fullPath = Bundle.main.resourcePath! + "/\(name)"
-		let fm = FileManager.default
+		guard let resourcePath = Bundle.main.resourcePath else { return }
+		let fullPath = resourcePath + "/\(name)"
+		let fileManager = FileManager.default
 		do {
-			try fm.createDirectory(atPath: fullPath, withIntermediateDirectories: false, attributes: nil)
+			try fileManager.createDirectory(atPath: fullPath, withIntermediateDirectories: false, attributes: nil)
 		} catch let error as NSError {
-			print(error.localizedDescription);
+			print(error.localizedDescription)
 		}
 	}
-
 }
