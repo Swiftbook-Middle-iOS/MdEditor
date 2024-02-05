@@ -45,3 +45,9 @@
 "stubTasks.writeTasks" = "Написать новые задачи";
 "stubTasks.solve" = "Решить 3 задачи на алгоритмы";
 "stubTasks.goShopping" = "Сходить в магазин";
+
+//MARK: Editor home screen
+"editorHome.title" = "MdEditor";
+"editorHome.newButtonTitle" = "Новый";
+"editorHome.openButtonTitle" = "Открыть";
+"editorHome.aboutButtonTitle" = "О приложении";

@@ -25,7 +25,15 @@ final class AppCoordinator: BaseCoordinator {
 	override func start() {
 #if DEBUG
 		if CommandLine.arguments.contains(CommandLineArguments.skipLogin.rawValue) {
-			startTodoListFlow()
+			runTodoListFlow()
+
+			window?.rootViewController = navigationController
+			window?.makeKeyAndVisible()
+			return
+		}
+
+		if CommandLine.arguments.contains("-skipToEditor") {
+			runEditorFlow()
 
 			window?.rootViewController = navigationController
 			window?.makeKeyAndVisible()
@@ -41,7 +49,7 @@ final class AppCoordinator: BaseCoordinator {
 
 		coordinator.finishFlow = { [weak self] in
 			guard let self = self else { return }
-			self.startTodoListFlow()
+			self.runEditorFlow()
 			self.removeDependency(coordinator)
 		}
 
@@ -51,8 +59,15 @@ final class AppCoordinator: BaseCoordinator {
 		window?.makeKeyAndVisible()
 	}
 
-	func startTodoListFlow() {
+	func runTodoListFlow() {
 		let coordinator = TodoListCoordinator(navigationController: navigationController, taskManager: taskManager)
+		addDependency(coordinator)
+
+		coordinator.start()
+	}
+
+	func runEditorFlow() {
+		let coordinator = EditorCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 
 		coordinator.start()
