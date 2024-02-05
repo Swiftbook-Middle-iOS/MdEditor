@@ -20,6 +20,6 @@ class FileBrowserViewController: UIViewController {
 private extension FileBrowserViewController {
 	func setupUI() {
 		view.backgroundColor = Theme.white
-		title = "example files"
+		title = L10n.FileBrowser.title
 	}
 }
