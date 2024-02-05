@@ -10,6 +10,7 @@ import Foundation
 
 protocol IEditorHomeInteractor {
 	func openDocumentSelected()
+	func openAboutSelected()
 }
 
 final class EditorHomeInteractor: IEditorHomeInteractor {
@@ -21,5 +22,9 @@ final class EditorHomeInteractor: IEditorHomeInteractor {
 
 	func openDocumentSelected() {
 		openFileClosure?()
+	}
+
+	func openAboutSelected() {
+
 	}
 }

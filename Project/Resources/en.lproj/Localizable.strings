@@ -55,3 +55,6 @@
 // MARK: FileBroswer
 "fileBrowser.title" = "Example files";
 "fileBrowser.filePath" = "Assets";
+
+// MARK: AboutScreen
+"aboutScreen.title" = "About";

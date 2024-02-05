@@ -55,3 +55,6 @@
 // MARK: FileBroswer
 "fileBrowser.title" = "Примеры файлов";
 "fileBrowser.filePath" = "Assets";
+
+// MARK: AboutScreen
+"aboutScreen.title" = "О приложении";
