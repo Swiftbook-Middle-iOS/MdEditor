@@ -10,6 +10,7 @@ import Foundation
 
 protocol IFileExplorer {
 	var files: [File] { get }
+	func scan(path: String)
 }
 
 class File {

@@ -14,10 +14,12 @@ protocol IEditorCoordinator: ICoordinator {
 class EditorCoordinator: IEditorCoordinator {
 	// MARK: Dependencies
 	var navigationController: UINavigationController
+	var fileExplorer: IFileExplorer
 
 	// MARK: Initialization
-	init(navigationController: UINavigationController) {
+	init(navigationController: UINavigationController, fileExplorer: IFileExplorer) {
 		self.navigationController = navigationController
+		self.fileExplorer = fileExplorer
 	}
 
 	// MARK: Public functions
@@ -29,6 +31,6 @@ class EditorCoordinator: IEditorCoordinator {
 	}
 
 	private func openBrowserScreen() {
-		navigationController.pushViewController(FileBrowserViewController(), animated: true)
+		navigationController.pushViewController(FileBrowserAssembler().assembly(fileExplorer: fileExplorer), animated: true)
 	}
 }

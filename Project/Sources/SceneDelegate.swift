@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		guard let scene = (scene as? UIWindowScene) else { return }
 		let window = UIWindow(windowScene: scene)
 
-		appCoordinator = AppCoordinator(window: window, taskManager: buildTaskManager())
+		appCoordinator = AppCoordinator(window: window, taskManager: buildTaskManager(), fileExplorer: FileExplorer())
 		appCoordinator.start()
 		self.window = window
 	}

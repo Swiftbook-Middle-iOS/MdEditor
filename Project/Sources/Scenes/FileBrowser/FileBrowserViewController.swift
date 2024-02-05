@@ -10,12 +10,19 @@ import UIKit
 
 class FileBrowserViewController: UITableViewController {
 
+	// MARK: Dependencies
+	var interactor: IFileBrowserInteractor?
+
 	// MARK: Private properties
 	private var viewModel = FileBrowserModel.ViewModel(files: [])
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		interactor?.fetchData()
 	}
 }
 
