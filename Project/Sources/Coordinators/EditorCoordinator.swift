@@ -22,7 +22,12 @@ class EditorCoordinator: IEditorCoordinator {
 
 	// MARK: Public functions
 	func start() {
-		let viewController = EditorHomeViewController()
+		let viewController = EditorHomeAssembly().assembly { [weak self] in
+			self?.openBrowserScreen()
+		}
 		navigationController.setViewControllers([viewController], animated: true)
+	}
+
+	private func openBrowserScreen() {
 	}
 }
