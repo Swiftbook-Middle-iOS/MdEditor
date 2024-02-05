@@ -50,7 +50,7 @@ private extension AboutAppViewController {
 				equalTo: navigationController?.navigationBar.bottomAnchor ?? view.topAnchor,
 				constant: Sizes.Padding.double
 			),
-			label.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+			label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal)
 		])
 	}
 }

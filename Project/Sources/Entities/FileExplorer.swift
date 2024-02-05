@@ -28,6 +28,7 @@ class File {
 
 	var name = ""
 	var path = ""
+	var fullPath = ""
 	var ext = ""
 	var size: UInt64 = 0
 	var type: FileType = .file
@@ -110,6 +111,7 @@ class FileExplorer: IFileExplorer {
 		let file = File()
 		file.name = name
 		file.path = atPath
+		file.fullPath = fullPath
 		if let fileType = attr[FileAttributeKey.type] as? FileAttributeType {
 			if fileType == .typeDirectory {
 				file.type = .dir
@@ -153,14 +155,10 @@ class FileExplorer: IFileExplorer {
 
 	/// Создание папки.
 	/// - Parameter name: Имя папки.
-	static func createFolder(withName name: String) {
+	static func createFolder(withName name: String) throws {
 		guard let resourcePath = Bundle.main.resourcePath else { return }
 		let fullPath = resourcePath + "/\(name)"
 		let fileManager = FileManager.default
-		do {
-			try fileManager.createDirectory(atPath: fullPath, withIntermediateDirectories: false, attributes: nil)
-		} catch let error as NSError {
-			print(error.localizedDescription)
-		}
+		try fileManager.createDirectory(atPath: fullPath, withIntermediateDirectories: false, attributes: nil)
 	}
 }
