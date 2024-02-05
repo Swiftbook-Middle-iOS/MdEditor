@@ -33,7 +33,7 @@ private extension EditorHomeViewController {
 
 		button.configuration = .borderless()
 		button.configuration?.imagePadding = Sizes.Padding.half
-		// TODO: Check why imageReservation isn't visible on xcode 14.2
+		// TODO: Check why imageReservation isn't visible on xcode 14.2 // swiftlint:disable:this todo
 //		button.configuration?.imageReservation = Sizes.Padding.double
 
 		button.configuration?.baseForegroundColor = Theme.black
