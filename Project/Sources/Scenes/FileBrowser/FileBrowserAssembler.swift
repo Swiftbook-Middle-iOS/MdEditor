@@ -9,10 +9,15 @@
 import Foundation
 
 final class FileBrowserAssembler {
-	func assembly(fileExplorer: IFileExplorer) -> FileBrowserViewController {
+	func assembly(fileExplorer: IFileExplorer, currentPath: String, newDirClosure: @escaping (String) -> Void) -> FileBrowserViewController {
 		let viewController = FileBrowserViewController()
 		let presenter = FileBrowserPresenter(viewController: viewController)
-		let interactor = FileBrowserInteractor(fileExplorer: fileExplorer, presenter: presenter)
+		let interactor = FileBrowserInteractor(
+			fileExplorer: fileExplorer,
+			currentPath: currentPath,
+			presenter: presenter,
+			newDirClosure: newDirClosure
+		)
 
 		viewController.interactor = interactor
 

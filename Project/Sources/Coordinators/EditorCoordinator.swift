@@ -25,12 +25,17 @@ class EditorCoordinator: IEditorCoordinator {
 	// MARK: Public functions
 	func start() {
 		let viewController = EditorHomeAssembly().assembly { [weak self] in
-			self?.openBrowserScreen()
+			self?.openBrowserScreen(at: L10n.FileBrowser.filePath)
 		}
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 
-	private func openBrowserScreen() {
-		navigationController.pushViewController(FileBrowserAssembler().assembly(fileExplorer: fileExplorer), animated: true)
+	private func openBrowserScreen(at filePath: String) {
+		navigationController.pushViewController(
+			FileBrowserAssembler().assembly(fileExplorer: fileExplorer, currentPath: filePath) { [weak self] path in
+				self?.openBrowserScreen(at: path)
+			},
+			animated: true
+		)
 	}
 }

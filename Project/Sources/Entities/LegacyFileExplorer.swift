@@ -14,12 +14,16 @@ protocol IFileExplorer {
 }
 
 class File {
+	enum FileType {
+		case file
+		case dir
+	}
+
 	var name = ""
 	var path = ""
 	var ext = ""
 	var size: UInt64 = 0
-	var isFile = true
-	var isDir = false
+	var type: FileType = .file
 	var creationDate = Date()
 	var modificationDate = Date()
 	var fullname: String {
@@ -46,7 +50,7 @@ class File {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "yyyy.MM.dd HH:mm:ss"
 
-		if isDir {
+		if type == .dir {
 			return "\(dateFormatter.string(from: modificationDate)) | <dir>"
 		} else {
 			return "\"\(ext)\" – \(dateFormatter.string(from: modificationDate)) | \(formattedSize)"
@@ -83,7 +87,7 @@ class FileExplorer: IFileExplorer {
 			let items = try fileManager.contentsOfDirectory(atPath: fullPath)
 			for item in items {
 				if let file = getFile(withNAme: item, atPath: path) {
-					if file.isDir {
+					if file.type == .dir {
 						onlyFolders.append(file)
 					} else {
 						onlyFiles.append(file)
@@ -109,8 +113,11 @@ class FileExplorer: IFileExplorer {
 			file.name = name
 			file.path = atPath
 			if let fileType = attr[FileAttributeKey.type] as? FileAttributeType {
-				file.isDir = fileType == .typeDirectory
-				file.isFile = fileType == .typeRegular
+				if fileType == .typeDirectory {
+					file.type = .dir
+				} else if fileType == .typeRegular {
+					file.type = .file
+				}
 			}
 			if let fileSize = attr[FileAttributeKey.size] as? UInt64 {
 				file.size = fileSize
@@ -122,7 +129,7 @@ class FileExplorer: IFileExplorer {
 				file.modificationDate = modificationDate
 			}
 
-			if file.isDir {
+			if file.type == .dir {
 				file.ext = ""
 			} else {
 				file.ext = String(describing: name.split(separator: ".").last ?? "")

@@ -10,9 +10,18 @@ import Foundation
 
 enum FileBrowserModel {
 	struct ViewModel {
-		let files: [FileModel]
+		let items: [ItemModel]
+
+		enum ItemModel {
+			case file(FileModel)
+			case dir(DirModel)
+		}
 
 		struct FileModel {
+			let title: String
+		}
+
+		struct DirModel {
 			let title: String
 		}
 	}

@@ -10,18 +10,41 @@ import Foundation
 
 protocol IFileBrowserInteractor {
 	func fetchData()
+	func didSelectItem(at index: Int)
 }
 
 final class FileBrowserInteractor: IFileBrowserInteractor {
-	private var fileExplorer: IFileExplorer
-	private var presenter: IFileBrowserPresenter
 
-	init(fileExplorer: IFileExplorer, presenter: IFileBrowserPresenter) {
+	// MARK: Dependencies
+	private var fileExplorer: IFileExplorer
+	private var currentPath: String
+	private var presenter: IFileBrowserPresenter
+	private var newDirClosure: (String) -> Void
+
+	// MARK: Initialization
+	init(
+		fileExplorer: IFileExplorer,
+		currentPath: String,
+		presenter: IFileBrowserPresenter,
+		newDirClosure: @escaping (String) -> Void
+	) {
 		self.fileExplorer = fileExplorer
+		self.currentPath = currentPath
 		self.presenter = presenter
+		self.newDirClosure = newDirClosure
 	}
 
+	// MARK: Public methods
 	func fetchData() {
-		fileExplorer.scan(path: L10n.FileBrowser.filePath)
+		fileExplorer.scan(path: currentPath)
+		presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files))
+	}
+
+	func didSelectItem(at index: Int) {
+		let item = fileExplorer.files[index]
+		if item.type == .dir {
+			let newPath = currentPath + "/\(item.name)"
+			newDirClosure(newPath)
+		}
 	}
 }
