@@ -26,6 +26,7 @@ class File {
 		case dir
 	}
 
+	// Не успел тут сделать URL :(
 	var name = ""
 	var path = ""
 	var fullPath = ""
@@ -38,7 +39,18 @@ class File {
 		"\(path)/\(name)"
 	}
 
-	func getFormattedSize(with size: UInt64) -> String {
+	// MARK: Public methods
+	func loadFileBody() throws -> String {
+		var text = ""
+		guard let resourcePath = Bundle.main.resourcePath else { return text }
+		let fullPath = resourcePath + "/\(path)/\(name)"
+		text = try String(contentsOfFile: fullPath, encoding: String.Encoding.utf8)
+
+		return text
+	}
+
+	// MARK: Private methods
+	private func getFormattedSize(with size: UInt64) -> String {
 		var convertedValue = Double(size)
 		var multiplyFactor = 0
 		let tokens = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
@@ -49,11 +61,13 @@ class File {
 		return String(format: "%4.2f %@", convertedValue, tokens[multiplyFactor])
 	}
 
-	func getFormattedSize() -> String {
+	private func getFormattedSize() -> String {
 		return getFormattedSize(with: size)
 	}
+}
 
-	func getFormattedAttributes() -> String {
+extension File: CustomStringConvertible {
+	var description: String {
 		let formattedSize = getFormattedSize()
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "yyyy.MM.dd HH:mm:ss"
@@ -63,15 +77,6 @@ class File {
 		} else {
 			return "\"\(ext)\" – \(dateFormatter.string(from: modificationDate)) | \(formattedSize)"
 		}
-	}
-
-	func loadFileBody() throws -> String {
-		var text = ""
-		guard let resourcePath = Bundle.main.resourcePath else { return text }
-		let fullPath = resourcePath + "/\(path)/\(name)"
-		text = try String(contentsOfFile: fullPath, encoding: String.Encoding.utf8)
-
-		return text
 	}
 }
 

@@ -49,12 +49,7 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	func didSelectItem(at index: Int) {
 		let item = fileExplorer.files[index]
-		switch item.type {
-		case .file:
-			let url = URL(fileURLWithPath: item.fullPath + "/\(item.name)")
-			let data = try? Data(contentsOf: url)
-			// TODO: Use data to open file //swiftlint:disable:this todo
-		case .dir:
+		if item.type == .dir {
 			let newPath = currentPath + "/\(item.name)"
 			newDirClosure(newPath)
 		}

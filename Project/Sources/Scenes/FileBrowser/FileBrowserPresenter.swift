@@ -45,14 +45,14 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 			return .file(
 				FileBrowserModel.ViewModel.FileModel(
 					title: file.name,
-					attributes: file.getFormattedAttributes()
+					attributes: file.description
 				)
 			)
 		case .dir:
 			return .dir(
 				FileBrowserModel.ViewModel.DirModel(
 					title: "dir \(file.name)",
-					attributes: file.getFormattedAttributes()
+					attributes: file.description
 				)
 			)
 		}

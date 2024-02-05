@@ -14,14 +14,17 @@ protocol IEditorHomeInteractor {
 }
 
 final class EditorHomeInteractor: IEditorHomeInteractor {
+	// MARK: Dependencies
 	var openFileClosure: (() -> Void)?
 	var aboutAppClosure: (() -> Void)?
 
+	// MARK: Initialization
 	init(openFileClosure: (() -> Void)? = nil, aboutAppClosure: (() -> Void)?) {
 		self.openFileClosure = openFileClosure
 		self.aboutAppClosure = aboutAppClosure
 	}
 
+	// MARK: IEditorHomeInteractor
 	func openDocumentSelected() {
 		openFileClosure?()
 	}
