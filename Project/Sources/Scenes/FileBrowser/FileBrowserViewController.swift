@@ -9,15 +9,16 @@
 import UIKit
 
 protocol IFileBrowserViewController: AnyObject {
+	func render(viewModel: FileBrowserModel.ViewModel)
 }
 
-class FileBrowserViewController: UITableViewController, IFileBrowserViewController {
+class FileBrowserViewController: UITableViewController {
 
 	// MARK: Dependencies
 	var interactor: IFileBrowserInteractor?
 
 	// MARK: Private properties
-	private var viewModel = FileBrowserModel.ViewModel(files: [])
+	private var viewModel = FileBrowserModel.ViewModel(items: [])
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -32,13 +33,13 @@ class FileBrowserViewController: UITableViewController, IFileBrowserViewControll
 
 extension FileBrowserViewController {
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		viewModel.files.count
+		viewModel.items.count
 	}
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let file = viewModel.files[indexPath.row]
+		let object = viewModel.items[indexPath.row]
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		configureCell(cell, with: file)
+		configureCell(cell, with: object)
 
 		return cell
 	}
@@ -51,9 +52,23 @@ private extension FileBrowserViewController {
 		self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 	}
 
-	func configureCell(_ cell: UITableViewCell, with file: FileBrowserModel.ViewModel.FileModel) {
+	func configureCell(_ cell: UITableViewCell, with object: FileBrowserModel.ViewModel.ItemModel) {
 		var contentConfiguration = cell.defaultContentConfiguration()
-		contentConfiguration.text = file.title
+		switch object {
+		case .file(let fileModel):
+			contentConfiguration.text = fileModel.title
+			contentConfiguration.image = UIImage(systemName: "doc.richtext")
+		case .dir(let dirModel):
+			contentConfiguration.text = dirModel.title
+			contentConfiguration.image = UIImage(systemName: "folder")
+		}
 		cell.contentConfiguration = contentConfiguration
+	}
+}
+
+extension FileBrowserViewController: IFileBrowserViewController {
+	func render(viewModel: FileBrowserModel.ViewModel) {
+		self.viewModel = viewModel
+		tableView.reloadData()
 	}
 }

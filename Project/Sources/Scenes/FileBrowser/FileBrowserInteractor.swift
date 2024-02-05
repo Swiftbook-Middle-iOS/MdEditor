@@ -23,5 +23,6 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	func fetchData() {
 		fileExplorer.scan(path: L10n.FileBrowser.filePath)
+		presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files))
 	}
 }
