@@ -33,7 +33,8 @@ private extension EditorHomeViewController {
 
 		button.configuration = .borderless()
 		button.configuration?.imagePadding = Sizes.Padding.half
-		button.configuration?.imageReservation = Sizes.Padding.double
+		// TODO: Check why imageReservation isn't visible on xcode 14.2
+//		button.configuration?.imageReservation = Sizes.Padding.double
 
 		button.configuration?.baseForegroundColor = Theme.black
 		button.configuration?.image = UIImage(systemName: imageName)?.withTintColor(
