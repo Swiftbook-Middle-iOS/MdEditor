@@ -45,3 +45,9 @@
 "stubTasks.writeTasks" = "Write new tasks";
 "stubTasks.solve" = "Solve 3 algorithms";
 "stubTasks.goShopping" = "Go shopping";
+
+//MARK: Editor home screen
+"editorHome.title" = "MdEditor";
+"editorHome.newButtonTitle" = "New";
+"editorHome.openButtonTitle" = "Open";
+"editorHome.aboutButtonTitle" = "About";
