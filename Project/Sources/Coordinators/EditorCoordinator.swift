@@ -32,24 +32,54 @@ class EditorCoordinator: IEditorCoordinator {
 			self?.openAboutAppScreen()
 		}
 
-		let viewController = EditorHomeAssembly().assembly(openFileClosure: openFileClosure, aboutAppClosure: aboutAppClosure)
+		let viewController = EditorHomeAssembly().assembly(
+			openFileClosure: openFileClosure,
+			aboutAppClosure: aboutAppClosure
+		)
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 
 	// MARK: Private functions
 	private func openBrowserScreen(at filePath: String) {
+		let newDirClosure: (String) -> Void = { [weak self] newPath in
+			self?.openBrowserScreen(at: newPath)
+		}
+
+		let errorClosure: () -> Void = { [weak self] in
+			self?.showError(message: L10n.FileBrowser.accessError)
+		}
+
 		navigationController.pushViewController(
-			FileBrowserAssembler().assembly(fileExplorer: fileExplorer, currentPath: filePath) { [weak self] newPath in
-				self?.openBrowserScreen(at: newPath)
-			},
+			FileBrowserAssembler().assembly(
+				fileExplorer: fileExplorer,
+				currentPath: filePath,
+				newDirClosure: newDirClosure,
+				errorClosure: errorClosure
+			),
 			animated: true
 		)
 	}
 
 	private func openAboutAppScreen() {
-		let viewController = AboutAppViewController()
-		let aboutFile = fileExplorer.getFile(withName: L10n.AboutApp.aboutFileName, atPath: L10n.FileBrowser.baseAssetsPath)
-		viewController.labelText = aboutFile?.loadFileBody()
+		let viewController: AboutAppViewController
+		do {
+			viewController = try AboutAppAssembler().assembly(fileExplorer: fileExplorer)
+		} catch {
+			showError(message: L10n.FileBrowser.loadError(L10n.AboutApp.aboutFileName, L10n.FileBrowser.baseAssetsPath))
+			return
+		}
 		navigationController.pushViewController(viewController, animated: true)
+	}
+
+	private func showError(message: String) {
+		let alert: UIAlertController
+		alert = UIAlertController(
+			title: L10n.Error.text,
+			message: message,
+			preferredStyle: UIAlertController.Style.alert
+		)
+		let action = UIAlertAction(title: L10n.Ok.text, style: .default)
+		alert.addAction(action)
+		navigationController.present(alert, animated: true, completion: nil)
 	}
 }

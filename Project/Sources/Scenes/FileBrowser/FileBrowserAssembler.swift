@@ -12,7 +12,8 @@ final class FileBrowserAssembler {
 	func assembly(
 		fileExplorer: IFileExplorer,
 		currentPath: String,
-		newDirClosure: @escaping (String) -> Void
+		newDirClosure: @escaping (String) -> Void,
+		errorClosure: (() -> Void)? = nil
 	) -> FileBrowserViewController {
 		let viewController = FileBrowserViewController()
 		let presenter = FileBrowserPresenter(viewController: viewController)
@@ -20,7 +21,8 @@ final class FileBrowserAssembler {
 			fileExplorer: fileExplorer,
 			currentPath: currentPath,
 			presenter: presenter,
-			newDirClosure: newDirClosure
+			newDirClosure: newDirClosure,
+			errorClosure: errorClosure
 		)
 
 		viewController.interactor = interactor

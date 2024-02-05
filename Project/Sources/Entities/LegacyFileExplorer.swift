@@ -8,10 +8,16 @@
 
 import Foundation
 
+enum FileExplorerError: Error {
+	case resourcePathNotFound
+	case noAccessToDirectory
+	case couldNotWriteToFile
+}
+
 protocol IFileExplorer {
 	var files: [File] { get }
-	func scan(path: String)
-	func getFile(withName name: String, atPath: String) -> File?
+	func scan(path: String) throws
+	func getFile(withName name: String, atPath: String) throws -> File
 }
 
 class File {
@@ -58,15 +64,11 @@ class File {
 		}
 	}
 
-	func loadFileBody() -> String {
+	func loadFileBody() throws -> String {
 		var text = ""
 		guard let resourcePath = Bundle.main.resourcePath else { return text }
 		let fullPath = resourcePath + "/\(path)/\(name)"
-		do {
-			text = try String(contentsOfFile: fullPath, encoding: String.Encoding.utf8)
-		} catch {
-			print("Failed to read text from \(name)")
-		}
+		text = try String(contentsOfFile: fullPath, encoding: String.Encoding.utf8)
 
 		return text
 	}
@@ -75,86 +77,70 @@ class File {
 class FileExplorer: IFileExplorer {
 	var files = [File]()
 
-	func scan(path: String) {
+	func scan(path: String) throws {
 		let fileManager = FileManager.default
-		guard let resourcePath = Bundle.main.resourcePath else { return }
+		guard let resourcePath = Bundle.main.resourcePath else { throw FileExplorerError.resourcePathNotFound }
 		let fullPath = resourcePath + "/\(path)"
 		files.removeAll()
 
 		var onlyFiles = [File]()
 		var onlyFolders = [File]()
 
-		do {
-			let items = try fileManager.contentsOfDirectory(atPath: fullPath)
-			for item in items {
-				if let file = getFile(withName: item, atPath: path) {
-					if file.type == .dir {
-						onlyFolders.append(file)
-					} else {
-						onlyFiles.append(file)
-					}
-				}
+		let items = try fileManager.contentsOfDirectory(atPath: fullPath)
+		for item in items {
+			let file = try getFile(withName: item, atPath: path)
+			if file.type == .dir {
+				onlyFolders.append(file)
+			} else {
+				onlyFiles.append(file)
 			}
-		} catch {
-			// failed to read directory – bad permissions, perhaps?
 		}
 
 		files.append(contentsOf: onlyFolders)
 		files.append(contentsOf: onlyFiles)
 	}
 
-	func getFile(withName name: String, atPath: String) -> File? {
+	func getFile(withName name: String, atPath: String) throws -> File {
 		let fileManager = FileManager.default
-		guard let resourcePath = Bundle.main.resourcePath else { return nil }
+		guard let resourcePath = Bundle.main.resourcePath else { throw FileExplorerError.resourcePathNotFound }
 		let fullPath = resourcePath + "/\(atPath)"
-		do {
-			let attr = try fileManager.attributesOfItem(atPath: fullPath + "/" + name)
 
-			let file = File()
-			file.name = name
-			file.path = atPath
-			if let fileType = attr[FileAttributeKey.type] as? FileAttributeType {
-				if fileType == .typeDirectory {
-					file.type = .dir
-				} else if fileType == .typeRegular {
-					file.type = .file
-				}
-			}
-			if let fileSize = attr[FileAttributeKey.size] as? UInt64 {
-				file.size = fileSize
-			}
-			if let creationDate = attr[FileAttributeKey.creationDate] as? Date {
-				file.creationDate = creationDate
-			}
-			if let modificationDate = attr[FileAttributeKey.modificationDate] as? Date {
-				file.modificationDate = modificationDate
-			}
+		let attr = try fileManager.attributesOfItem(atPath: fullPath + "/" + name)
 
-			if file.type == .dir {
-				file.ext = ""
-			} else {
-				file.ext = String(describing: name.split(separator: ".").last ?? "")
+		let file = File()
+		file.name = name
+		file.path = atPath
+		if let fileType = attr[FileAttributeKey.type] as? FileAttributeType {
+			if fileType == .typeDirectory {
+				file.type = .dir
+			} else if fileType == .typeRegular {
+				file.type = .file
 			}
-
-			return file
-		} catch {
+		}
+		if let fileSize = attr[FileAttributeKey.size] as? UInt64 {
+			file.size = fileSize
+		}
+		if let creationDate = attr[FileAttributeKey.creationDate] as? Date {
+			file.creationDate = creationDate
+		}
+		if let modificationDate = attr[FileAttributeKey.modificationDate] as? Date {
+			file.modificationDate = modificationDate
 		}
 
-		return nil
+		if file.type == .dir {
+			file.ext = ""
+		} else {
+			file.ext = String(describing: name.split(separator: ".").last ?? "")
+		}
+
+		return file
 	}
 
-	static func createFile(withName name: String) -> Bool {
-		guard let resourcePath = Bundle.main.resourcePath else { return false }
+	static func createFile(withName name: String) throws {
+		guard let resourcePath = Bundle.main.resourcePath else { throw FileExplorerError.resourcePathNotFound }
 		let fullName = resourcePath + "/\(name)"
 		let empty = ""
-		do {
-			try empty.write(toFile: fullName, atomically: false, encoding: .utf8)
-			print("Filename created \(fullName)")
-			return true
-		} catch {/* error handling here */
-			print("Error, can not create file \(fullName)")
-			return false
-		}
+		try empty.write(toFile: fullName, atomically: false, encoding: .utf8)
 	}
 
 	static func createFile2(withName name: String) {

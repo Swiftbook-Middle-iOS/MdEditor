@@ -55,6 +55,8 @@
 // MARK: FileBroswer
 "fileBrowser.title" = "Примеры файлов";
 "fileBrowser.baseAssetsPath" = "Assets";
+"fileBrowser.accessError" = "Отсутствует доступ к директории";
+"fileBrowser.loadError" = "Could not load file %@ at %@";
 
 // MARK: AboutApp
 "aboutApp.title"= "О приложении";

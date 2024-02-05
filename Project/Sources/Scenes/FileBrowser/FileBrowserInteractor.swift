@@ -20,23 +20,30 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	private var currentPath: String
 	private var presenter: IFileBrowserPresenter
 	private var newDirClosure: (String) -> Void
+	private var errorClosure: (() -> Void)?
 
 	// MARK: Initialization
 	init(
 		fileExplorer: IFileExplorer,
 		currentPath: String,
 		presenter: IFileBrowserPresenter,
-		newDirClosure: @escaping (String) -> Void
+		newDirClosure: @escaping (String) -> Void,
+		errorClosure: (() -> Void)? = nil
 	) {
 		self.fileExplorer = fileExplorer
 		self.currentPath = currentPath
 		self.presenter = presenter
 		self.newDirClosure = newDirClosure
+		self.errorClosure = errorClosure
 	}
 
 	// MARK: Public methods
 	func fetchData() {
-		fileExplorer.scan(path: currentPath)
+		do {
+			try fileExplorer.scan(path: currentPath)
+		} catch {
+			errorClosure?()
+		}
 		presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files, currentPath: currentPath))
 	}
 
