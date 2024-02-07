@@ -53,7 +53,7 @@
 "editorHome.aboutButtonTitle" = "About";
 
 // MARK: FileBroswer
-"fileBrowser.title" = "Example files";
+"fileBrowser.defaultTitle" = "Root";
 "fileBrowser.baseAssetsPath" = "Assets";
 "fileBrowser.accessError" = "Do not have access to read files";
 "fileBrowser.loadError" = "Could not load file %@ at %@";

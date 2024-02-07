@@ -10,7 +10,7 @@ import Foundation
 
 final class FileBrowserRootInteractor: IFileBrowserInteractor {
 
-	private lazy var rootDirs = [makeFileForAssetsFolder()]
+	private lazy var rootItems = [makeFileForAssetsFolder(), makeFileForDocumentsFolder()]
 	private var presenter: IFileBrowserPresenter
 	private var newDirClosure: (URL) -> Void
 
@@ -21,13 +21,13 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 
 	func fetchData() {
 		presenter.present(response: FileBrowserModel.Response(
-			files: rootDirs,
+			files: rootItems,
 			currentPath: URL(fileURLWithPath: "")
 		))
 	}
 
 	func didSelectItem(at index: Int) {
-		let item = rootDirs[index]
+		let item = rootItems[index]
 		guard let fullPath = item.fullPath else { return }
 		if item.type == .dir {
 			newDirClosure(fullPath)
@@ -46,5 +46,17 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 		assetsFolder.type = .dir
 
 		return assetsFolder
+	}
+
+	private func makeFileForDocumentsFolder() -> File {
+		guard let documentsURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return File() }
+
+		let documentsFolder = File()
+		documentsFolder.name = "Documents"
+		documentsFolder.path = documentsURL.deletingLastPathComponent()
+		documentsFolder.fullPath = documentsURL
+		documentsFolder.type = .dir
+
+		return documentsFolder
 	}
 }

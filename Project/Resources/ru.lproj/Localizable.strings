@@ -53,7 +53,7 @@
 "editorHome.aboutButtonTitle" = "О приложении";
 
 // MARK: FileBroswer
-"fileBrowser.title" = "Примеры файлов";
+"fileBrowser.defaultTitle" = "Root";
 "fileBrowser.baseAssetsPath" = "Assets";
 "fileBrowser.accessError" = "Отсутствует доступ к директории";
 "fileBrowser.loadError" = "Could not load file %@ at %@";

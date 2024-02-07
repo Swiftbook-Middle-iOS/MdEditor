@@ -24,7 +24,7 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 
 	// MARK: Public methods
 	func present(response: FileBrowserModel.Response) {
-        var title = L10n.FileBrowser.title
+        var title = L10n.FileBrowser.defaultTitle
         let lastComponent = response.currentPath.lastPathComponent
 
         if !lastComponent.isEmpty && lastComponent != "/" {
