@@ -8,12 +8,20 @@
 
 import Foundation
 
+enum AboutAppAssemblerError: Error {
+	case couldNotFindUrl
+}
+
 final class AboutAppAssembler {
 	func assembly(fileExplorer: IFileExplorer) throws -> AboutAppViewController {
 		let viewController = AboutAppViewController()
+		guard let assetsUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
+			throw AboutAppAssemblerError.couldNotFindUrl
+		}
+
 		let aboutFile = try fileExplorer.getFile(
 			withName: L10n.AboutApp.aboutFileName,
-			atPath: L10n.FileBrowser.baseAssetsPath
+			atURL: assetsUrl
 		)
 
 		viewController.labelText = try aboutFile.loadFileBody()

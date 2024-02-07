@@ -11,8 +11,8 @@ import Foundation
 final class FileBrowserAssembler {
 	func assembly(
 		fileExplorer: IFileExplorer,
-		currentPath: String,
-		newDirClosure: @escaping (String) -> Void,
+		currentPath: URL,
+		newDirClosure: @escaping (URL) -> Void,
 		errorClosure: (() -> Void)? = nil
 	) -> FileBrowserViewController {
 		let viewController = FileBrowserViewController()

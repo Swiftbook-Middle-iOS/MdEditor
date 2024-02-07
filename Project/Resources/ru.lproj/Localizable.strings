@@ -57,6 +57,7 @@
 "fileBrowser.baseAssetsPath" = "Assets";
 "fileBrowser.accessError" = "Отсутствует доступ к директории";
 "fileBrowser.loadError" = "Could not load file %@ at %@";
+"fileBrowser.invalidAssetsUrlError" = "Не валидный URL для файла about.md";
 
 // MARK: AboutApp
 "aboutApp.title"= "О приложении";

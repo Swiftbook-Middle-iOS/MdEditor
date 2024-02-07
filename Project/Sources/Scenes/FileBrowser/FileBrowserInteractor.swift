@@ -17,17 +17,17 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	// MARK: Dependencies
 	private var fileExplorer: IFileExplorer
-	private var currentPath: String
+	private var currentPath: URL
 	private var presenter: IFileBrowserPresenter
-	private var newDirClosure: (String) -> Void
+	private var newDirClosure: (URL) -> Void
 	private var errorClosure: (() -> Void)?
 
 	// MARK: Initialization
 	init(
 		fileExplorer: IFileExplorer,
-		currentPath: String,
+		currentPath: URL,
 		presenter: IFileBrowserPresenter,
-		newDirClosure: @escaping (String) -> Void,
+		newDirClosure: @escaping (URL) -> Void,
 		errorClosure: (() -> Void)? = nil
 	) {
 		self.fileExplorer = fileExplorer
@@ -50,8 +50,8 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	func didSelectItem(at index: Int) {
 		let item = fileExplorer.files[index]
 		if item.type == .dir {
-			let newPath = currentPath + "/\(item.name)"
-			newDirClosure(newPath)
+            let newURL = currentPath.appendingPathComponent(item.name)
+			newDirClosure(newURL)
 		}
 	}
 }
