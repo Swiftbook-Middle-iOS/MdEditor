@@ -52,7 +52,7 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 		case .dir:
 			return .dir(
 				FileBrowserModel.ViewModel.DirModel(
-					title: "dir \(file.name)",
+					title: file.name,
 					attributes: file.description
 				)
 			)

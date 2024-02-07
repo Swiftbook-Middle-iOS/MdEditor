@@ -29,4 +29,13 @@ final class FileBrowserAssembler {
 
 		return viewController
 	}
+
+	func rootAssembly(newDirClosure: @escaping (URL) -> Void) -> FileBrowserViewController {
+		let viewController = FileBrowserViewController()
+		let presenter = FileBrowserPresenter(viewController: viewController)
+		let interactor = FileBrowserRootInteractor(presenter: presenter, newDirClosure: newDirClosure)
+		viewController.interactor = interactor
+
+		return viewController
+	}
 }

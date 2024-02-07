@@ -50,7 +50,7 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	func didSelectItem(at index: Int) {
 		let item = fileExplorer.files[index]
 		if item.type == .dir {
-            let newURL = currentPath.appendingPathComponent(item.name)
+			let newURL = currentPath.appendingPathComponent(item.name)
 			newDirClosure(newURL)
 		}
 	}

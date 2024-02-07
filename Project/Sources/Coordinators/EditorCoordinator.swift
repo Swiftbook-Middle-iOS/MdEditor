@@ -25,9 +25,7 @@ class EditorCoordinator: IEditorCoordinator {
 	// MARK: Public functions
 	func start() {
 		let openFileClosure: () -> Void = { [weak self] in
-            if let url = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) {
-                self?.openBrowserScreen(at: url)
-            }
+			self?.openRootBrowserScreen()
 		}
 
 		let aboutAppClosure: () -> Void = { [weak self] in
@@ -42,6 +40,15 @@ class EditorCoordinator: IEditorCoordinator {
 	}
 
 	// MARK: Private functions
+	private func openRootBrowserScreen() {
+		navigationController.pushViewController(
+			FileBrowserAssembler().rootAssembly { [weak self] newPath in
+				self?.openBrowserScreen(at: newPath)
+			},
+			animated: true
+		)
+	}
+
 	private func openBrowserScreen(at filePath: URL) {
 		let newDirClosure: (URL) -> Void = { [weak self] newPath in
 			self?.openBrowserScreen(at: newPath)
