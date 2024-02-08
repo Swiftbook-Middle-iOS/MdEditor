@@ -8,11 +8,21 @@
 
 import Foundation
 
+/// Протокол для FileBrowserInteractor
 protocol IFileBrowserInteractor {
+	/// Метод для первичного сканирования директории и получения файлов
 	func fetchData()
+	/// Метод, вызываемый при выборе файла/директории
 	func didSelectItem(at index: Int)
 }
 
+/// Имплементация FileBrowserInteractor для просмотра файлов в одной конкретной директории
+/// - Parameters
+///     - fileExplorer: Объект, подписанный под`IFileExplorer`, необходим для сканирования пути и получения объектов `File`
+///     - currentPath: URL директории, который будет сканироваться при поиске файлов
+///     - presenter: Объект, подписанный под `IFileBrowserPresenter` для презентации полученных данных
+///     - newDirClosure: Замыкание для вызова при выборе новой диретории, в которое передается  ее URL
+///     - errorClosure: Опциональное замыкание для вызова при ошибке во время сканирования директории
 final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	// MARK: Dependencies

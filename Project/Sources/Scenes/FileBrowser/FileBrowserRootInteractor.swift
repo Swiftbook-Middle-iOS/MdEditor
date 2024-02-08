@@ -8,17 +8,25 @@
 
 import Foundation
 
+/// Имплементация IFileBrowserInteractor для корневого экрана.
+/// Необходима в случае, если нужно собрать корневой экран с папками/документами из разных директорий,
+/// например, из Resources + папки Documents приложения
 final class FileBrowserRootInteractor: IFileBrowserInteractor {
 
+	// MARK: Private properties
 	private lazy var rootItems = [makeFileForAssetsFolder(), makeFileForDocumentsFolder()]
+
+	// MARK: Dependencies
 	private var presenter: IFileBrowserPresenter
 	private var newDirClosure: (URL) -> Void
 
+	// MARK: Initialization
 	init(presenter: IFileBrowserPresenter, newDirClosure: @escaping (URL) -> Void) {
 		self.presenter = presenter
 		self.newDirClosure = newDirClosure
 	}
 
+	// MARK: IFileBrowserInteractor
 	func fetchData() {
 		presenter.present(response: FileBrowserModel.Response(
 			files: rootItems,
@@ -34,6 +42,7 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 		}
 	}
 
+	// MARK: Private methods
 	private func makeFileForAssetsFolder() -> File {
 		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
 			return File()
@@ -49,7 +58,12 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 	}
 
 	private func makeFileForDocumentsFolder() -> File {
-		guard let documentsURL = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return File() }
+		guard let documentsURL = try? FileManager.default.url(
+			for: .documentDirectory,
+			in: .userDomainMask,
+			appropriateFor: nil,
+			create: false
+		) else { return File() }
 
 		let documentsFolder = File()
 		documentsFolder.name = "Documents"
