@@ -37,6 +37,8 @@ private extension AboutAppViewController {
 		label.textColor = Theme.black
 		label.text = text
 		label.numberOfLines = 0
+		label.font = UIFont.preferredFont(forTextStyle: .body)
+		label.adjustsFontForContentSizeCategory = true
 		label.translatesAutoresizingMaskIntoConstraints = false
 		return label
 	}
