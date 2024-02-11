@@ -24,12 +24,12 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 
 	// MARK: Public methods
 	func present(response: FileBrowserModel.Response) {
-        var title = L10n.FileBrowser.defaultTitle
-        let lastComponent = response.currentPath.lastPathComponent
+		var title = L10n.FileBrowser.defaultTitle
+		let lastComponent = response.currentPath.lastPathComponent
 
-        if !lastComponent.isEmpty && lastComponent != "/" {
-            title = lastComponent
-        }
+		if !lastComponent.isEmpty && lastComponent != "/" {
+			title = lastComponent
+		}
 
 		let viewModel = FileBrowserModel.ViewModel(items: mapFilesData(files: response.files), title: title)
 		viewController.render(viewModel: viewModel)
