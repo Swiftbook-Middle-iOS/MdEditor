@@ -17,8 +17,9 @@ protocol IFileBrowserInteractor {
 }
 
 /// Имплементация FileBrowserInteractor для просмотра файлов в одной конкретной директории
-/// - Parameters
-///     - fileExplorer: Объект, подписанный под`IFileExplorer`, необходим для сканирования пути и получения объектов `File`
+/// - Parameters:
+///     - fileExplorer: Объект, подписанный под`IFileExplorer`, необходим для сканирования пути и 
+///       получения объектов `File`
 ///     - currentPath: URL директории, который будет сканироваться при поиске файлов
 ///     - presenter: Объект, подписанный под `IFileBrowserPresenter` для презентации полученных данных
 ///     - newDirClosure: Замыкание для вызова при выборе новой диретории, в которое передается  ее URL
@@ -51,10 +52,10 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	func fetchData() {
 		do {
 			try fileExplorer.scan(path: currentPath)
+			presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files, currentPath: currentPath))
 		} catch {
 			errorClosure?()
 		}
-		presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files, currentPath: currentPath))
 	}
 
 	func didSelectItem(at index: Int) {

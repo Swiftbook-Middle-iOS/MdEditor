@@ -16,7 +16,11 @@ enum AccessibilityIdentifier {
 	case textFieldLogin
 	case textFieldPass
 	case buttonLogin
-	
+
+	case openFileButton
+	case newDocumentButton
+	case aboutAppButton
+
 	var description: String {
 		switch self {
 		case .todoListTableView:
@@ -31,6 +35,12 @@ enum AccessibilityIdentifier {
 			return "textFieldPass"
 		case .buttonLogin:
 			return "loginButton"
+		case .openFileButton:
+			return "openFileButton"
+		case .newDocumentButton:
+			return "newDocumentButton"
+		case .aboutAppButton:
+			return "aboutAppButton"
 		}
 	}
 }
