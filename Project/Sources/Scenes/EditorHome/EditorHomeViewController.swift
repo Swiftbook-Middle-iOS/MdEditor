@@ -14,16 +14,28 @@ final class EditorHomeViewController: UIViewController {
 	var interactor: IEditorHomeInteractor?
 
 	// MARK: Private properties
-	private lazy var newDocumentButton: UIButton = makeButton(imageName: "doc", title: L10n.EditorHome.newButtonTitle)
+	private lazy var newDocumentButton: UIButton = makeButton(
+		imageName: "doc",
+		title: L10n.EditorHome.newButtonTitle,
+		accessibilityIdentifier: AccessibilityIdentifier.newDocumentButton.description
+	)
 
 	private lazy var openFileButton: UIButton = {
-		let button = makeButton(imageName: "folder", title: L10n.EditorHome.openButtonTitle)
+		let button = makeButton(
+			imageName: "folder",
+			title: L10n.EditorHome.openButtonTitle,
+			accessibilityIdentifier: AccessibilityIdentifier.openFileButton.description
+		)
 		button.addTarget(nil, action: #selector(openDocumentTapped), for: .touchUpInside)
 		return button
 	}()
 
 	private lazy var aboutButton: UIButton = {
-		let button = makeButton(imageName: "info.circle", title: L10n.EditorHome.aboutButtonTitle)
+		let button = makeButton(
+			imageName: "info.circle",
+			title: L10n.EditorHome.aboutButtonTitle,
+			accessibilityIdentifier: AccessibilityIdentifier.aboutAppButton.description
+		)
 		button.addTarget(nil, action: #selector(aboutAppTapped), for: .touchUpInside)
 		return button
 	}()
@@ -51,7 +63,7 @@ final class EditorHomeViewController: UIViewController {
 
 // MARK: Setup UI
 private extension EditorHomeViewController {
-	func makeButton(imageName: String, title: String) -> UIButton {
+	func makeButton(imageName: String, title: String, accessibilityIdentifier: String) -> UIButton {
 		let button = UIButton()
 
 		button.configuration = .borderless()
@@ -77,6 +89,7 @@ private extension EditorHomeViewController {
 		button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
 		button.titleLabel?.adjustsFontForContentSizeCategory = true
 
+		button.accessibilityIdentifier = accessibilityIdentifier
 		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
 	}

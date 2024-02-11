@@ -17,7 +17,7 @@ protocol IFileBrowserInteractor {
 }
 
 /// Имплементация FileBrowserInteractor для просмотра файлов в одной конкретной директории
-/// - Parameters
+/// - Parameters:
 ///     - fileExplorer: Объект, подписанный под`IFileExplorer`, необходим для сканирования пути и получения объектов `File`
 ///     - currentPath: URL директории, который будет сканироваться при поиске файлов
 ///     - presenter: Объект, подписанный под `IFileBrowserPresenter` для презентации полученных данных

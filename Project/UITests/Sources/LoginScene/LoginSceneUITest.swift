@@ -32,7 +32,7 @@ final class LoginSceneUITest: XCTestCase {
 	
 	func test_login_withValidCred_mustBeSuccess() {
 		app.launch()
-		let todoListScreenObject = TodoListScreenObject(app: app)
+		let editorHomeScreenObject = EditorHomeScreenObject(app: app)
 
 		loginScreen
 			.isLoginScreen()
@@ -40,7 +40,7 @@ final class LoginSceneUITest: XCTestCase {
 			.set(login: LoginCredentials.valid.login)
 			.login()
 
-		todoListScreenObject.isTodoListScreen()
+		editorHomeScreenObject.isEditorHomeScreen()
 	}
 	
 	func test_login_withInvalidPassword_mustBeSuccess() {
