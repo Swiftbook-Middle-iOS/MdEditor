@@ -21,7 +21,7 @@ final class FileBrowserInteractorTests: XCTestCase {
 		fileExplorer = FileExplorerMock()
 	}
 
-	func test_fetchData_withValidURL_mustBeSuccess() {
+	func test_fetchData_withValidURL_mustBeCorrect() {
 		let sut = makeSut(newDirClosure: { _ in })
 
 		sut.fetchData()
