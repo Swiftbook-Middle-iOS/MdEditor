@@ -37,6 +37,9 @@ private extension AboutAppViewController {
 		label.textColor = Theme.black
 		label.text = text
 		label.numberOfLines = 0
+		label.font = UIFont.preferredFont(forTextStyle: .body)
+		label.lineBreakMode = .byWordWrapping
+		label.adjustsFontForContentSizeCategory = true
 		label.translatesAutoresizingMaskIntoConstraints = false
 		return label
 	}
@@ -50,7 +53,8 @@ private extension AboutAppViewController {
 				equalTo: navigationController?.navigationBar.bottomAnchor ?? view.topAnchor,
 				constant: Sizes.Padding.double
 			),
-			label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal)
+			label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal),
+			label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Sizes.Padding.normal)
 		])
 	}
 }

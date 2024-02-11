@@ -16,8 +16,8 @@ enum FileExplorerError: Error {
 
 protocol IFileExplorer {
 	var files: [File] { get }
-	func scan(path: String) throws
-	func getFile(withName name: String, atPath: String) throws -> File
+	func scan(path: URL) throws
+	func getFile(withName name: String, atURL: URL) throws -> File
 }
 
 class File {
@@ -26,25 +26,24 @@ class File {
 		case dir
 	}
 
-	// Не успел тут сделать URL :(
 	var name = ""
-	var path = ""
-	var fullPath = ""
+	var path: URL?
+	var fullPath: URL?
 	var ext = ""
 	var size: UInt64 = 0
 	var type: FileType = .file
 	var creationDate = Date()
 	var modificationDate = Date()
 	var fullname: String {
-		"\(path)/\(name)"
+		guard let fullPath = fullPath else { return "" }
+		return fullPath.absoluteString
 	}
 
 	// MARK: Public methods
 	func loadFileBody() throws -> String {
 		var text = ""
-		guard let resourcePath = Bundle.main.resourcePath else { return text }
-		let fullPath = resourcePath + "/\(path)/\(name)"
-		text = try String(contentsOfFile: fullPath, encoding: String.Encoding.utf8)
+		guard let fullPath = fullPath else { return text }
+		text = try String(contentsOf: fullPath, encoding: String.Encoding.utf8)
 
 		return text
 	}
@@ -83,18 +82,16 @@ extension File: CustomStringConvertible {
 class FileExplorer: IFileExplorer {
 	var files = [File]()
 
-	func scan(path: String) throws {
+	func scan(path: URL) throws {
 		let fileManager = FileManager.default
-		guard let resourcePath = Bundle.main.resourcePath else { throw FileExplorerError.resourcePathNotFound }
-		let fullPath = resourcePath + "/\(path)"
 		files.removeAll()
 
 		var onlyFiles = [File]()
 		var onlyFolders = [File]()
 
-		let items = try fileManager.contentsOfDirectory(atPath: fullPath)
+		let items = try fileManager.contentsOfDirectory(at: path, includingPropertiesForKeys: nil)
 		for item in items {
-			let file = try getFile(withName: item, atPath: path)
+			let file = try getFile(withName: item.lastPathComponent, atURL: item.deletingLastPathComponent())
 			if file.type == .dir {
 				onlyFolders.append(file)
 			} else {
@@ -106,17 +103,16 @@ class FileExplorer: IFileExplorer {
 		files.append(contentsOf: onlyFiles)
 	}
 
-	func getFile(withName name: String, atPath: String) throws -> File {
+	func getFile(withName name: String, atURL: URL) throws -> File {
 		let fileManager = FileManager.default
-		guard let resourcePath = Bundle.main.resourcePath else { throw FileExplorerError.resourcePathNotFound }
-		let fullPath = resourcePath + "/\(atPath)"
+		let fileURL = atURL.appendingPathComponent(name)
 
-		let attr = try fileManager.attributesOfItem(atPath: fullPath + "/" + name)
+		let attr = try fileManager.attributesOfItem(atPath: fileURL.path)
 
 		let file = File()
 		file.name = name
-		file.path = atPath
-		file.fullPath = fullPath
+		file.path = atURL
+		file.fullPath = fileURL
 		if let fileType = attr[FileAttributeKey.type] as? FileAttributeType {
 			if fileType == .typeDirectory {
 				file.type = .dir

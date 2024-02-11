@@ -25,7 +25,7 @@ class EditorCoordinator: IEditorCoordinator {
 	// MARK: Public functions
 	func start() {
 		let openFileClosure: () -> Void = { [weak self] in
-			self?.openBrowserScreen(at: L10n.FileBrowser.baseAssetsPath)
+			self?.openRootBrowserScreen()
 		}
 
 		let aboutAppClosure: () -> Void = { [weak self] in
@@ -40,8 +40,17 @@ class EditorCoordinator: IEditorCoordinator {
 	}
 
 	// MARK: Private functions
-	private func openBrowserScreen(at filePath: String) {
-		let newDirClosure: (String) -> Void = { [weak self] newPath in
+	private func openRootBrowserScreen() {
+		navigationController.pushViewController(
+			FileBrowserAssembler().rootAssembly { [weak self] newPath in
+				self?.openBrowserScreen(at: newPath)
+			},
+			animated: true
+		)
+	}
+
+	private func openBrowserScreen(at filePath: URL) {
+		let newDirClosure: (URL) -> Void = { [weak self] newPath in
 			self?.openBrowserScreen(at: newPath)
 		}
 
@@ -64,6 +73,9 @@ class EditorCoordinator: IEditorCoordinator {
 		let viewController: AboutAppViewController
 		do {
 			viewController = try AboutAppAssembler().assembly(fileExplorer: fileExplorer)
+		} catch AboutAppAssemblerError.couldNotFindUrl {
+			showError(message: L10n.FileBrowser.invalidAssetsUrlError)
+			return
 		} catch {
 			showError(message: L10n.FileBrowser.loadError(L10n.AboutApp.aboutFileName, L10n.FileBrowser.baseAssetsPath))
 			return
