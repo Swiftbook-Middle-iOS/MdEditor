@@ -63,7 +63,14 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 			return nil
 		}
 
-		let documentsFolder = File(name: "Documents", path: documentsURL.deletingLastPathComponent(), type: .dir, size: 0, creationDate: Date(), modificationDate: Date())
+		let documentsFolder = File(
+			name: "Documents",
+			path: documentsURL.deletingLastPathComponent(),
+			type: .dir,
+			size: 0,
+			creationDate: Date(),
+			modificationDate: Date()
+		)
 
 		return documentsFolder
 	}

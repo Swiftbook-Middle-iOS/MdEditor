@@ -30,7 +30,7 @@ final class FileExplorerMock: IFileExplorer {
 	}
 	
 	func getFile(withName name: String, atURL: URL) throws -> MdEditor.File {
-		return File()
+		return File(name: "", path: nil, type: .file, size: 0, modificationDate: Date())
 	}
 
 	func loadTextFileBody(of file: MdEditor.File) throws -> String {
