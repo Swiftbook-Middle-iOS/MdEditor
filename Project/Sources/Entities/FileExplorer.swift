@@ -12,12 +12,14 @@ enum FileExplorerError: Error {
 	case resourcePathNotFound
 	case noAccessToDirectory
 	case couldNotWriteToFile
+	case notATextFile
 }
 
 protocol IFileExplorer {
 	var files: [File] { get }
 	func scan(path: URL) throws
 	func getFile(withName name: String, atURL: URL) throws -> File
+	func loadTextFileBody(of file: File) throws -> String
 }
 
 class File {
@@ -42,15 +44,6 @@ class File {
 			return String(describing: name.split(separator: ".").last ?? "")
 		}
 		return ""
-	}
-
-	// MARK: Public methods
-	func loadFileBody() throws -> String {
-		var text = ""
-		guard let fullPath = fullPath else { return text }
-		text = try String(contentsOf: fullPath, encoding: String.Encoding.utf8)
-
-		return text
 	}
 
 	// MARK: Private methods
@@ -106,6 +99,17 @@ class FileExplorer: IFileExplorer {
 
 		files.append(contentsOf: onlyFolders)
 		files.append(contentsOf: onlyFiles)
+	}
+
+	func loadTextFileBody(of file: File) throws -> String {
+		let textFileExts = ["md", "txt"]
+		guard textFileExts.contains(file.ext) else { throw FileExplorerError.notATextFile }
+
+		var text = ""
+		guard let fullPath = file.fullPath else { return text }
+		text = try String(contentsOf: fullPath, encoding: String.Encoding.utf8)
+
+		return text
 	}
 
 	func getFile(withName name: String, atURL: URL) throws -> File {
