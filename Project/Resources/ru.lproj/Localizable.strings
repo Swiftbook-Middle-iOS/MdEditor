@@ -51,6 +51,9 @@
 "editorHome.newButtonTitle" = "Новый";
 "editorHome.openButtonTitle" = "Открыть";
 "editorHome.aboutButtonTitle" = "О приложении";
+"editorHome.newDocImageName" = "doc";
+"editorHome.openFileImageName" = "folder";
+"editorHome.aboutAppImageName" = "info.circle";
 
 // MARK: FileBroswer
 "fileBrowser.defaultTitle" = "Root";
@@ -58,6 +61,8 @@
 "fileBrowser.accessError" = "Отсутствует доступ к директории";
 "fileBrowser.loadError" = "Could not load file %@ at %@";
 "fileBrowser.invalidAssetsUrlError" = "Не валидный URL для файла about.md";
+"fileBrowser.folderImageName" = "folder";
+"fileBrowser.fileImageName" = "doc.richtext";
 
 // MARK: AboutApp
 "aboutApp.title"= "О приложении";

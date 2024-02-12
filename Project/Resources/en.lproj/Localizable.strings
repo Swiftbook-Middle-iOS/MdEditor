@@ -51,6 +51,9 @@
 "editorHome.newButtonTitle" = "New";
 "editorHome.openButtonTitle" = "Open";
 "editorHome.aboutButtonTitle" = "About";
+"editorHome.newDocImageName" = "doc";
+"editorHome.openFileImageName" = "folder";
+"editorHome.aboutAppImageName" = "info.circle";
 
 // MARK: FileBroswer
 "fileBrowser.defaultTitle" = "Root";
@@ -58,6 +61,8 @@
 "fileBrowser.accessError" = "Do not have access to read files";
 "fileBrowser.loadError" = "Could not load file %@ at %@";
 "fileBrowser.invalidAssetsUrlError" = "Invalid URL for about.md file";
+"fileBrowser.folderImageName" = "folder";
+"fileBrowser.fileImageName" = "doc.richtext";
 
 // MARK: AboutApp
 "aboutApp.title"= "About app";

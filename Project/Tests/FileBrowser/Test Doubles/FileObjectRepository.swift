@@ -13,21 +13,19 @@ final class FileObjectRepository {
 	static var stubFileIetms = [makeStubFolder(), makeStubFile()]
 
 	private static func makeStubFolder() -> File {
-		let stubFolder = File()
-		stubFolder.name = "Folder"
-		stubFolder.path = URL(fileURLWithPath: NSTemporaryDirectory()).deletingLastPathComponent()
-		stubFolder.fullPath = URL(fileURLWithPath: NSTemporaryDirectory()).deletingLastPathComponent()
-		stubFolder.type = .dir
+		let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+		let folderPath = temporaryDirectoryURL.deletingLastPathComponent()
+
+		let stubFolder = File(name: "Folder", path: folderPath, type: .dir, size: 0, creationDate: Date(), modificationDate: Date())
 
 		return stubFolder
 	}
 
 	private static func makeStubFile() -> File {
-		let stubFile = File()
-		stubFile.name = "File"
-		stubFile.path = URL(fileURLWithPath: NSTemporaryDirectory()).deletingLastPathComponent()
-		stubFile.fullPath = URL(fileURLWithPath: NSTemporaryDirectory()).deletingLastPathComponent()
-		stubFile.type = .file
+		let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+		let filePath = temporaryDirectoryURL.deletingLastPathComponent()
+
+		let stubFile = File(name: "File", path: filePath, type: .file, size: 0, creationDate: Date(), modificationDate: Date())
 
 		return stubFile
 	}

@@ -29,13 +29,14 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 	// MARK: IFileBrowserInteractor
 	func fetchData() {
 		presenter.present(response: FileBrowserModel.Response(
-			files: rootItems,
+			files: rootItems.compactMap { $0 },
 			currentPath: URL(fileURLWithPath: "")
 		))
 	}
 
 	func didSelectItem(at index: Int) {
 		let item = rootItems[index]
+		guard let item = item else { return }
 		guard let fullPath = item.fullPath else { return }
 		if item.type == .dir {
 			newDirClosure(fullPath)
@@ -43,33 +44,33 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 	}
 
 	// MARK: Private methods
-	private func makeFileForAssetsFolder() -> File {
+	private func makeFileForAssetsFolder() -> File? {
 		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
-			return File()
+			return nil
 		}
-
-		let assetsFolder = File()
-		assetsFolder.name = "Assets"
-		assetsFolder.path = assetsFolderUrl.deletingLastPathComponent()
-		assetsFolder.fullPath = assetsFolderUrl
-		assetsFolder.type = .dir
+		let assetsFolder = File(name: "Assets", path: assetsFolderUrl.deletingLastPathComponent(), type: .dir)
 
 		return assetsFolder
 	}
 
-	private func makeFileForDocumentsFolder() -> File {
+	private func makeFileForDocumentsFolder() -> File? {
 		guard let documentsURL = try? FileManager.default.url(
 			for: .documentDirectory,
 			in: .userDomainMask,
 			appropriateFor: nil,
 			create: false
-		) else { return File() }
+		) else {
+			return nil
+		}
 
-		let documentsFolder = File()
-		documentsFolder.name = "Documents"
-		documentsFolder.path = documentsURL.deletingLastPathComponent()
-		documentsFolder.fullPath = documentsURL
-		documentsFolder.type = .dir
+		let documentsFolder = File(
+			name: "Documents",
+			path: documentsURL.deletingLastPathComponent(),
+			type: .dir,
+			size: 0,
+			creationDate: Date(),
+			modificationDate: Date()
+		)
 
 		return documentsFolder
 	}

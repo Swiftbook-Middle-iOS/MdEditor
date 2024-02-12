@@ -27,7 +27,7 @@ final class AboutAppAssembler {
 			atURL: assetsUrl
 		)
 
-		viewController.mdText = try aboutFile.loadFileBody()
+		viewController.mdText = try fileExplorer.loadTextFileBody(of: aboutFile)
 		viewController.markdownCoverter = markdownConverter
 		return viewController
 	}
