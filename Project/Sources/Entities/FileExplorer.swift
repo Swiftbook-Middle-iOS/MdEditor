@@ -28,22 +28,42 @@ class File {
 		case dir
 	}
 
-	var name = ""
-	var path: URL?
-	var fullPath: URL?
-	var size: UInt64 = 0
-	var type: FileType = .file
-	var creationDate = Date()
-	var modificationDate = Date()
+	private(set) var name = ""
+	private(set) var path: URL?
+	private(set) var fullPath: URL?
+	private(set) var size: UInt64 = 0
+	private(set) var type: FileType = .file
+	private(set) var creationDate = Date()
+	private(set) var modificationDate = Date()
+
 	var fullname: String {
 		guard let fullPath = fullPath else { return "" }
 		return fullPath.absoluteString
 	}
+
 	var ext: String {
 		if type == .file {
 			return String(describing: name.split(separator: ".").last ?? "")
 		}
 		return ""
+	}
+
+	// MARK: Initializer
+	init(
+		name: String,
+		path: URL? = nil,
+		type: FileType,
+		size: UInt64 = 0,
+		creationDate: Date = Date(),
+		modificationDate: Date = Date()
+	) {
+		self.name = name
+		self.path = path
+		self.type = type
+		self.size = size
+		self.creationDate = creationDate
+		self.modificationDate = modificationDate
+		self.fullPath = path?.appendingPathComponent(name)
 	}
 
 	// MARK: Private methods
@@ -117,27 +137,21 @@ class FileExplorer: IFileExplorer {
 		let fileURL = atURL.appendingPathComponent(name)
 
 		let attr = try fileManager.attributesOfItem(atPath: fileURL.path)
+		let fileType = attr[FileAttributeKey.type] as? FileAttributeType
+		let fileSize = attr[FileAttributeKey.size] as? UInt64 ?? 0
+		let creationDate = attr[FileAttributeKey.creationDate] as? Date ?? Date()
+		let modificationDate = attr[FileAttributeKey.modificationDate] as? Date ?? Date()
 
-		let file = File()
-		file.name = name
-		file.path = atURL
-		file.fullPath = fileURL
-		if let fileType = attr[FileAttributeKey.type] as? FileAttributeType {
-			if fileType == .typeDirectory {
-				file.type = .dir
-			} else if fileType == .typeRegular {
-				file.type = .file
-			}
-		}
-		if let fileSize = attr[FileAttributeKey.size] as? UInt64 {
-			file.size = fileSize
-		}
-		if let creationDate = attr[FileAttributeKey.creationDate] as? Date {
-			file.creationDate = creationDate
-		}
-		if let modificationDate = attr[FileAttributeKey.modificationDate] as? Date {
-			file.modificationDate = modificationDate
-		}
+		let type: File.FileType = (fileType == .typeDirectory) ? .dir : .file
+
+		let file = File(
+			name: name,
+			path: atURL,
+			type: type,
+			size: fileSize,
+			creationDate: creationDate,
+			modificationDate: modificationDate
+		)
 
 		return file
 	}
