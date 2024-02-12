@@ -15,11 +15,17 @@ class EditorCoordinator: IEditorCoordinator {
 	// MARK: Dependencies
 	var navigationController: UINavigationController
 	var fileExplorer: IFileExplorer
+	var markdownConverter: IMarkdownToHtmlConverter
 
 	// MARK: Initialization
-	init(navigationController: UINavigationController, fileExplorer: IFileExplorer) {
+	init(
+		navigationController: UINavigationController,
+		fileExplorer: IFileExplorer,
+		markdownConverter: IMarkdownToHtmlConverter
+	) {
 		self.navigationController = navigationController
 		self.fileExplorer = fileExplorer
+		self.markdownConverter = markdownConverter
 	}
 
 	// MARK: Public functions
@@ -72,7 +78,7 @@ class EditorCoordinator: IEditorCoordinator {
 	private func openAboutAppScreen() {
 		let viewController: AboutAppViewController
 		do {
-			viewController = try AboutAppAssembler().assembly(fileExplorer: fileExplorer)
+			viewController = try AboutAppAssembler().assembly(fileExplorer: fileExplorer, markdownConverter: markdownConverter)
 		} catch AboutAppAssemblerError.couldNotFindUrl {
 			showError(message: L10n.FileBrowser.invalidAssetsUrlError)
 			return

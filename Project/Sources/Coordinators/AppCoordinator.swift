@@ -15,12 +15,19 @@ final class AppCoordinator: BaseCoordinator {
 	private var window: UIWindow?
 	private var taskManager: ITaskManager
 	private var fileExplorer: IFileExplorer
+	private var markdownConverter: IMarkdownToHtmlConverter
 
-	init(window: UIWindow?, taskManager: ITaskManager, fileExplorer: IFileExplorer) {
+	init(
+		window: UIWindow?,
+		taskManager: ITaskManager,
+		fileExplorer: IFileExplorer,
+		markdownConverter: IMarkdownToHtmlConverter
+	) {
 		self.navigationController = UINavigationController()
 		self.window = window
 		self.taskManager = taskManager
 		self.fileExplorer = fileExplorer
+		self.markdownConverter = markdownConverter
 	}
 
 	// MARK: Public properties
@@ -61,7 +68,11 @@ final class AppCoordinator: BaseCoordinator {
 	}
 
 	func runEditorFlow() {
-		let coordinator = EditorCoordinator(navigationController: navigationController, fileExplorer: fileExplorer)
+		let coordinator = EditorCoordinator(
+			navigationController: navigationController,
+			fileExplorer: fileExplorer,
+			markdownConverter: markdownConverter
+		)
 		addDependency(coordinator)
 
 		coordinator.start()

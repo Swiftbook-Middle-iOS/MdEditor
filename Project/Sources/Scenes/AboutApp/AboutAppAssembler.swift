@@ -13,7 +13,10 @@ enum AboutAppAssemblerError: Error {
 }
 
 final class AboutAppAssembler {
-	func assembly(fileExplorer: IFileExplorer) throws -> AboutAppViewController {
+	func assembly(
+		fileExplorer: IFileExplorer,
+		markdownConverter: IMarkdownToHtmlConverter
+	) throws -> AboutAppViewController {
 		let viewController = AboutAppViewController()
 		guard let assetsUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
 			throw AboutAppAssemblerError.couldNotFindUrl
@@ -24,7 +27,8 @@ final class AboutAppAssembler {
 			atURL: assetsUrl
 		)
 
-		viewController.labelText = try aboutFile.loadFileBody()
+		viewController.mdText = try aboutFile.loadFileBody()
+		viewController.markdownCoverter = markdownConverter
 		return viewController
 	}
 }
