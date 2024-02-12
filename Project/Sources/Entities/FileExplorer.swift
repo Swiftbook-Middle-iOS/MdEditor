@@ -29,7 +29,6 @@ class File {
 	var name = ""
 	var path: URL?
 	var fullPath: URL?
-	var ext = ""
 	var size: UInt64 = 0
 	var type: FileType = .file
 	var creationDate = Date()
@@ -37,6 +36,12 @@ class File {
 	var fullname: String {
 		guard let fullPath = fullPath else { return "" }
 		return fullPath.absoluteString
+	}
+	var ext: String {
+		if type == .file {
+			return String(describing: name.split(separator: ".").last ?? "")
+		}
+		return ""
 	}
 
 	// MARK: Public methods
@@ -128,12 +133,6 @@ class FileExplorer: IFileExplorer {
 		}
 		if let modificationDate = attr[FileAttributeKey.modificationDate] as? Date {
 			file.modificationDate = modificationDate
-		}
-
-		if file.type == .dir {
-			file.ext = ""
-		} else {
-			file.ext = String(describing: name.split(separator: ".").last ?? "")
 		}
 
 		return file
