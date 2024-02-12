@@ -15,14 +15,14 @@ final class EditorHomeViewController: UIViewController {
 
 	// MARK: Private properties
 	private lazy var newDocumentButton: UIButton = makeButton(
-		imageName: "doc",
+		imageName: L10n.EditorHome.newDocImageName,
 		title: L10n.EditorHome.newButtonTitle,
 		accessibilityIdentifier: AccessibilityIdentifier.newDocumentButton.description
 	)
 
 	private lazy var openFileButton: UIButton = {
 		let button = makeButton(
-			imageName: "folder",
+			imageName: L10n.EditorHome.openFileImageName,
 			title: L10n.EditorHome.openButtonTitle,
 			accessibilityIdentifier: AccessibilityIdentifier.openFileButton.description
 		)
@@ -32,7 +32,7 @@ final class EditorHomeViewController: UIViewController {
 
 	private lazy var aboutButton: UIButton = {
 		let button = makeButton(
-			imageName: "info.circle",
+			imageName: L10n.EditorHome.aboutAppImageName,
 			title: L10n.EditorHome.aboutButtonTitle,
 			accessibilityIdentifier: AccessibilityIdentifier.aboutAppButton.description
 		)
