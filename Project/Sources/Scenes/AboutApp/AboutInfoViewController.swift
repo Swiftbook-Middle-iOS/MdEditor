@@ -25,6 +25,7 @@ final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 		view = webView
 
 		let html = markdownCoverter.convert(mdText)
+		let tokens = Lexer().tokenize(mdText)
 		loadPage(html: html)
 	}
 

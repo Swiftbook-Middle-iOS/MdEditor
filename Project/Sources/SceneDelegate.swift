@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window: window,
 			taskManager: buildTaskManager(),
 			fileExplorer: FileExplorer(),
-			markdownConverter: MarkdownToHtmlConverter()
+			markdownConverter: MarkdownToRawHtmlConverter()
 		)
 		appCoordinator.start()
 		self.window = window
