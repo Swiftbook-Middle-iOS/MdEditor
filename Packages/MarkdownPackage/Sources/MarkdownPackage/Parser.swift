@@ -72,9 +72,6 @@ private extension Parser {
 				tokens.removeFirst()
 				textNodes.append(contentsOf: parseText(text: text))
 				print(text)
-			} else if case .lineBreak = token {
-//				tokens.removeFirst()
-				break
 			} else {
 				break
 			}
