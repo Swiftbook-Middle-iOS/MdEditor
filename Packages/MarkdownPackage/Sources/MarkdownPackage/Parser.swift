@@ -24,6 +24,7 @@ public final class Parser {
 			nodes.append(parseLinebreak(tokens: &tokens))
 			nodes.append(parseCodeblock(tokens: &tokens))
 			nodes.append(parseOrderedList(tokens: &tokens))
+			nodes.append(parseUnorderedList(tokens: &tokens))
 
 			let resultNodes = nodes.compactMap { $0 }
 			if resultNodes.isEmpty, !tokens.isEmpty {
@@ -118,6 +119,44 @@ private extension Parser {
 
 		if !itemNodes.isEmpty {
 			return OrderedListNode(level: listLevel, children: itemNodes.compactMap { $0 })
+		}
+
+		return nil
+	}
+
+	func parseUnorderedList(tokens: inout [Token]) -> UnorderedListNode? {
+		var itemNodes = [INode?]()
+		var listLevel: Int!
+
+		guard let token = tokens.first else { return nil }
+
+		if case let .unorderedListItem(level, text) = token {
+			tokens.removeFirst()
+			itemNodes.append(UnorderedListItemNode(parseText(text: text)))
+			listLevel = level
+		} else {
+			return nil
+		}
+
+		while !tokens.isEmpty {
+			guard let token = tokens.first else { return nil }
+
+			if case let .unorderedListItem(level, text) = token {
+				if level == listLevel {
+					tokens.removeFirst()
+					itemNodes.append(UnorderedListItemNode(parseText(text: text)))
+				} else if level < listLevel {
+					break
+				} else {
+					itemNodes.append(parseUnorderedList(tokens: &tokens))
+				}
+			} else {
+				break
+			}
+		}
+
+		if !itemNodes.isEmpty {
+			return UnorderedListNode(level: listLevel, children: itemNodes.compactMap { $0 })
 		}
 
 		return nil

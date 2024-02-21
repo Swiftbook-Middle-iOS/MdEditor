@@ -33,6 +33,7 @@ public final class Lexer {
 				tokens.append(parseBlockquote(rawText: line))
 				tokens.append(parseParagraph(rawText: line))
 				tokens.append(parseOrderedList(rawText: line))
+				tokens.append(parseUnorderedList(rawText: line))
 			} else {
 				tokens.append(.codeLine(text: line))
 			}
@@ -85,7 +86,7 @@ private extension Lexer {
 
 	func parseParagraph(rawText: String) -> Token? {
 		if rawText.isEmpty { return nil }
-		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s)([^\#\>].*)"#)
+		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s|\t*-\s)([^\#\>].*)"#)
 		let range = NSRange(rawText.startIndex..., in: rawText)
 
 		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
@@ -121,6 +122,23 @@ private extension Lexer {
 			let text = String(rawText[textRange])
 
 			return .orderedListItem(level: level, text: parseText(rawText: text))
+		}
+
+		return nil
+	}
+
+	func parseUnorderedList(rawText: String) -> Token? {
+		let regex = try? NSRegularExpression(pattern: #"^(?!\d+\.)(\t*)-\s+(.+)"#)
+		let range = NSRange(rawText.startIndex..., in: rawText)
+
+		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
+
+		if let levelRange = Range(match.range(at: 1), in: rawText),
+		   let textRange = Range(match.range(at: 2), in: rawText) {
+			let level = String(rawText[levelRange]).count
+			let text = String(rawText[textRange])
+
+			return .unorderedListItem(level: level, text: parseText(rawText: text))
 		}
 
 		return nil
