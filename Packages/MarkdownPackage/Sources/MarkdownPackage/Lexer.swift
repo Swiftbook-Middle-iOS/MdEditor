@@ -51,24 +51,32 @@ private extension Lexer {
 	}
 
 	func parseHeader(rawText: String) -> Token? {
-		let regex = #/^(?<headerLevel>#{1,6})\s+(?<headerText>.+)/#
+		let regex = try? NSRegularExpression(pattern: #"^(?<headerLevel>#{1,6})\s+(?<headerText>.+)"#)
+		let range = NSRange(rawText.startIndex..., in: rawText)
+		let matches = regex?.matches(in: rawText, range: range)
 
-		if let match = rawText.wholeMatch(of: regex) {
-			let headerLevel = String(match.headerLevel).count
-			let headerText = String(match.headerText)
-			return .header(level: headerLevel, text: parseText(rawText: headerText))
+		guard let match = matches?.first else { return nil }
+
+		if let levelRange = Range(match.range(withName: "headerLevel"), in: rawText),
+		   let textRange = Range(match.range(withName: "headerText"), in: rawText) {
+			let level = String(rawText[levelRange]).count
+			let header = String(rawText[textRange])
+			return .header(level: level, text: parseText(rawText: header))
 		}
 
 		return nil
 	}
 
 	func parseBlockquote(rawText: String) -> Token? {
-		let regex = #/^(>{1,6})\s+(.+)/#
+		let regex = try? NSRegularExpression(pattern: #"^(>{1,6})\s+(.+)"#)
+		let range = NSRange(rawText.startIndex..., in: rawText)
+		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
 
-		if let match = rawText.wholeMatch(of: regex) {
-			let blockquoteLevel = String(match.output.1).count
-			let blockquoteText = parseText(rawText: String(match.output.2))
-			return .blockquote(level: blockquoteLevel, text: blockquoteText)
+		if let levelRange = Range(match.range(at: 1), in: rawText),
+		   let textRange = Range(match.range(at: 2), in: rawText) {
+			let level = String(rawText[levelRange]).count
+			let text = String(rawText[textRange])
+			return .blockquote(level: level, text: parseText(rawText: text))
 		}
 
 		return nil
@@ -76,11 +84,14 @@ private extension Lexer {
 
 	func parseParagraph(rawText: String) -> Token? {
 		if rawText.isEmpty { return nil }
-		let regex = #/^([^#>].*)/#
+		let regex = try? NSRegularExpression(pattern: #"^([^#>].*)"#)
+		let range = NSRange(rawText.startIndex..., in: rawText)
 
-		if let match = rawText.wholeMatch(of: regex) {
-			let paragraphText = parseText(rawText: String(match.output.1))
-			return .textLine(text: paragraphText)
+		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
+
+		if let textRange = Range(match.range(at: 1), in: rawText) {
+			let paragraphText = String(rawText[textRange])
+			return .textLine(text: parseText(rawText: paragraphText))
 		}
 
 		return nil

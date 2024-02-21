@@ -126,7 +126,7 @@ private extension Parser {
 			if case let .codeLine(text) = token {
 				tokens.removeFirst()
 				codeNodes.append(CodelineNode(code: text))
-			} else if case let .codeBlockMarker(level: level, lang: lang) = token {
+			} else if case let .codeBlockMarker(level: _, lang: _) = token {
 				tokens.removeFirst()
 				break
 			} else {
