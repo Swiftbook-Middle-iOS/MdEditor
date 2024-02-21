@@ -121,6 +121,18 @@ public final class ImageNode: BaseNode {
 	}
 }
 
+public final class OrderedListNode: BaseNode {
+	let level: Int
+
+	public init(level: Int, children: [INode] = []) {
+		self.level = level
+		super.init(children)
+	}
+}
+
+public final class OrderedListItemNode: BaseNode {
+}
+
 public final class LinebreakNode: BaseNode {
 	public init() {}
 }

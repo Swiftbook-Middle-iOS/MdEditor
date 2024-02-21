@@ -23,6 +23,7 @@ public final class Parser {
 			nodes.append(parseImage(tokens: &tokens))
 			nodes.append(parseLinebreak(tokens: &tokens))
 			nodes.append(parseCodeblock(tokens: &tokens))
+			nodes.append(parseOrderedList(tokens: &tokens))
 
 			let resultNodes = nodes.compactMap { $0 }
 			if resultNodes.isEmpty, !tokens.isEmpty {
@@ -84,6 +85,44 @@ private extension Parser {
 		return nil
 	}
 
+	func parseOrderedList(tokens: inout [Token]) -> OrderedListNode? {
+		var itemNodes = [INode?]()
+		var listLevel: Int!
+
+		guard let token = tokens.first else { return nil }
+
+		if case let .orderedListItem(level, text) = token {
+			tokens.removeFirst()
+			itemNodes.append(OrderedListItemNode(parseText(text: text)))
+			listLevel = level
+		} else {
+			return nil
+		}
+
+		while !tokens.isEmpty {
+			guard let token = tokens.first else { return nil }
+
+			if case let .orderedListItem(level, text) = token {
+				if level == listLevel {
+					tokens.removeFirst()
+					itemNodes.append(OrderedListItemNode(parseText(text: text)))
+				} else if level < listLevel {
+					break
+				} else {
+					itemNodes.append(parseOrderedList(tokens: &tokens))
+				}
+			} else {
+				break
+			}
+		}
+
+		if !itemNodes.isEmpty {
+			return OrderedListNode(level: listLevel, children: itemNodes.compactMap { $0 })
+		}
+
+		return nil
+	}
+
 	func parseImage(tokens: inout [Token]) -> ImageNode? {
 		guard let token = tokens.first else { return nil }
 
@@ -126,7 +165,7 @@ private extension Parser {
 			if case let .codeLine(text) = token {
 				tokens.removeFirst()
 				codeNodes.append(CodelineNode(code: text))
-			} else if case let .codeBlockMarker(level: _, lang: _) = token {
+			} else if case .codeBlockMarker(level: _, lang: _) = token {
 				tokens.removeFirst()
 				break
 			} else {
