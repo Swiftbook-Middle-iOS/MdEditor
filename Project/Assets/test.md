@@ -1,4 +1,5 @@
 # This is a Header
+paragraph
 
 > This is a blockquote.
 
@@ -18,6 +19,8 @@ console.log("Hello, world!");
 	2. Second level 2
 2. This is the second ordered list item
 3. This is the third ordered list item
+
+paragraph
 
 - Hello
 	- ordered level 2

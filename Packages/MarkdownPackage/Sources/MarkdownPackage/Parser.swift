@@ -25,6 +25,7 @@ public final class Parser {
 			nodes.append(parseCodeblock(tokens: &tokens))
 			nodes.append(parseOrderedList(tokens: &tokens))
 			nodes.append(parseUnorderedList(tokens: &tokens))
+			nodes.append(parseLink(tokens: &tokens))
 
 			let resultNodes = nodes.compactMap { $0 }
 			if resultNodes.isEmpty, !tokens.isEmpty {
@@ -44,8 +45,7 @@ private extension Parser {
 
 		if case let .header(level, text) = token {
 			tokens.removeFirst()
-			let textNodes = parseText(text: text)
-			return HeaderNode(level: level, children: textNodes)
+			return HeaderNode(level: level, children: parseText(text: text))
 		}
 
 		return nil
@@ -71,8 +71,9 @@ private extension Parser {
 			if case let .textLine(text) = token {
 				tokens.removeFirst()
 				textNodes.append(contentsOf: parseText(text: text))
+				print(text)
 			} else if case .lineBreak = token {
-				tokens.removeFirst()
+//				tokens.removeFirst()
 				break
 			} else {
 				break
@@ -214,6 +215,17 @@ private extension Parser {
 
 		if !codeNodes.isEmpty {
 			return codeNodes
+		}
+
+		return nil
+	}
+
+	func parseLink(tokens: inout [Token]) -> LinkNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case let .link(url, text) = token {
+			tokens.removeFirst()
+			return LinkNode(url: url, text: text)
 		}
 
 		return nil

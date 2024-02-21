@@ -145,6 +145,16 @@ public final class UnorderedListNode: BaseNode {
 public final class UnorderedListItemNode: BaseNode {
 }
 
+public final class LinkNode: BaseNode {
+	let url: String
+	let text: String
+
+	public init(url: String, text: String) {
+		self.url = url
+		self.text = text
+	}
+}
+
 public final class LinebreakNode: BaseNode {
 	public init() {}
 }

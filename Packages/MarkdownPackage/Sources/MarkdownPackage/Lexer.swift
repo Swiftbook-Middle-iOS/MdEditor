@@ -34,6 +34,7 @@ public final class Lexer {
 				tokens.append(parseParagraph(rawText: line))
 				tokens.append(parseOrderedList(rawText: line))
 				tokens.append(parseUnorderedList(rawText: line))
+				tokens.append(parseLink(rawText: line))
 			} else {
 				tokens.append(.codeLine(text: line))
 			}
@@ -86,7 +87,7 @@ private extension Lexer {
 
 	func parseParagraph(rawText: String) -> Token? {
 		if rawText.isEmpty { return nil }
-		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s|\t*-\s)([^\#\>].*)"#)
+		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s|\t*-\s|#+\s)([^\>].*)"#)
 		let range = NSRange(rawText.startIndex..., in: rawText)
 
 		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
@@ -141,6 +142,23 @@ private extension Lexer {
 			return .unorderedListItem(level: level, text: parseText(rawText: text))
 		}
 
+		return nil
+	}
+
+	func parseLink(rawText: String) -> Token? {
+		let regex = try? NSRegularExpression(pattern: #"\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#)
+		let range = NSRange(rawText.startIndex..., in: rawText)
+
+		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
+
+		if let titleRange = Range(match.range(at: 1), in: rawText),
+		   let linkRange = Range(match.range(at: 2), in: rawText) {
+			let title = String(rawText[titleRange])
+			let link = String(rawText[linkRange])
+
+			return .link(url: link, text: title)
+		}
+		
 		return nil
 	}
 
