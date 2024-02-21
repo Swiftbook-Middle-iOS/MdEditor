@@ -1,0 +1,166 @@
+//
+//  Parser.swift
+//  MdEditor
+//
+//  Created by Aleksandr Mamlygo on 20.02.24.
+//  Copyright © 2024 Swiftbook-Middle-iOS. All rights reserved.
+//
+
+import Foundation
+
+public final class Parser {
+	public init() {}
+
+	public func parse(tokens: [Token]) -> Document {
+		var tokens = tokens
+		var result = [INode]()
+
+		while !tokens.isEmpty {
+			var nodes = [INode?]()
+			nodes.append(parseHeader(tokens: &tokens))
+			nodes.append(parseBlockquote(tokens: &tokens))
+			nodes.append(parseParagraph(tokens: &tokens))
+			nodes.append(parseImage(tokens: &tokens))
+			nodes.append(parseLinebreak(tokens: &tokens))
+			nodes.append(parseCodeblock(tokens: &tokens))
+
+			let resultNodes = nodes.compactMap { $0 }
+			if resultNodes.isEmpty, !tokens.isEmpty {
+				tokens.removeFirst()
+			} else {
+				result.append(contentsOf: resultNodes)
+			}
+		}
+
+		return Document(result)
+	}
+}
+
+private extension Parser {
+	func parseHeader(tokens: inout [Token]) -> HeaderNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case let .header(level, text) = token {
+			tokens.removeFirst()
+			let textNodes = parseText(text: text)
+			return HeaderNode(level: level, children: textNodes)
+		}
+
+		return nil
+	}
+
+	func parseBlockquote(tokens: inout [Token]) -> BlockquoteNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case let .blockquote(level, text) = token {
+			tokens.removeFirst()
+			return BlockquoteNode(level: level, parseText(text: text))
+		}
+
+		return nil
+	}
+
+	func parseParagraph(tokens: inout [Token]) -> ParagraphNode? {
+		var textNodes = [INode]()
+
+		while !tokens.isEmpty {
+			guard let token = tokens.first else { return nil }
+
+			if case let .textLine(text) = token {
+				tokens.removeFirst()
+				textNodes.append(contentsOf: parseText(text: text))
+			} else if case .lineBreak = token {
+				tokens.removeFirst()
+				break
+			} else {
+				break
+			}
+		}
+
+		if !textNodes.isEmpty {
+			return ParagraphNode(textNodes)
+		}
+
+		return nil
+	}
+
+	func parseImage(tokens: inout [Token]) -> ImageNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case let .image(url, size) = token {
+			tokens.removeFirst()
+			return ImageNode(url: url, size: size)
+		}
+
+		return nil
+	}
+
+	func parseLinebreak(tokens: inout [Token]) -> LinebreakNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case .lineBreak = token {
+			tokens.removeFirst()
+			return LinebreakNode()
+		}
+
+		return nil
+	}
+
+	func parseCodeblock(tokens: inout [Token]) -> CodeblockNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case let .codeBlockMarker(level, lang) = token {
+			tokens.removeFirst()
+			return CodeblockNode(level: level, lang: lang, children: parseCodelines(tokens: &tokens) ?? [])
+		}
+
+		return nil
+	}
+
+	func parseCodelines(tokens: inout [Token]) -> [CodelineNode]? {
+		var codeNodes = [CodelineNode]()
+
+		while !tokens.isEmpty {
+			guard let token = tokens.first else { return nil }
+
+			if case let .codeLine(text) = token {
+				tokens.removeFirst()
+				codeNodes.append(CodelineNode(code: text))
+			} else if case let .codeBlockMarker(level: level, lang: lang) = token {
+				tokens.removeFirst()
+				break
+			} else {
+				break
+			}
+		}
+
+		if !codeNodes.isEmpty {
+			return codeNodes
+		}
+
+		return nil
+	}
+
+	func parseText(text: Text) -> [INode] {
+		var textNodes = [INode]()
+
+		text.text.forEach { part in
+			switch part {
+			case .normal(let text):
+				textNodes.append(TextNode(text: text))
+			case .bold(let text):
+				textNodes.append(BoldTextNode(text: text))
+			case .italic(let text):
+				textNodes.append(ItalicTextNode(text: text))
+			case .boldItalic(let text):
+				textNodes.append(BoldItalicTextNode(text: text))
+			case .inlineCode(let text):
+				textNodes.append(InlineCodeNode(code: text))
+			case .escapedChar(let text):
+				textNodes.append(EscapedCharNode(char: text))
+			}
+		}
+
+		return textNodes
+	}
+}
