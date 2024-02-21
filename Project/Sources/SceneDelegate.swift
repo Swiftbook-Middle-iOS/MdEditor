@@ -21,8 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		appCoordinator = AppCoordinator(
 			window: window,
 			taskManager: buildTaskManager(),
-			fileExplorer: FileExplorer(),
-			markdownConverter: MarkdownToRawHtmlConverter()
+			fileExplorer: FileExplorer()
 		)
 		appCoordinator.start()
 		self.window = window

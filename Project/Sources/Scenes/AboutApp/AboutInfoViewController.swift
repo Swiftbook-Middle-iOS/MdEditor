@@ -8,12 +8,14 @@
 
 import UIKit
 import WebKit
+import MarkdownPackage
 
 final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 
 	// MARK: Dependencies
 	var mdText: String! // swiftlint:disable:this implicitly_unwrapped_optional
-	var markdownCoverter: IMarkdownToHtmlConverter! // swiftlint:disable:this implicitly_unwrapped_optional
+	var parser: Parser! // swiftlint:disable:this implicitly_unwrapped_optional
+	var lexer: Lexer! // swiftlint:disable:this implicitly_unwrapped_optional
 
 	// MARK: Private properties
 	private var webView = WKWebView()
@@ -24,9 +26,9 @@ final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 		webView.navigationDelegate = self
 		view = webView
 
-		let html = markdownCoverter.convert(mdText)
-		let tokens = Lexer().tokenize(mdText)
-		loadPage(html: html)
+		let tokens = lexer.tokenize(mdText)
+		let nodes = parser.parse(tokens: tokens)
+		print()
 	}
 
 	// MARK: Private methods

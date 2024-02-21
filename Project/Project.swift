@@ -43,7 +43,8 @@ let target = Target(
 	resources: ["Resources/**", .folderReference(path: "Assets", tags: [], inclusionCondition: nil)],
 	scripts: myScripts,
 	dependencies: [
-		.package(product: "TaskManagerPackage")
+		.package(product: "TaskManagerPackage"),
+		.package(product: "MarkdownPackage")
 	]
 )
 
@@ -89,7 +90,8 @@ let project = Project(
 		developmentRegion: "en"
 	),
 	packages: [
-		.local(path: .relativeToManifest("../Packages/TaskManagerPackage"))
+		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
+		.local(path: .relativeToManifest("../Packages/MarkdownPackage"))
 	],
 	settings: .settings(
 		base: [

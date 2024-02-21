@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MarkdownPackage
 
 enum AboutAppAssemblerError: Error {
 	case couldNotFindUrl
@@ -15,20 +16,24 @@ enum AboutAppAssemblerError: Error {
 final class AboutAppAssembler {
 	func assembly(
 		fileExplorer: IFileExplorer,
-		markdownConverter: IMarkdownToHtmlConverter
+		lexer: Lexer,
+		parser: Parser
 	) throws -> AboutAppViewController {
 		let viewController = AboutAppViewController()
 		guard let assetsUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
 			throw AboutAppAssemblerError.couldNotFindUrl
 		}
 
+		// TODO: change back to about
 		let aboutFile = try fileExplorer.getFile(
-			withName: L10n.AboutApp.aboutFileName,
+			withName: "test.md",
 			atURL: assetsUrl
 		)
 
 		viewController.mdText = try fileExplorer.loadTextFileBody(of: aboutFile)
-		viewController.markdownCoverter = markdownConverter
+		viewController.lexer = lexer
+		viewController.parser = parser
+
 		return viewController
 	}
 }
