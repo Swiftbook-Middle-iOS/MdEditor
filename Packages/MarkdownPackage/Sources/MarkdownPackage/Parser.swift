@@ -19,13 +19,12 @@ public final class Parser {
 			var nodes = [INode?]()
 			nodes.append(parseHeader(tokens: &tokens))
 			nodes.append(parseBlockquote(tokens: &tokens))
-			nodes.append(parseParagraph(tokens: &tokens))
 			nodes.append(parseImage(tokens: &tokens))
 			nodes.append(parseLinebreak(tokens: &tokens))
 			nodes.append(parseCodeblock(tokens: &tokens))
 			nodes.append(parseOrderedList(tokens: &tokens))
 			nodes.append(parseUnorderedList(tokens: &tokens))
-			nodes.append(parseLink(tokens: &tokens))
+			nodes.append(parseParagraph(tokens: &tokens))
 
 			let resultNodes = nodes.compactMap { $0 }
 			if resultNodes.isEmpty, !tokens.isEmpty {
@@ -71,7 +70,6 @@ private extension Parser {
 			if case let .textLine(text) = token {
 				tokens.removeFirst()
 				textNodes.append(contentsOf: parseText(text: text))
-				print(text)
 			} else {
 				break
 			}
@@ -217,17 +215,6 @@ private extension Parser {
 		return nil
 	}
 
-	func parseLink(tokens: inout [Token]) -> LinkNode? {
-		guard let token = tokens.first else { return nil }
-
-		if case let .link(url, text) = token {
-			tokens.removeFirst()
-			return LinkNode(url: url, text: text)
-		}
-
-		return nil
-	}
-
 	func parseText(text: Text) -> [INode] {
 		var textNodes = [INode]()
 
@@ -245,6 +232,8 @@ private extension Parser {
 				textNodes.append(InlineCodeNode(code: text))
 			case .escapedChar(let text):
 				textNodes.append(EscapedCharNode(char: text))
+			case .link(let url, let text):
+				textNodes.append(LinkNode(url: url, text: text))
 			}
 		}
 

@@ -8,7 +8,9 @@
 
 import Foundation
 
-final class TextParser {
+// TODO: remove public
+public final class TextParser {
+	public init() {}
 	private struct PartRegex {
 		let type: PartType
 		let regex: NSRegularExpression
@@ -20,6 +22,7 @@ final class TextParser {
 			case boldItalic
 			case inlineCode
 			case escapedChar
+			case link
 		}
 
 		init(type: TextParser.PartRegex.PartType, pattern: String) {
@@ -30,6 +33,7 @@ final class TextParser {
 
 	private let partRegexes = [
 		PartRegex(type: .escapedChar, pattern: #"^\\([\\\`\*\_\{\}\[\]\<\>\(\)\+\-\.\!\|#]){1}"#),
+		PartRegex(type: .link, pattern: #"\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#),
 		PartRegex(type: .normal, pattern: #"^(.*?)(?=[\*`\\]|$)"#),
 		PartRegex(type: .boldItalic, pattern: #"^\*\*\*(.*?)\*\*\*"#),
 		PartRegex(type: .bold, pattern: #"^\*\*(.*?)\*\*"#),
@@ -37,7 +41,7 @@ final class TextParser {
 		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#)
 	]
 
-	func parse(rawText text: String) -> Text {
+	public func parse(rawText text: String) -> Text {
 		var parts = [Text.Part]()
 		var range = NSRange(text.startIndex..., in: text)
 
@@ -63,6 +67,10 @@ final class TextParser {
 							parts.append(.inlineCode(text: extractedText))
 						case .escapedChar:
 							parts.append(.escapedChar(text: extractedText))
+						case .link:
+							if let group2 = Range(match.range(at: 2), in: text) {
+								parts.append(.link(url: String(text[group2]), text: extractedText))
+							}
 						}
 						range = NSRange(group0.upperBound..., in: text)
 						break

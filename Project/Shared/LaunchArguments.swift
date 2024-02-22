@@ -10,4 +10,5 @@ import Foundation
 
 enum CommandLineArguments: String {
 	case skipLogin = "-skipLogin"
+	case skipLoginForEditor = "-skipLoginForEditor"
 }

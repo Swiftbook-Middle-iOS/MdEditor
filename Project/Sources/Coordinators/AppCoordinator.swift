@@ -36,6 +36,12 @@ final class AppCoordinator: BaseCoordinator {
 			window?.rootViewController = navigationController
 			window?.makeKeyAndVisible()
 			return
+		} else if CommandLine.arguments.contains(CommandLineArguments.skipLoginForEditor.rawValue) {
+			runEditorFlow()
+
+			window?.rootViewController = navigationController
+			window?.makeKeyAndVisible()
+			return
 		}
 #endif
 		runLoginFlow()

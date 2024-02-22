@@ -29,7 +29,7 @@ paragraph
 	- ordered lebvel 2
 - bye
 
-This is a regular text line.
+This is a regular text line. [This is an inline link](https://example.com)
 
 [This is a link](https://example.com)
 

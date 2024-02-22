@@ -31,5 +31,6 @@ public struct Text {
 		case boldItalic(text: String)
 		case inlineCode(text: String)
 		case escapedChar(text: String)
+		case link(url: String, text: String)
 	}
 }
