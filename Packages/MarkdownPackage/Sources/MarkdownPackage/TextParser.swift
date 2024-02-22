@@ -33,12 +33,12 @@ public final class TextParser {
 
 	private let partRegexes = [
 		PartRegex(type: .escapedChar, pattern: #"^\\([\\\`\*\_\{\}\[\]\<\>\(\)\+\-\.\!\|#]){1}"#),
-		PartRegex(type: .link, pattern: #"(?<!\!)\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#),
-		PartRegex(type: .normal, pattern: #"^(.*?)(?=[\*`\\]|$)"#),
+		PartRegex(type: .normal, pattern: #"^(.*?)(?=[\*`\\\[]|$)"#),
 		PartRegex(type: .boldItalic, pattern: #"^\*\*\*(.*?)\*\*\*"#),
 		PartRegex(type: .bold, pattern: #"^\*\*(.*?)\*\*"#),
 		PartRegex(type: .italic, pattern: #"^\*(.*?)\*"#),
-		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#)
+		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#),
+		PartRegex(type: .link, pattern: #"(?<!\!)\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#)
 	]
 
 	public func parse(rawText text: String) -> Text {

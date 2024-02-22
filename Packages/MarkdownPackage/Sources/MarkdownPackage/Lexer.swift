@@ -87,8 +87,8 @@ private extension Lexer {
 
 	func parseParagraph(rawText: String) -> Token? {
 		if rawText.isEmpty { return nil }
-		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s|\t*-\s|#+\s|[*_-]{3,})([^\>].*)"#
-)
+		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s|\t*-\s|#+\s|[*_-]{3,})([^\>].*)"#)
+
 		let range = NSRange(rawText.startIndex..., in: rawText)
 
 		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
