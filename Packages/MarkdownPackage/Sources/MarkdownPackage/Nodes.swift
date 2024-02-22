@@ -158,3 +158,7 @@ public final class LinkNode: BaseNode {
 public final class LinebreakNode: BaseNode {
 	public init() {}
 }
+
+public final class LineNode: BaseNode {
+	public init() {}
+}

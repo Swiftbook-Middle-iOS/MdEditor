@@ -25,6 +25,7 @@ public final class Parser {
 			nodes.append(parseOrderedList(tokens: &tokens))
 			nodes.append(parseUnorderedList(tokens: &tokens))
 			nodes.append(parseParagraph(tokens: &tokens))
+			nodes.append(parseHorizontalLine(tokens: &tokens))
 
 			let resultNodes = nodes.compactMap { $0 }
 			if resultNodes.isEmpty, !tokens.isEmpty {
@@ -153,6 +154,17 @@ private extension Parser {
 
 		if !itemNodes.isEmpty {
 			return UnorderedListNode(level: listLevel, children: itemNodes.compactMap { $0 })
+		}
+
+		return nil
+	}
+
+	func parseHorizontalLine(tokens: inout [Token]) -> LineNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case .horizontalLine = token {
+			tokens.removeFirst()
+			return LineNode()
 		}
 
 		return nil

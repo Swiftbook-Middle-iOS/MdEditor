@@ -31,6 +31,7 @@ public final class Lexer {
 				tokens.append(parseLineBreak(rawText: line))
 				tokens.append(parseHeader(rawText: line))
 				tokens.append(parseBlockquote(rawText: line))
+				tokens.append(parseHorizontalLine(rawText: line))
 				tokens.append(parseParagraph(rawText: line))
 				tokens.append(parseOrderedList(rawText: line))
 				tokens.append(parseUnorderedList(rawText: line))
@@ -86,7 +87,8 @@ private extension Lexer {
 
 	func parseParagraph(rawText: String) -> Token? {
 		if rawText.isEmpty { return nil }
-		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s|\t*-\s|#+\s)([^\>].*)"#)
+		let regex = try? NSRegularExpression(pattern: #"^(?!>|\t*\d+\.\s|\t*-\s|#+\s|[*_-]{3,})([^\>].*)"#
+)
 		let range = NSRange(rawText.startIndex..., in: rawText)
 
 		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
@@ -105,6 +107,16 @@ private extension Lexer {
 		if let text = rawText.group(for: pattern) {
 			let level = rawText.filter { $0 == "`" }.count
 			return .codeBlockMarker(level: level, lang: text)
+		}
+
+		return nil
+	}
+
+	func parseHorizontalLine(rawText: String) -> Token? {
+		let pattern = #"^([-*_])(?:\1){2,}[\t ]*$"#
+
+		if let _ = rawText.group(for: pattern) {
+			return .horizontalLine
 		}
 
 		return nil

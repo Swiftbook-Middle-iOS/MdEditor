@@ -20,6 +20,8 @@ console.log("Hello, world!");
 2. This is the second ordered list item
 3. This is the third ordered list item
 
+***
+
 paragraph
 
 - Hello

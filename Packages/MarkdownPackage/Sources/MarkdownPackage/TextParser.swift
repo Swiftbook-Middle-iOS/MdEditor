@@ -33,7 +33,7 @@ public final class TextParser {
 
 	private let partRegexes = [
 		PartRegex(type: .escapedChar, pattern: #"^\\([\\\`\*\_\{\}\[\]\<\>\(\)\+\-\.\!\|#]){1}"#),
-		PartRegex(type: .link, pattern: #"\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#),
+		PartRegex(type: .link, pattern: #"(?<!\!)\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#),
 		PartRegex(type: .normal, pattern: #"^(.*?)(?=[\*`\\]|$)"#),
 		PartRegex(type: .boldItalic, pattern: #"^\*\*\*(.*?)\*\*\*"#),
 		PartRegex(type: .bold, pattern: #"^\*\*(.*?)\*\*"#),

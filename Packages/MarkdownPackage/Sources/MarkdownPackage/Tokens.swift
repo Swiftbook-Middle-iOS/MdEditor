@@ -19,6 +19,7 @@ public enum Token {
 	case link(url: String, text: String)
 	case image(url: String, size: Int)
 	case lineBreak
+	case horizontalLine
 }
 
 public struct Text {
