@@ -8,9 +8,7 @@
 
 import Foundation
 
-// TODO: remove public
-public final class TextParser {
-	public init() {}
+final class TextParser {
 	private struct PartRegex {
 		let type: PartType
 		let regex: NSRegularExpression
@@ -41,7 +39,7 @@ public final class TextParser {
 		PartRegex(type: .link, pattern: #"(?<!\!)\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#)
 	]
 
-	public func parse(rawText text: String) -> Text {
+	func parse(rawText text: String) -> Text {
 		var parts = [Text.Part]()
 		var range = NSRange(text.startIndex..., in: text)
 
