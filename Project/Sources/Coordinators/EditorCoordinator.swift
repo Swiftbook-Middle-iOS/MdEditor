@@ -87,7 +87,7 @@ class EditorCoordinator: IEditorCoordinator {
 			showError(message: L10n.FileBrowser.invalidAssetsUrlError)
 			return
 		} catch {
-			showError(message: L10n.FileBrowser.loadError(L10n.AboutApp.aboutFileName, L10n.FileBrowser.baseAssetsPath))
+			showError(message: L10n.FileBrowser.loadError(Endpoints.aboutFileName, Endpoints.baseAssetsPath))
 			return
 		}
 		navigationController.pushViewController(viewController, animated: true)

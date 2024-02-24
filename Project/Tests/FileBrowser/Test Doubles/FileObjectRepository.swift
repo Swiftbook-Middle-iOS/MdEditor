@@ -13,7 +13,7 @@ final class FileObjectRepository {
 	static var stubFileIetms = [makeStubFolder(), makeStubFile()]
 
 	private static func makeStubFolder() -> File? {
-		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
+		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(Endpoints.baseAssetsPath.rawValue) else {
 			return nil
 		}
 		switch File.parse(url: assetsFolderUrl) {
@@ -26,7 +26,7 @@ final class FileObjectRepository {
 
 	private static func makeStubFile() -> File? {
 		guard let assetsFolderUrl = Bundle.main.resourceURL?
-			.appendingPathComponent(L10n.FileBrowser.baseAssetsPath)
+			.appendingPathComponent(Endpoints.baseAssetsPath.rawValue)
 			.appendingPathComponent("about.md")
 		else {
 			return nil

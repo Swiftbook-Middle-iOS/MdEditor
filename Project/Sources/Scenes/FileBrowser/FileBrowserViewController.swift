@@ -63,11 +63,11 @@ private extension FileBrowserViewController {
 		switch object {
 		case .file(let fileModel):
 			contentConfiguration.text = fileModel.title
-			contentConfiguration.image = UIImage(systemName: L10n.FileBrowser.fileImageName)
+			contentConfiguration.image = UIImage(systemName: Images.FileBrowser.fileImageName.rawValue)
 			contentConfiguration.secondaryText = fileModel.attributes
 		case .dir(let dirModel):
 			contentConfiguration.text = dirModel.title
-			contentConfiguration.image = UIImage(systemName: L10n.FileBrowser.folderImageName)
+			contentConfiguration.image = UIImage(systemName: Images.FileBrowser.folderImageName.rawValue)
 			contentConfiguration.secondaryText = dirModel.attributes
 		}
 		cell.contentConfiguration = contentConfiguration

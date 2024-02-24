@@ -20,7 +20,7 @@ final class AboutAppAssembler {
 		parser: Parser
 	) throws -> AboutAppViewController {
 		let viewController = AboutAppViewController()
-		guard let assetsUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
+		guard let assetsUrl = Bundle.main.resourceURL?.appendingPathComponent(Endpoints.baseAssetsPath.rawValue) else {
 			throw AboutAppAssemblerError.couldNotFindUrl
 		}
 
