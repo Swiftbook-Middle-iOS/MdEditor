@@ -26,7 +26,7 @@ final class FileBrowserInteractorTests: XCTestCase {
 
 		sut.fetchData()
 
-		XCTAssertEqual(currentPath, fileExplorer.didScanPath, "File explorer не осуществил скнирование ожидаемой директории")
+		XCTAssertEqual(currentPath, fileExplorer.didGetFilesFromPath, "File explorer не осуществил скнирование ожидаемой директории")
 		XCTAssertTrue(presenter.didCallPresent, "Не вызван presenter.present(:)")
 	}
 

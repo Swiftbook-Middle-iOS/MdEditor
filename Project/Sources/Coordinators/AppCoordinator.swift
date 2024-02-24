@@ -51,8 +51,9 @@ final class AppCoordinator: BaseCoordinator {
 		let coordinator = LoginCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 
-		coordinator.finishFlow = { [weak self] in
+		coordinator.finishFlow = { [weak self, weak coordinator] in
 			guard let self = self else { return }
+			guard let coordinator = coordinator else { return }
 			self.runEditorFlow()
 			self.removeDependency(coordinator)
 		}

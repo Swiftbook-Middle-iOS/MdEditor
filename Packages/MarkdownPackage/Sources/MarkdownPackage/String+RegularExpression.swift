@@ -19,7 +19,8 @@ extension String {
 			   let group = Range(match.range(at: 1), in: text) {
 				return String(text[group])
 			}
-		} catch let error as NSError {
+		} catch {
+			return nil
 		}
 
 		return nil

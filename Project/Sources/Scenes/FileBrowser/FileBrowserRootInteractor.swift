@@ -14,7 +14,7 @@ import Foundation
 final class FileBrowserRootInteractor: IFileBrowserInteractor {
 
 	// MARK: Private properties
-	private lazy var rootItems = [makeFileForAssetsFolder()]
+	private lazy var rootItems = [makeFileForAssetsFolder(), makeFileForDocumentsFolder()]
 
 	// MARK: Dependencies
 	private var presenter: IFileBrowserPresenter
@@ -50,30 +50,26 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 		switch File.parse(url: assetsFolderUrl) {
 		case .success(let folder):
 			return folder
-		case .failure(_):
+		case .failure:
 			return nil
 		}
 	}
 
-//	private func makeFileForDocumentsFolder() -> File? {
-//		guard let documentsURL = try? FileManager.default.url(
-//			for: .documentDirectory,
-//			in: .userDomainMask,
-//			appropriateFor: nil,
-//			create: false
-//		) else {
-//			return nil
-//		}
-//
-//		let documentsFolder = File(
-//			name: "Documents",
-//			path: documentsURL.deletingLastPathComponent(),
-//			type: .dir,
-//			size: 0,
-//			creationDate: Date(),
-//			modificationDate: Date()
-//		)
-//
-//		return documentsFolder
-//	}
+	private func makeFileForDocumentsFolder() -> File? {
+		guard let documentsURL = try? FileManager.default.url(
+			for: .documentDirectory,
+			in: .userDomainMask,
+			appropriateFor: nil,
+			create: false
+		) else {
+			return nil
+		}
+
+		switch File.parse(url: documentsURL) {
+		case .success(let folder):
+			return folder
+		case .failure:
+			return nil
+		}
+	}
 }

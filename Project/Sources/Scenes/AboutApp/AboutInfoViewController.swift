@@ -28,7 +28,6 @@ final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 
 		let tokens = lexer.tokenize(mdText)
 		let nodes = parser.parse(tokens: tokens)
-		print()
 	}
 
 	// MARK: Private methods

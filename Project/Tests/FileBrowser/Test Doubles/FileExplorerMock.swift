@@ -14,26 +14,26 @@ enum MockFileExplorerError: Error {
 }
 
 final class FileExplorerMock: IFileExplorer {
-
 	private var stubItems = FileObjectRepository.stubFileIetms
 
 	var files = [MdEditor.File]()
-	var didScanPath: URL?
+	var didGetFilesFromPath: URL?
 	var shouldThrowError = false
 
-	func scan(path: URL) throws {
+	func contentsOfFolder(at url: URL) -> Result<[MdEditor.File], Error> {
 		if shouldThrowError {
-			throw MockFileExplorerError.scanFailed
+			return .failure(MockFileExplorerError.scanFailed)
 		}
-		stubItems.forEach { files.append($0) }
-		didScanPath = path
-	}
-	
-	func getFile(withName name: String, atURL: URL) throws -> MdEditor.File {
-		return File(name: "", path: nil, type: .file, size: 0, modificationDate: Date())
+		stubItems.forEach { files.append($0!) }
+		didGetFilesFromPath = url
+		return .success(files)
 	}
 
-	func loadTextFileBody(of file: MdEditor.File) throws -> String {
-		return ""
+	func createFolder(at url: URL, withName name: String) -> Result<MdEditor.File, Error> {
+		.failure(NSError())
+	}
+
+	func createNewFile(at url: URL, fileName: String) -> Result<MdEditor.File, Error> {
+		.failure(NSError())
 	}
 }

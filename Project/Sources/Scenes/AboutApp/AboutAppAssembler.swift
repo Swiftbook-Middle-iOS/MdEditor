@@ -24,11 +24,10 @@ final class AboutAppAssembler {
 			throw AboutAppAssemblerError.couldNotFindUrl
 		}
 
-		// TODO: change back to about
 		switch fileExplorer.contentsOfFolder(at: assetsUrl) {
 		case .success(let files):
 			let file = files.first { file in
-				file.name == "test.md"
+				file.name == "about.md"
 			}
 
 			viewController.mdText = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8)
