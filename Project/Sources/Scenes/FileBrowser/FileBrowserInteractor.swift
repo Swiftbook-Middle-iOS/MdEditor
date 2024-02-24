@@ -33,6 +33,9 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	private var newDirClosure: (URL) -> Void
 	private var errorClosure: (() -> Void)?
 
+	// MARK: Private properties
+	private var currentFiles: [File] = []
+
 	// MARK: Initialization
 	init(
 		fileExplorer: IFileExplorer,
@@ -51,16 +54,22 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	// MARK: Public methods
 	func fetchData() {
 		do {
-			try fileExplorer.scan(path: currentPath)
-			presenter.present(response: FileBrowserModel.Response(files: fileExplorer.files, currentPath: currentPath))
+			let filesResult = fileExplorer.contentsOfFolder(at: currentPath)
+			switch filesResult {
+			case .success(let files):
+				currentFiles = files
+				presenter.present(response: FileBrowserModel.Response(files: currentFiles, currentPath: currentPath))
+			case .failure(let error):
+				throw error
+			}
 		} catch {
 			errorClosure?()
 		}
 	}
 
 	func didSelectItem(at index: Int) {
-		let item = fileExplorer.files[index]
-		if item.type == .dir {
+		let item = currentFiles[index]
+		if item.isFolder {
 			let newURL = currentPath.appendingPathComponent(item.name)
 			newDirClosure(newURL)
 		}

@@ -41,19 +41,18 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 	}
 
 	private func mapFileData(file: File) -> FileBrowserModel.ViewModel.ItemModel {
-		switch file.type {
-		case .file:
-			return .file(
-				FileBrowserModel.ViewModel.FileModel(
-					title: file.name,
-					attributes: file.description
-				)
-			)
-		case .dir:
+		if file.isFolder {
 			return .dir(
 				FileBrowserModel.ViewModel.DirModel(
 					title: file.name,
-					attributes: file.description
+					attributes: file.creationDate.description
+				)
+			)
+		} else {
+			return .file(
+				FileBrowserModel.ViewModel.FileModel(
+					title: file.name,
+					attributes: file.creationDate.description
 				)
 			)
 		}

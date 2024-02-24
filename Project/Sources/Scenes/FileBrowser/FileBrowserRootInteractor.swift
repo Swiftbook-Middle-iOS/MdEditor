@@ -14,7 +14,7 @@ import Foundation
 final class FileBrowserRootInteractor: IFileBrowserInteractor {
 
 	// MARK: Private properties
-	private lazy var rootItems = [makeFileForAssetsFolder(), makeFileForDocumentsFolder()]
+	private lazy var rootItems = [makeFileForAssetsFolder()]
 
 	// MARK: Dependencies
 	private var presenter: IFileBrowserPresenter
@@ -37,9 +37,8 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 	func didSelectItem(at index: Int) {
 		let item = rootItems[index]
 		guard let item = item else { return }
-		guard let fullPath = item.fullPath else { return }
-		if item.type == .dir {
-			newDirClosure(fullPath)
+		if item.isFolder {
+			newDirClosure(item.url)
 		}
 	}
 
@@ -48,30 +47,33 @@ final class FileBrowserRootInteractor: IFileBrowserInteractor {
 		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(L10n.FileBrowser.baseAssetsPath) else {
 			return nil
 		}
-		let assetsFolder = File(name: "Assets", path: assetsFolderUrl.deletingLastPathComponent(), type: .dir)
-
-		return assetsFolder
-	}
-
-	private func makeFileForDocumentsFolder() -> File? {
-		guard let documentsURL = try? FileManager.default.url(
-			for: .documentDirectory,
-			in: .userDomainMask,
-			appropriateFor: nil,
-			create: false
-		) else {
+		switch File.parse(url: assetsFolderUrl) {
+		case .success(let folder):
+			return folder
+		case .failure(_):
 			return nil
 		}
-
-		let documentsFolder = File(
-			name: "Documents",
-			path: documentsURL.deletingLastPathComponent(),
-			type: .dir,
-			size: 0,
-			creationDate: Date(),
-			modificationDate: Date()
-		)
-
-		return documentsFolder
 	}
+
+//	private func makeFileForDocumentsFolder() -> File? {
+//		guard let documentsURL = try? FileManager.default.url(
+//			for: .documentDirectory,
+//			in: .userDomainMask,
+//			appropriateFor: nil,
+//			create: false
+//		) else {
+//			return nil
+//		}
+//
+//		let documentsFolder = File(
+//			name: "Documents",
+//			path: documentsURL.deletingLastPathComponent(),
+//			type: .dir,
+//			size: 0,
+//			creationDate: Date(),
+//			modificationDate: Date()
+//		)
+//
+//		return documentsFolder
+//	}
 }

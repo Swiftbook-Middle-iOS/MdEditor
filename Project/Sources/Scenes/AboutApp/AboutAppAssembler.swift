@@ -25,12 +25,17 @@ final class AboutAppAssembler {
 		}
 
 		// TODO: change back to about
-		let aboutFile = try fileExplorer.getFile(
-			withName: "test.md",
-			atURL: assetsUrl
-		)
+		switch fileExplorer.contentsOfFolder(at: assetsUrl) {
+		case .success(let files):
+			let file = files.first { file in
+				file.name == "test.md"
+			}
 
-		viewController.mdText = try fileExplorer.loadTextFileBody(of: aboutFile)
+			viewController.mdText = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8)
+		case .failure(let error):
+			throw error
+		}
+
 		viewController.lexer = lexer
 		viewController.parser = parser
 
