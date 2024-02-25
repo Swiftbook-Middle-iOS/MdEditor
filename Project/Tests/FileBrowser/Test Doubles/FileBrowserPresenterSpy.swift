@@ -12,8 +12,10 @@ import Foundation
 final class FileBrowserPresenterSpy: IFileBrowserPresenter {
 
 	private(set) var didCallPresent = false
+	private(set) var receivedFiles = [File]()
 
 	func present(response: MdEditor.FileBrowserModel.Response) {
+		receivedFiles = response.files
 		didCallPresent = true
 	}
 }
