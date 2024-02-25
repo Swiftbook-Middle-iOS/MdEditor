@@ -52,12 +52,12 @@ final class EditorHomeViewController: UIViewController {
 
 	@objc
 	func openDocumentTapped() {
-		interactor?.openDocumentSelected()
+		interactor?.menuItemSelected(item: .openFile)
 	}
 
 	@objc
 	func aboutAppTapped() {
-		interactor?.aboutAppSelected()
+		interactor?.menuItemSelected(item: .aboutApp)
 	}
 }
 

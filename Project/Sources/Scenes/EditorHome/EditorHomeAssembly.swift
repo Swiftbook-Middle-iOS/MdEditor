@@ -9,9 +9,10 @@
 import Foundation
 
 final class EditorHomeAssembly {
-	func assembly(openFileClosure: (() -> Void)?, aboutAppClosure: (() -> Void)?) -> EditorHomeViewController {
+	func assembly(delegate: IMainMenuDelegate) -> EditorHomeViewController {
 		let viewController = EditorHomeViewController()
-		let interactor = EditorHomeInteractor(openFileClosure: openFileClosure, aboutAppClosure: aboutAppClosure)
+		let interactor = EditorHomeInteractor()
+		interactor.delegate = delegate
 
 		viewController.interactor = interactor
 		return viewController

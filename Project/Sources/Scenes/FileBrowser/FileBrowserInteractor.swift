@@ -16,6 +16,11 @@ protocol IFileBrowserInteractor {
 	func didSelectItem(at index: Int)
 }
 
+protocol IFileBrowserDelegate: AnyObject {
+	func showError()
+	func openFolder(url: URL)
+}
+
 /// Имплементация FileBrowserInteractor для просмотра файлов в одной конкретной директории
 /// - Parameters:
 ///     - fileExplorer: Объект, подписанный под`IFileExplorer`, необходим для сканирования пути и 
@@ -28,10 +33,10 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	// MARK: Dependencies
 	private var fileExplorer: IFileExplorer
-	private var currentPath: URL
+	private var currentPath: URL?
 	private var presenter: IFileBrowserPresenter
-	private var newDirClosure: (URL) -> Void
-	private var errorClosure: (() -> Void)?
+
+	weak var delegate: IFileBrowserDelegate?
 
 	// MARK: Private properties
 	private var currentFiles: [File] = []
@@ -39,39 +44,73 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	// MARK: Initialization
 	init(
 		fileExplorer: IFileExplorer,
-		currentPath: URL,
-		presenter: IFileBrowserPresenter,
-		newDirClosure: @escaping (URL) -> Void,
-		errorClosure: (() -> Void)? = nil
+		currentPath: URL?,
+		presenter: IFileBrowserPresenter
 	) {
 		self.fileExplorer = fileExplorer
 		self.currentPath = currentPath
 		self.presenter = presenter
-		self.newDirClosure = newDirClosure
-		self.errorClosure = errorClosure
 	}
 
 	// MARK: Public methods
 	func fetchData() {
-		do {
-			let filesResult = fileExplorer.contentsOfFolder(at: currentPath)
-			switch filesResult {
-			case .success(let files):
-				currentFiles = files
-				presenter.present(response: FileBrowserModel.Response(files: currentFiles, currentPath: currentPath))
-			case .failure(let error):
-				throw error
+		if let currentPath = currentPath {
+			do {
+				let filesResult = fileExplorer.contentsOfFolder(at: currentPath)
+				switch filesResult {
+				case .success(let files):
+					currentFiles = files
+					presenter.present(response: FileBrowserModel.Response(files: currentFiles, currentPath: currentPath))
+				case .failure(let error):
+					throw error
+				}
+			} catch {
+				delegate?.showError()
 			}
-		} catch {
-			errorClosure?()
+		} else {
+			currentFiles = [makeFileForAssetsFolder(), makeFileForDocumentsFolder()].compactMap { $0 }
+			presenter.present(response: FileBrowserModel.Response(files: currentFiles, currentPath: nil))
 		}
 	}
 
 	func didSelectItem(at index: Int) {
 		let item = currentFiles[index]
-		if item.isFolder {
+		if let currentPath = currentPath, item.isFolder {
 			let newURL = currentPath.appendingPathComponent(item.name)
-			newDirClosure(newURL)
+			delegate?.openFolder(url: newURL)
+		} else if item.isFolder {
+			delegate?.openFolder(url: item.url)
+		}
+	}
+
+	// MARK: Private methods
+	private func makeFileForAssetsFolder() -> File? {
+		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(Endpoints.baseAssetsPath.rawValue) else {
+			return nil
+		}
+		switch File.parse(url: assetsFolderUrl) {
+		case .success(let folder):
+			return folder
+		case .failure:
+			return nil
+		}
+	}
+
+	private func makeFileForDocumentsFolder() -> File? {
+		guard let documentsURL = try? FileManager.default.url(
+			for: .documentDirectory,
+			in: .userDomainMask,
+			appropriateFor: nil,
+			create: false
+		) else {
+			return nil
+		}
+
+		switch File.parse(url: documentsURL) {
+		case .success(let folder):
+			return folder
+		case .failure:
+			return nil
 		}
 	}
 }

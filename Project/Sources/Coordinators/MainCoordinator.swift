@@ -1,5 +1,5 @@
 //
-//  EditorCoordinator.swift
+//  MainCoordinator.swift
 //  MdEditor
 //
 //  Created by Aleksandr Mamlygo on 05.02.24.
@@ -9,70 +9,53 @@
 import UIKit
 import MarkdownPackage
 
-protocol IEditorCoordinator: ICoordinator {
-}
-
-class EditorCoordinator: IEditorCoordinator {
+class MainCoordinator: BaseCoordinator {
 	// MARK: Dependencies
 	var navigationController: UINavigationController
-	var fileExplorer: IFileExplorer
 	var markdownParser = Parser()
 	var markdownLexer = Lexer()
+	var fileExplorer = FileExplorer()
 
 	// MARK: Initialization
 	init(
-		navigationController: UINavigationController,
-		fileExplorer: IFileExplorer
+		navigationController: UINavigationController
 	) {
 		self.navigationController = navigationController
-		self.fileExplorer = fileExplorer
 	}
 
 	// MARK: Public functions
-	func start() {
-		let openFileClosure: () -> Void = { [weak self] in
-			self?.openRootBrowserScreen()
-		}
+	override func start() {
+		let viewController = EditorHomeAssembly().assembly(delegate: self)
 
-		let aboutAppClosure: () -> Void = { [weak self] in
-			self?.openAboutAppScreen()
-		}
-
-		let viewController = EditorHomeAssembly().assembly(
-			openFileClosure: openFileClosure,
-			aboutAppClosure: aboutAppClosure
-		)
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 
 	// MARK: Private functions
-	private func openRootBrowserScreen() {
-		navigationController.pushViewController(
-			FileBrowserAssembler().rootAssembly { [weak self] newPath in
-				self?.openBrowserScreen(at: newPath)
-			},
-			animated: true
-		)
-	}
+	private func openBrowserScreen() {
+		let topViewController = navigationController.topViewController
 
-	private func openBrowserScreen(at filePath: URL) {
-		let newDirClosure: (URL) -> Void = { [weak self] newPath in
-			self?.openBrowserScreen(at: newPath)
+		let coordinator = FileBrowserCoordinator(
+			navigationController: navigationController,
+			topViewController: topViewController,
+			fileExplorer: fileExplorer
+		)
+
+		addDependency(coordinator)
+
+		coordinator.finishFlow = { [weak self, weak coordinator] in
+			guard let self = self else { return }
+			if let topViewController = topViewController {
+				self.navigationController.popToViewController(topViewController, animated: true)
+			} else {
+				self.navigationController.popToRootViewController(animated: true)
+			}
+
+			if let coordinator = coordinator {
+				self.removeDependency(coordinator)
+			}
 		}
 
-		let errorClosure: () -> Void = { [weak self] in
-			self?.showError(message: L10n.FileBrowser.accessError)
-		}
-
-		navigationController.pushViewController(
-			FileBrowserAssembler().assembly(
-				fileExplorer: fileExplorer,
-				currentPath: filePath,
-				newDirClosure: newDirClosure,
-				errorClosure: errorClosure
-			),
-			animated: true
-		)
+		coordinator.start()
 	}
 
 	private func openAboutAppScreen() {
@@ -103,5 +86,15 @@ class EditorCoordinator: IEditorCoordinator {
 		let action = UIAlertAction(title: L10n.Ok.text, style: .default)
 		alert.addAction(action)
 		navigationController.present(alert, animated: true, completion: nil)
+	}
+}
+
+extension MainCoordinator: IMainMenuDelegate {
+	func openFileBroweser() {
+		openBrowserScreen()
+	}
+
+	func showAbout() {
+		openAboutAppScreen()
 	}
 }

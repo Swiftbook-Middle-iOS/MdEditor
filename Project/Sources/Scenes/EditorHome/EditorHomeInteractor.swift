@@ -9,27 +9,28 @@
 import Foundation
 
 protocol IEditorHomeInteractor {
-	func openDocumentSelected()
-	func aboutAppSelected()
+	func menuItemSelected(item: EditorHomeModel.Request.MenuItemSelected)
+}
+
+protocol IMainMenuDelegate: AnyObject {
+	func openFileBroweser()
+	func showAbout()
 }
 
 final class EditorHomeInteractor: IEditorHomeInteractor {
 	// MARK: Dependencies
-	var openFileClosure: (() -> Void)?
-	var aboutAppClosure: (() -> Void)?
 
-	// MARK: Initialization
-	init(openFileClosure: (() -> Void)? = nil, aboutAppClosure: (() -> Void)?) {
-		self.openFileClosure = openFileClosure
-		self.aboutAppClosure = aboutAppClosure
-	}
+	weak var delegate: IMainMenuDelegate?
 
 	// MARK: IEditorHomeInteractor
-	func openDocumentSelected() {
-		openFileClosure?()
-	}
-
-	func aboutAppSelected() {
-		aboutAppClosure?()
+	func menuItemSelected(item: EditorHomeModel.Request.MenuItemSelected) {
+		switch item {
+		case .newFile:
+			return
+		case .openFile:
+			delegate?.openFileBroweser()
+		case .aboutApp:
+			delegate?.showAbout()
+		}
 	}
 }

@@ -25,9 +25,8 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 	// MARK: Public methods
 	func present(response: FileBrowserModel.Response) {
 		var title = L10n.FileBrowser.defaultTitle
-		let lastComponent = response.currentPath.lastPathComponent
-
-		if !lastComponent.isEmpty && lastComponent != "/" {
+		if let lastComponent = response.currentPath?.lastPathComponent,
+			!lastComponent.isEmpty, lastComponent != "/" {
 			title = lastComponent
 		}
 
@@ -45,14 +44,14 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 			return .dir(
 				FileBrowserModel.ViewModel.DirModel(
 					title: file.name,
-					attributes: file.creationDate.description
+					attributes: file.description
 				)
 			)
 		} else {
 			return .file(
 				FileBrowserModel.ViewModel.FileModel(
 					title: file.name,
-					attributes: file.creationDate.description
+					attributes: file.description
 				)
 			)
 		}

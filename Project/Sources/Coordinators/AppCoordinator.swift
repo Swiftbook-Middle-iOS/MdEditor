@@ -72,9 +72,8 @@ final class AppCoordinator: BaseCoordinator {
 	}
 
 	func runEditorFlow() {
-		let coordinator = EditorCoordinator(
-			navigationController: navigationController,
-			fileExplorer: fileExplorer
+		let coordinator = MainCoordinator(
+			navigationController: navigationController
 		)
 		addDependency(coordinator)
 
