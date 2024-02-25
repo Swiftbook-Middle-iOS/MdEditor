@@ -15,6 +15,7 @@ class MainCoordinator: BaseCoordinator {
 	var markdownParser = Parser()
 	var markdownLexer = Lexer()
 	var fileExplorer = FileExplorer()
+	var recentFileManager = StubRecentFileManager()
 
 	// MARK: Initialization
 	init(
@@ -25,8 +26,9 @@ class MainCoordinator: BaseCoordinator {
 
 	// MARK: Public functions
 	override func start() {
-		let viewController = EditorHomeAssembly().assembly(delegate: self)
+		let (viewController, interactor) = EditorHomeAssembly().assembly(recentFileManager: recentFileManager)
 
+		interactor.delegate = self
 		navigationController.setViewControllers([viewController], animated: true)
 	}
 

@@ -9,12 +9,12 @@
 import Foundation
 
 final class EditorHomeAssembly {
-	func assembly(delegate: IMainMenuDelegate) -> EditorHomeViewController {
+	func assembly(recentFileManager: IRecentFileManager) -> (EditorHomeViewController, EditorHomeInteractor) {
 		let viewController = EditorHomeViewController()
-		let interactor = EditorHomeInteractor()
-		interactor.delegate = delegate
+		let presenter = EditorHomePresenter(view: viewController)
+		let interactor = EditorHomeInteractor(recentFileManager: recentFileManager, presenter: presenter)
 
 		viewController.interactor = interactor
-		return viewController
+		return (viewController, interactor)
 	}
 }

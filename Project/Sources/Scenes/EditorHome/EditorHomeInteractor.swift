@@ -10,6 +10,7 @@ import Foundation
 
 protocol IEditorHomeInteractor {
 	func menuItemSelected(item: EditorHomeModel.Request.MenuItemSelected)
+	func fetchData()
 }
 
 protocol IMainMenuDelegate: AnyObject {
@@ -18,11 +19,25 @@ protocol IMainMenuDelegate: AnyObject {
 }
 
 final class EditorHomeInteractor: IEditorHomeInteractor {
-	// MARK: Dependencies
 
+	// MARK: Dependencies
+	private let recentFileManager: IRecentFileManager
+	private let presenter: IEditorHomePresenter
 	weak var delegate: IMainMenuDelegate?
 
+	// MARK: Initialization
+	init(recentFileManager: IRecentFileManager, presenter: IEditorHomePresenter) {
+		self.recentFileManager = recentFileManager
+		self.presenter = presenter
+	}
+
 	// MARK: IEditorHomeInteractor
+	func fetchData() {
+		let recentFiles = recentFileManager.getRecentFiles()
+		let response = EditorHomeModel.Response(recentFiles: recentFiles)
+		presenter.present(response: response)
+	}
+
 	func menuItemSelected(item: EditorHomeModel.Request.MenuItemSelected) {
 		switch item {
 		case .newFile:

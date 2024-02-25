@@ -16,4 +16,17 @@ enum EditorHomeModel {
 			case aboutApp
 		}
 	}
+
+	struct Response {
+		let recentFiles: [RecentFile]
+	}
+
+	struct ViewModel {
+		let recentFiles: [RecentFile]
+
+		struct RecentFile {
+			let previewText: String
+			let fileName: String
+		}
+	}
 }

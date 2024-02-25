@@ -8,12 +8,25 @@
 
 import UIKit
 
+protocol IEditorHomeView: AnyObject {
+	func render(viewModel: EditorHomeModel.ViewModel)
+}
+
 final class EditorHomeViewController: UIViewController {
 
 	// MARK: Dependencies
 	var interactor: IEditorHomeInteractor?
 
 	// MARK: Private properties
+	private var viewModel = EditorHomeModel.ViewModel(recentFiles: [])
+
+	private let coverHeight: CGFloat = 200
+	private let coverWidth: CGFloat = 100
+
+	private lazy var collectionViewRecentFiles: UICollectionView = makeCollectionView(
+		accessibilityIdentifier: AccessibilityIdentifier.recentFileCollectionView.description
+	)
+
 	private lazy var newDocumentButton: UIButton = makeButton(
 		imageName: Images.EdtorHome.newDocImageName.rawValue,
 		title: L10n.EditorHome.newButtonTitle,
@@ -43,6 +56,7 @@ final class EditorHomeViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+		interactor?.fetchData()
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -63,13 +77,38 @@ final class EditorHomeViewController: UIViewController {
 
 // MARK: Setup UI
 private extension EditorHomeViewController {
+	func makeCollectionView(accessibilityIdentifier: String) -> UICollectionView {
+		let layout = makeFlowLayout()
+
+		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+		collectionView.isPagingEnabled = true
+		collectionView.translatesAutoresizingMaskIntoConstraints = false
+		collectionView.backgroundColor = Theme.white
+		collectionView.showsHorizontalScrollIndicator = false
+
+		collectionView.accessibilityIdentifier = accessibilityIdentifier
+		collectionView.delegate = self
+		collectionView.dataSource = self
+
+		return collectionView
+	}
+
+	func makeFlowLayout() -> UICollectionViewFlowLayout {
+		let layout = UICollectionViewFlowLayout()
+		layout.itemSize = CGSize(width: coverWidth, height: coverHeight)
+		layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: Sizes.Padding.normal)
+		layout.scrollDirection = .horizontal
+		layout.minimumLineSpacing = Sizes.Padding.double
+		layout.minimumInteritemSpacing = Sizes.Padding.double
+
+		return layout
+	}
+
 	func makeButton(imageName: String, title: String, accessibilityIdentifier: String) -> UIButton {
 		let button = UIButton()
 
 		button.configuration = .borderless()
 		button.configuration?.imagePadding = Sizes.Padding.half
-		// TODO: Check why imageReservation isn't visible on xcode 14.2 // swiftlint:disable:this todo
-//		button.configuration?.imageReservation = Sizes.Padding.double
 
 		button.configuration?.baseForegroundColor = Theme.black
 		button.configuration?.image = UIImage(systemName: imageName)?.withTintColor(
@@ -102,6 +141,12 @@ private extension EditorHomeViewController {
 		view.addSubview(newDocumentButton)
 		view.addSubview(aboutButton)
 		view.addSubview(openFileButton)
+		view.addSubview(collectionViewRecentFiles)
+
+		collectionViewRecentFiles.register(
+			RecentFileCollectionViewCell.self,
+			forCellWithReuseIdentifier: RecentFileCollectionViewCell.reusableIdentifier
+		)
 	}
 }
 
@@ -109,8 +154,13 @@ private extension EditorHomeViewController {
 private extension EditorHomeViewController {
 	func layout() {
 		let constraints = [
+			collectionViewRecentFiles.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+			collectionViewRecentFiles.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			collectionViewRecentFiles.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			collectionViewRecentFiles.heightAnchor.constraint(equalToConstant: 200),
+
 			newDocumentButton.topAnchor.constraint(
-				equalTo: navigationController?.navigationBar.bottomAnchor ?? view.topAnchor,
+				equalTo: collectionViewRecentFiles.bottomAnchor,
 				constant: Sizes.Padding.double
 			),
 			newDocumentButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Sizes.Padding.normal),
@@ -126,5 +176,32 @@ private extension EditorHomeViewController {
 		]
 
 		NSLayoutConstraint.activate(constraints)
+	}
+}
+
+// MARK: Collection view delegate
+extension EditorHomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		viewModel.recentFiles.count
+	}
+
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		let cell = collectionView.dequeueReusableCell(
+			withReuseIdentifier: RecentFileCollectionViewCell.reusableIdentifier,
+			for: indexPath
+		) as! RecentFileCollectionViewCell // swiftlint:disable:this force_cast
+
+		let viewModel = viewModel.recentFiles[indexPath.row]
+		cell.configure(fileName: viewModel.fileName, previewText: viewModel.previewText)
+
+		return cell
+	}
+}
+
+// MARK: IEditorHomeView
+extension EditorHomeViewController: IEditorHomeView {
+	func render(viewModel: EditorHomeModel.ViewModel) {
+		self.viewModel = viewModel
+		collectionViewRecentFiles.reloadData()
 	}
 }

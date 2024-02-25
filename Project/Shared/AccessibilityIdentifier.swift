@@ -21,6 +21,8 @@ enum AccessibilityIdentifier {
 	case newDocumentButton
 	case aboutAppButton
 
+	case recentFileCollectionView
+
 	var description: String {
 		switch self {
 		case .todoListTableView:
@@ -41,6 +43,8 @@ enum AccessibilityIdentifier {
 			return "newDocumentButton"
 		case .aboutAppButton:
 			return "aboutAppButton"
+		case .recentFileCollectionView:
+			return "recentFileCollection"
 		}
 	}
 }
