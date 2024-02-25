@@ -13,12 +13,21 @@ import MarkdownPackage
 final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 
 	// MARK: Dependencies
-	var mdText: String! // swiftlint:disable:this implicitly_unwrapped_optional
+	var htmlText: String
 	var parser: Parser! // swiftlint:disable:this implicitly_unwrapped_optional
 	var lexer: Lexer! // swiftlint:disable:this implicitly_unwrapped_optional
 
 	// MARK: Private properties
 	private var webView = WKWebView()
+
+	init(htmlText: String) {
+		self.htmlText = htmlText
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	// MARK: Lifecyle
 	override func viewDidLoad() {
@@ -26,8 +35,7 @@ final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 		webView.navigationDelegate = self
 		view = webView
 
-		let tokens = lexer.tokenize(mdText)
-		let nodes = parser.parse(tokens: tokens)
+		loadPage(html: htmlText)
 	}
 
 	// MARK: Private methods

@@ -53,7 +53,6 @@ private extension RecentFileCollectionViewCell {
 }
 
 // MARK: - UI setup
-
 private extension RecentFileCollectionViewCell {
 	func makeColoredView() -> UIView {
 		let view = UIView()
@@ -85,7 +84,6 @@ private extension RecentFileCollectionViewCell {
 }
 
 // MARK: - Layout UI
-
 private extension RecentFileCollectionViewCell {
 	func layout() {
 		addSubview(viewCover)

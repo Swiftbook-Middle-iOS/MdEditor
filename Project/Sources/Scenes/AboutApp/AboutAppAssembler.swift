@@ -19,7 +19,7 @@ final class AboutAppAssembler {
 		lexer: Lexer,
 		parser: Parser
 	) throws -> AboutAppViewController {
-		let viewController = AboutAppViewController()
+
 		guard let assetsUrl = Bundle.main.resourceURL?.appendingPathComponent(Endpoints.baseAssetsPath.rawValue) else {
 			throw AboutAppAssemblerError.couldNotFindUrl
 		}
@@ -27,17 +27,19 @@ final class AboutAppAssembler {
 		switch fileExplorer.contentsOfFolder(at: assetsUrl) {
 		case .success(let files):
 			let file = files.first { file in
-				file.name == "about.md"
+				file.name == "test.md"
 			}
 
-			viewController.mdText = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8)
+			let tokens = lexer.tokenize(String(data: file?.contentOfFile() ?? Data(), encoding: .utf8) ?? "")
+			let document = parser.parse(tokens: tokens)
+			let visitor = HTMLVisitor()
+
+			let text = document.accept(visitor: visitor).joined()
+
+//			return AboutAppTextViewController(attributedText: text.joined())
+			return AboutAppViewController(htmlText: text)
 		case .failure(let error):
 			throw error
 		}
-
-		viewController.lexer = lexer
-		viewController.parser = parser
-
-		return viewController
 	}
 }

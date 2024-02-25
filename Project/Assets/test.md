@@ -1,5 +1,7 @@
 # This is a Header
-paragraph
+## Header lvl 2
+###### header lvl 6
+**paragraph** ***bitaliic*** *italic*
 
 > This is a blockquote.
 
@@ -7,7 +9,7 @@ paragraph
 // This is a code block with a JavaScript code line
 console.log("Hello, world!");
 ```
-	
+
 - This is the first unordered list item
 - This is the second unordered list item
 - This is the third unordered list item
