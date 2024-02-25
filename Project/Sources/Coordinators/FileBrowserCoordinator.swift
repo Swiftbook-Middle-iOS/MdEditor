@@ -39,7 +39,7 @@ class FileBrowserCoordinator: NSObject, IFileBrowserCoordinator {
 	func showFileManagerScene(for file: File?) {
 		let (viewController, interactor) = FileBrowserAssembler().assembly(
 			fileExplorer: fileExplorer,
-			currentPath: file?.url
+			currentFile: file
 		)
 
 		interactor.delegate = self
@@ -61,16 +61,7 @@ extension FileBrowserCoordinator: UINavigationControllerDelegate {
 }
 
 extension FileBrowserCoordinator: IFileBrowserDelegate {
-	func showError() {
-		return
-	}
-
-	func openFolder(url: URL) {
-		switch File.parse(url: url) {
-		case .success(let url):
-			showFileManagerScene(for: url)
-		case .failure:
-			showError()
-		}
+	func openFolder(at file: File) {
+		showFileManagerScene(for: file)
 	}
 }

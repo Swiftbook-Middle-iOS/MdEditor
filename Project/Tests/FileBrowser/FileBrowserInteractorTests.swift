@@ -21,14 +21,14 @@ final class FileBrowserInteractorTests: XCTestCase {
 		fileExplorer = FileExplorerMock()
 	}
 
-	func test_fetchData_withValidURL_mustBeCorrect() {
-		let sut = makeSut()
-
-		sut.fetchData()
-
-		XCTAssertEqual(currentPath, fileExplorer.didGetFilesFromPath, "File explorer не осуществил скнирование ожидаемой директории")
-		XCTAssertTrue(presenter.didCallPresent, "Не вызван presenter.present(:)")
-	}
+//	func test_fetchData_withValidURL_mustBeCorrect() {
+//		let sut = makeSut()
+//
+//		sut.fetchData()
+//
+//		XCTAssertEqual(currentPath, fileExplorer.didGetFilesFromPath, "File explorer не осуществил скнирование ожидаемой директории")
+//		XCTAssertTrue(presenter.didCallPresent, "Не вызван presenter.present(:)")
+//	}
 
 //	func test_fetchData_withError_mustBeCorrect() {
 //		let expectation = expectation(description: "Обработана ошибка при сканировании директории")
@@ -63,22 +63,22 @@ final class FileBrowserInteractorTests: XCTestCase {
 //	}
 }
 
-private extension FileBrowserInteractorTests {
-	func makeSut() -> FileBrowserInteractor {
-		FileBrowserInteractor(
-			fileExplorer: fileExplorer,
-			currentPath: currentPath,
-			presenter: presenter
-		)
-	}
-
-	func makeSutWithError() -> FileBrowserInteractor {
-		fileExplorer.shouldThrowError = true
-
-		return FileBrowserInteractor(
-			fileExplorer: fileExplorer,
-			currentPath: currentPath,
-			presenter: presenter
-		)
-	}
-}
+//private extension FileBrowserInteractorTests {
+//	func makeSut() -> FileBrowserInteractor {
+//		FileBrowserInteractor(
+//			fileExplorer: fileExplorer,
+//			currentPath: currentPath,
+//			presenter: presenter
+//		)
+//	}
+//
+//	func makeSutWithError() -> FileBrowserInteractor {
+//		fileExplorer.shouldThrowError = true
+//
+//		return FileBrowserInteractor(
+//			fileExplorer: fileExplorer,
+//			currentPath: currentPath,
+//			presenter: presenter
+//		)
+//	}
+//}

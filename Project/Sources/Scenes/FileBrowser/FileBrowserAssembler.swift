@@ -12,13 +12,13 @@ final class FileBrowserAssembler {
 	/// Метод для сборки сцены FileBrowser в случае просмотра конкретной директории (URL)
 	func assembly(
 		fileExplorer: IFileExplorer,
-		currentPath: URL?
+		currentFile: File?
 	) -> (FileBrowserViewController, FileBrowserInteractor) {
 		let viewController = FileBrowserViewController()
 		let presenter = FileBrowserPresenter(viewController: viewController)
 		let interactor = FileBrowserInteractor(
 			fileExplorer: fileExplorer,
-			currentPath: currentPath,
+			currentFile: currentFile,
 			presenter: presenter
 		)
 

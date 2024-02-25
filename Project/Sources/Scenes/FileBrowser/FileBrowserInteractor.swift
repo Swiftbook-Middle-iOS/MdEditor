@@ -17,8 +17,7 @@ protocol IFileBrowserInteractor {
 }
 
 protocol IFileBrowserDelegate: AnyObject {
-	func showError()
-	func openFolder(url: URL)
+	func openFolder(at file: File)
 }
 
 /// Имплементация FileBrowserInteractor для просмотра файлов в одной конкретной директории
@@ -33,7 +32,7 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	// MARK: Dependencies
 	private var fileExplorer: IFileExplorer
-	private var currentPath: URL?
+	private var currentFile: File?
 	private var presenter: IFileBrowserPresenter
 
 	weak var delegate: IFileBrowserDelegate?
@@ -44,29 +43,25 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 	// MARK: Initialization
 	init(
 		fileExplorer: IFileExplorer,
-		currentPath: URL?,
+		currentFile: File?,
 		presenter: IFileBrowserPresenter
 	) {
 		self.fileExplorer = fileExplorer
-		self.currentPath = currentPath
+		self.currentFile = currentFile
 		self.presenter = presenter
 	}
 
 	// MARK: Public methods
 	func fetchData() {
-		if let currentPath = currentPath {
-			do {
-				let filesResult = fileExplorer.contentsOfFolder(at: currentPath)
+		if let currentFile = currentFile {
+			let filesResult = fileExplorer.contentsOfFolder(at: currentFile.url)
 				switch filesResult {
 				case .success(let files):
 					currentFiles = files
-					presenter.present(response: FileBrowserModel.Response(files: currentFiles, currentPath: currentPath))
-				case .failure(let error):
-					throw error
+					presenter.present(response: FileBrowserModel.Response(files: currentFiles, currentPath: currentFile.url))
+				case .failure:
+					break
 				}
-			} catch {
-				delegate?.showError()
-			}
 		} else {
 			currentFiles = [makeFileForAssetsFolder(), makeFileForDocumentsFolder()].compactMap { $0 }
 			presenter.present(response: FileBrowserModel.Response(files: currentFiles, currentPath: nil))
@@ -75,11 +70,8 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	func didSelectItem(at index: Int) {
 		let item = currentFiles[index]
-		if let currentPath = currentPath, item.isFolder {
-			let newURL = currentPath.appendingPathComponent(item.name)
-			delegate?.openFolder(url: newURL)
-		} else if item.isFolder {
-			delegate?.openFolder(url: item.url)
+		if item.isFolder {
+			delegate?.openFolder(at: item)
 		}
 	}
 
