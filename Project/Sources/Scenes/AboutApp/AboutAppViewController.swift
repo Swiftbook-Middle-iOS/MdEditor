@@ -14,8 +14,6 @@ final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 
 	// MARK: Dependencies
 	var htmlText: String
-	var parser: Parser! // swiftlint:disable:this implicitly_unwrapped_optional
-	var lexer: Lexer! // swiftlint:disable:this implicitly_unwrapped_optional
 
 	// MARK: Private properties
 	private var webView = WKWebView()

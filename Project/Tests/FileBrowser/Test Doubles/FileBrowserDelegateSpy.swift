@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@testable import MdEditor
 
 class FileBrowserDelegateSpy: IFileBrowserDelegate {
 	private(set) var didCallOpenFile = false

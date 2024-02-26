@@ -2,6 +2,7 @@
 ## Header lvl 2
 ###### header lvl 6
 **paragraph** ***bitaliic*** *italic*
+this is still a 
 
 > This is a blockquote.
 
@@ -9,6 +10,11 @@
 // This is a code block with a JavaScript code line
 console.log("Hello, world!");
 ```
+
+	- [ ] задача 1
+- [x] задача 2
+- [*] **задача 2**
+- [ ]     задача 2
 
 - This is the first unordered list item
 - This is the second unordered list item
@@ -42,3 +48,13 @@ This is a regular text line. [This is an inline link](https://example.com)
 This is a line break below this line.
 
 ---
+
+here is some more **text**
+
+here is some more **text**
+here is some more **text**
+here is some more **text**
+here is some more **text**
+here is some more **text**here is some more **text**
+
+here is some more **text**

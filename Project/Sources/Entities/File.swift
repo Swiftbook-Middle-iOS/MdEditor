@@ -25,9 +25,11 @@ struct File {
 
 	enum ParseError: Error {
 		case wrongAttribute
+		case invalidUrl
 	}
 
-	static func parse(url: URL) -> Result<File, Error> {
+	static func parse(url: URL?) -> Result<File, Error> {
+		guard let url = url else { return .failure(ParseError.invalidUrl) }
 		let fileManager = FileManager.default
 		do {
 			let attributes = try fileManager.attributesOfItem(atPath: url.relativePath)

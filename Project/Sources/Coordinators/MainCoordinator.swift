@@ -12,8 +12,6 @@ import MarkdownPackage
 class MainCoordinator: BaseCoordinator {
 	// MARK: Dependencies
 	var navigationController: UINavigationController
-	var markdownParser = Parser()
-	var markdownLexer = Lexer()
 	var fileExplorer = FileExplorer()
 	var recentFileManager = StubRecentFileManager()
 
@@ -61,20 +59,29 @@ class MainCoordinator: BaseCoordinator {
 	}
 
 	private func openAboutAppScreen() {
-		let viewController: AboutAppViewController
+		let viewController: UIViewController
 		do {
-			viewController = try AboutAppAssembler().assembly(
-				fileExplorer: fileExplorer,
-				lexer: markdownLexer,
-				parser: markdownParser
-			)
+			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).assembly()
+
 		} catch AboutAppAssemblerError.couldNotFindUrl {
 			showError(message: L10n.FileBrowser.invalidAssetsUrlError)
 			return
 		} catch {
-			showError(message: L10n.FileBrowser.loadError(Endpoints.aboutFileName, Endpoints.baseAssetsPath))
+			showError(message: L10n.FileBrowser.loadError(DefaultFileNames.aboutFileName, DefaultFileNames.baseAssetsPath))
 			return
 		}
+
+//		do {
+//			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).pdfAssembly(
+//				markdownTextFileName: "test.md",
+//				pdfAuthor: "Sasha",
+//				pdfTitle: "pdfTitle"
+//			)
+//		} catch {
+//			showError(message: L10n.FileBrowser.loadError(Endpoints.aboutFileName, Endpoints.baseAssetsPath))
+//			return
+//		}
+
 		navigationController.pushViewController(viewController, animated: true)
 	}
 

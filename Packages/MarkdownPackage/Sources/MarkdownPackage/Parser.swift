@@ -8,10 +8,8 @@
 
 import Foundation
 
-public final class Parser {
-	public init() {}
-
-	public func parse(tokens: [Token]) -> Document {
+final class Parser {
+	func parse(tokens: [Token]) -> Document {
 		var tokens = tokens
 		var result = [INode]()
 
@@ -26,6 +24,7 @@ public final class Parser {
 			nodes.append(parseUnorderedList(tokens: &tokens))
 			nodes.append(parseParagraph(tokens: &tokens))
 			nodes.append(parseHorizontalLine(tokens: &tokens))
+			nodes.append(parseTask(tokens: &tokens))
 
 			let resultNodes = nodes.compactMap { $0 }
 			if resultNodes.isEmpty, !tokens.isEmpty {
@@ -222,6 +221,17 @@ private extension Parser {
 
 		if !codeNodes.isEmpty {
 			return codeNodes
+		}
+
+		return nil
+	}
+
+	func parseTask(tokens: inout [Token]) -> TaskNode? {
+		guard let token = tokens.first else { return nil }
+
+		if case let .task(isDone, text) = token {
+			tokens.removeFirst()
+			return TaskNode(isDone: isDone, children: parseText(text: text))
 		}
 
 		return nil

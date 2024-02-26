@@ -20,6 +20,7 @@ public enum Token {
 	case image(url: String, size: Int)
 	case lineBreak
 	case horizontalLine
+	case task(isDone: Bool, text: Text)
 }
 
 public struct Text {

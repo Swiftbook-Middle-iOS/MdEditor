@@ -12,10 +12,8 @@ protocol ILexer {
 	func tokenize(_ input: String) -> [Token]
 }
 
-public final class Lexer {
-	public init() {}
-
-	public func tokenize(_ input: String) -> [Token] {
+final class Lexer {
+	func tokenize(_ input: String) -> [Token] {
 		let lines = input.components(separatedBy: .newlines)
 		var tokens = [Token?]()
 		var inCodeBlock = false
@@ -35,6 +33,7 @@ public final class Lexer {
 				tokens.append(parseParagraph(rawText: line))
 				tokens.append(parseOrderedList(rawText: line))
 				tokens.append(parseUnorderedList(rawText: line))
+				tokens.append(parseTask(rawText: line))
 			} else {
 				tokens.append(.codeLine(text: line))
 			}
@@ -140,7 +139,7 @@ private extension Lexer {
 	}
 
 	func parseUnorderedList(rawText: String) -> Token? {
-		let regex = try? NSRegularExpression(pattern: #"^(?!\d+\.)(\t*)-\s+(.+)"#)
+		let regex = try? NSRegularExpression(pattern: #"^(?!\d+\.)(\t*)-\s+((?!\[\s*[Xx*]?\]).+)"#)
 		let range = NSRange(rawText.startIndex..., in: rawText)
 
 		guard let match = regex?.firstMatch(in: rawText, range: range) else { return nil }
@@ -158,6 +157,17 @@ private extension Lexer {
 
 	func parseText(rawText: String) -> Text {
 		TextParser().parse(rawText: rawText)
+	}
+
+	func parseTask(rawText: String) -> Token? {
+		let pattern = #"\s*- \[[ *Xx]\]\s+(.*)"#
+
+		if let text = rawText.group(for: pattern) {
+			let isDone = !rawText.contains("- [ ]")
+			return .task(isDone: isDone, text: parseText(rawText: text))
+		}
+
+		return nil
 	}
 }
 

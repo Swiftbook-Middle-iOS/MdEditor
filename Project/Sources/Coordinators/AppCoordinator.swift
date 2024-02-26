@@ -18,13 +18,12 @@ final class AppCoordinator: BaseCoordinator {
 
 	init(
 		window: UIWindow?,
-		taskManager: ITaskManager,
 		fileExplorer: IFileExplorer
 	) {
 		self.navigationController = UINavigationController()
 		self.window = window
-		self.taskManager = taskManager
 		self.fileExplorer = fileExplorer
+		self.taskManager = OrderedTaskManager(taskManager: TaskManager())
 	}
 
 	// MARK: Public properties
@@ -78,5 +77,14 @@ final class AppCoordinator: BaseCoordinator {
 		addDependency(coordinator)
 
 		coordinator.start()
+	}
+
+	private func buildOrderedStubTaskManager() -> ITaskManager {
+		let taskManager = TaskManager()
+		let repository = TaskRepositoryStub()
+		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
+		orderedTaskManager.addTasks(tasks: repository.getTasks())
+
+		return orderedTaskManager
 	}
 }

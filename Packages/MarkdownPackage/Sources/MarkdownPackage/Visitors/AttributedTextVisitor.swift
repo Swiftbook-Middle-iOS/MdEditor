@@ -7,14 +7,13 @@
 
 import UIKit
 
-public final class AttributedTextVisitor: IVisitor {
-	public init() {}
+final class AttributedTextVisitor: IVisitor {
 
-	public func visit(node: Document) -> [NSMutableAttributedString] {
+	func visit(node: Document) -> [NSMutableAttributedString] {
 		visitChidren(of: node)
 	}
 
-	public func visit(node: HeaderNode) -> NSMutableAttributedString {
+	func visit(node: HeaderNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode(String(repeating: "#", count: node.level) + " ")
 		let text = visitChidren(of: node).joined()
 
@@ -31,14 +30,14 @@ public final class AttributedTextVisitor: IVisitor {
 		return result
 	}
 
-	public func visit(node: ParagraphNode) -> NSMutableAttributedString {
+	func visit(node: ParagraphNode) -> NSMutableAttributedString {
 		let result = visitChidren(of: node).joined()
 		result.append(String.linebreak)
 		result.append(String.linebreak)
 		return result
 	}
 
-	public func visit(node: BlockquoteNode) -> NSMutableAttributedString {
+	func visit(node: BlockquoteNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode(String(repeating: ">", count: node.level) + " ")
 		let text = visitChidren(of: node).joined()
 
@@ -51,7 +50,7 @@ public final class AttributedTextVisitor: IVisitor {
 		return result
 	}
 
-	public func visit(node: TextNode) -> NSMutableAttributedString {
+	func visit(node: TextNode) -> NSMutableAttributedString {
 		let attributes: [NSMutableAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.black,
 			.font: UIFont.systemFont(ofSize: 18)
@@ -61,7 +60,7 @@ public final class AttributedTextVisitor: IVisitor {
 		return result
 	}
 
-	public func visit(node: BoldTextNode) -> NSMutableAttributedString {
+	func visit(node: BoldTextNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode("**")
 
 		let attributes: [NSMutableAttributedString.Key: Any] = [
@@ -77,7 +76,7 @@ public final class AttributedTextVisitor: IVisitor {
 		return result
 	}
 
-	public func visit(node: ItalicTextNode) -> NSMutableAttributedString {
+	func visit(node: ItalicTextNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode("*")
 
 		let attributes: [NSMutableAttributedString.Key: Any] = [
@@ -93,7 +92,7 @@ public final class AttributedTextVisitor: IVisitor {
 		return result
 	}
 
-	public func visit(node: BoldItalicTextNode) -> NSMutableAttributedString {
+	func visit(node: BoldItalicTextNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode("***")
 
 		let font: UIFont
@@ -119,26 +118,30 @@ public final class AttributedTextVisitor: IVisitor {
 		return result
 	}
 
-	public func visit(node: ImageNode) -> NSMutableAttributedString {
+	func visit(node: ImageNode) -> NSMutableAttributedString {
 		let result = NSMutableAttributedString()
 
 		return result
 	}
 
-	public func visit(node: EscapedCharNode) -> NSMutableAttributedString {
+	func visit(node: EscapedCharNode) -> NSMutableAttributedString {
 		let result = NSMutableAttributedString()
 
 		return result
 	}
 
-	public func visit(node: InlineCodeNode) -> NSMutableAttributedString {
+	func visit(node: InlineCodeNode) -> NSMutableAttributedString {
 		let result = NSMutableAttributedString()
 
 		return result
 	}
 
-	public func visit(node: LinebreakNode) -> NSMutableAttributedString {
+	func visit(node: LinebreakNode) -> NSMutableAttributedString {
 		return String.linebreak
+	}
+
+	func visit(node: TaskNode) -> NSMutableAttributedString {
+		return visitChidren(of: node).joined()
 	}
 }
 

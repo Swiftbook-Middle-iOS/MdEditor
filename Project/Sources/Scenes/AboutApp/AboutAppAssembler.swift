@@ -6,7 +6,7 @@
 //  Copyright © 2024 Swiftbook-Middle-iOS. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import MarkdownPackage
 
 enum AboutAppAssemblerError: Error {
@@ -14,13 +14,15 @@ enum AboutAppAssemblerError: Error {
 }
 
 final class AboutAppAssembler {
-	func assembly(
-		fileExplorer: IFileExplorer,
-		lexer: Lexer,
-		parser: Parser
-	) throws -> AboutAppViewController {
+	private let fileExplorer: IFileExplorer
 
-		guard let assetsUrl = Bundle.main.resourceURL?.appendingPathComponent(Endpoints.baseAssetsPath.rawValue) else {
+	init(fileExplorer: IFileExplorer) {
+		self.fileExplorer = fileExplorer
+	}
+
+	func assembly() throws -> UIViewController {
+
+		guard let assetsUrl = Endpoints.assets else {
 			throw AboutAppAssemblerError.couldNotFindUrl
 		}
 
@@ -30,14 +32,32 @@ final class AboutAppAssembler {
 				file.name == "test.md"
 			}
 
-			let tokens = lexer.tokenize(String(data: file?.contentOfFile() ?? Data(), encoding: .utf8) ?? "")
-			let document = parser.parse(tokens: tokens)
-			let visitor = HTMLVisitor()
-
-			let text = document.accept(visitor: visitor).joined()
+			let fileContent = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8)
+			let text = MarkdownToHtmlConverter().convert(markdownText: fileContent ?? "")
 
 //			return AboutAppTextViewController(attributedText: text.joined())
 			return AboutAppViewController(htmlText: text)
+		case .failure(let error):
+			throw error
+		}
+	}
+
+	func pdfAssembly(markdownTextFileName: String, pdfAuthor: String, pdfTitle: String) throws -> UIViewController {
+		guard let assetsUrl = Endpoints.assets else {
+			throw AboutAppAssemblerError.couldNotFindUrl
+		}
+
+		switch fileExplorer.contentsOfFolder(at: assetsUrl) {
+		case .success(let files):
+			let file = files.first { file in
+				file.name == markdownTextFileName
+			}
+
+			let text = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8) ?? ""
+
+			let data = MarkdownToPdfConverter().convert(markdownText: text, pdfAuthor: pdfAuthor, pdfTitle: pdfTitle)
+
+			return PDFViewController(data: data)
 		case .failure(let error):
 			throw error
 		}

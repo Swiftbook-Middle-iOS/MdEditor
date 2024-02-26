@@ -22,6 +22,7 @@ public protocol IVisitor {
 	func visit(node: EscapedCharNode) -> Result
 	func visit(node: InlineCodeNode) -> Result
 	func visit(node: LinebreakNode) -> Result
+	func visit(node: TaskNode) -> Result
 }
 
 extension IVisitor {
@@ -49,6 +50,8 @@ extension IVisitor {
 			case let child as InlineCodeNode:
 				return visit(node: child)
 			case let child as LinebreakNode:
+				return visit(node: child)
+			case let child as TaskNode:
 				return visit(node: child)
 			default:
 				return nil

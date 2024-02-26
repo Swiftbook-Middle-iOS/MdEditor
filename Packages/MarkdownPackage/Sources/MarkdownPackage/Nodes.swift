@@ -23,8 +23,8 @@ public class BaseNode: INode {
 public final class Document: BaseNode {
 }
 
-public extension Document {
-	func accept<T: IVisitor>(visitor: T) -> [T.Result] {
+extension Document {
+	public func accept<T: IVisitor>(visitor: T) -> [T.Result] {
 		visitor.visit(node: self)
 	}
 }
@@ -167,4 +167,17 @@ public final class LinebreakNode: BaseNode {
 
 public final class LineNode: BaseNode {
 	public init() {}
+}
+
+public final class TaskNode: BaseNode {
+	public let isDone: Bool
+
+	public init(isDone: Bool, children: [INode] = []) {
+		self.isDone = isDone
+		super.init(children)
+	}
+
+	public func accept<T: IVisitor>(visitor: T) -> T.Result {
+		visitor.visit(node: self)
+	}
 }

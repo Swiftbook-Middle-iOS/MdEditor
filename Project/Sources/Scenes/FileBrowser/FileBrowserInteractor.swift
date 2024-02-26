@@ -77,7 +77,7 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 
 	// MARK: Private methods
 	private func makeFileForAssetsFolder() -> File? {
-		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(Endpoints.baseAssetsPath.rawValue) else {
+		guard let assetsFolderUrl = Bundle.main.resourceURL?.appendingPathComponent(DefaultFileNames.baseAssetsPath.rawValue) else {
 			return nil
 		}
 		switch File.parse(url: assetsFolderUrl) {
