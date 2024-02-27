@@ -29,6 +29,8 @@ public protocol IVisitor {
 	func visit(node: OrderedListItemNode) -> Result
 	func visit(node: UnorderedListNode) -> Result
 	func visit(node: UnorderedListItemNode) -> Result
+	func visit(node: LinkNode) -> Result
+	func visit(node: LineNode) -> Result
 }
 
 extension IVisitor {
@@ -70,6 +72,10 @@ extension IVisitor {
 			case let child as UnorderedListNode:
 				return visit(node: child)
 			case let child as UnorderedListItemNode:
+				return visit(node: child)
+			case let child as LinkNode:
+				return visit(node: child)
+			case let child as LineNode:
 				return visit(node: child)
 			default:
 				return nil

@@ -19,7 +19,7 @@ final class HTMLVisitor: IVisitor {
 	}
 
 	func visit(node: ParagraphNode) -> String {
-		let text = visitChidren(of: node).joined()
+		let text = visitChidren(of: node).joined(separator: " ")
 		return "<p>\(text)</p>"
 	}
 
@@ -33,7 +33,7 @@ final class HTMLVisitor: IVisitor {
 	}
 
 	func visit(node: BoldTextNode) -> String {
-		"<strong>\(node.text)</stong>"
+		"<strong>\(node.text)</strong>"
 	}
 
 	func visit(node: ItalicTextNode) -> String {
@@ -97,5 +97,13 @@ final class HTMLVisitor: IVisitor {
 		let result = visitChidren(of: node).joined()
 
 		return "<li>\(result)</li>"
+	}
+
+	func visit(node: LinkNode) -> String {
+		"<a href=\"\(node.url)\">\(node.text)</a>"
+	}
+
+	func visit(node: LineNode) -> String {
+		"<hr>"
 	}
 }

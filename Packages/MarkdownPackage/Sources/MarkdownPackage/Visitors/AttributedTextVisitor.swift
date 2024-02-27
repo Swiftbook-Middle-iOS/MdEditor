@@ -179,6 +179,18 @@ final class AttributedTextVisitor: IVisitor {
 
 		return result
 	}
+
+	func visit(node: LinkNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
+	}
+
+	func visit(node: LineNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
+	}
 }
 
 private extension AttributedTextVisitor {

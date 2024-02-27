@@ -49,8 +49,6 @@ This is a regular text line. [This is an inline link](https://example.com)
 
 [This is a link](https://example.com)
 
-![This is an image](https://example.com/image.jpg)
-
 This is a line break below this line.
 
 ---
