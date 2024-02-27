@@ -36,7 +36,7 @@ final class TextParser {
 		PartRegex(type: .boldItalic, pattern: #"^\*\*\*(.*?)\*\*\*"#),
 		PartRegex(type: .bold, pattern: #"^\*\*(.*?)\*\*"#),
 		PartRegex(type: .italic, pattern: #"^\*(.*?)\*"#),
-		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#),
+		PartRegex(type: .inlineCode, pattern: #"`{2,6}(.*?)`{2,6}"#),
 		PartRegex(type: .link, pattern: #"(?<!\!)\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#),
 		PartRegex(type: .image, pattern: #"!\[\[\s*(.+?)\s*\|\s*(\d+)\s*\]\]"#)
 	]

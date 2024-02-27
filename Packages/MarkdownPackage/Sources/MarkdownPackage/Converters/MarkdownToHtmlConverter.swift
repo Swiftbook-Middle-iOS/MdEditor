@@ -18,6 +18,7 @@ public final class MarkdownToHtmlConverter {
 
 		let visitor = HTMLVisitor()
 		let html = document.accept(visitor: visitor)
+		print(html)
 
 		return makeHtml(html.joined())
 	}

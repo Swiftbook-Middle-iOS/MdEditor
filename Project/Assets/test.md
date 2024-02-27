@@ -4,7 +4,7 @@
 
 this is a text line with an **aimeg** ![[imageUrl.jpg|5000]]
 
-> This is a blockquote.
+> This is a blockquote. ```let inlineCode = InlineCode()``` *italic* text
 
 ```javascript
 // This is a code block with a JavaScript code line
@@ -16,9 +16,13 @@ console.log("Hello, world!");
 - [*] **задача 2**
 - [ ]     задача 2
 
-- This is the first unordered list item with an image ![[imageUrl.jpg|5000]]
-- This is the second unordered list item
+- This is the first *unordered* list item with an image ![[imageUrl.jpg|5000]]
+- This is the second unordered list item 
 - This is the third unordered list item
+
+1. one
+2. two
+3. three
 
 1. This is the first ordered list item
 	1. Second level list item
@@ -30,7 +34,7 @@ console.log("Hello, world!");
 
 ***
 
-![[imageUrl.jpg|5000]]
+![[https://images.unsplash.com/photo-1682687982470-8f1b0e79151a?q=80&w=3570&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D|5000]]
 
 paragraph
 

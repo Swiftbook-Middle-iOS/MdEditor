@@ -56,6 +56,16 @@ final class HTMLVisitor: IVisitor {
 		"<code>\(node.code)</code>"
 	}
 
+	func visit(node: CodelineNode) -> String {
+		"<code>\(node.code)</code>"
+	}
+
+	func visit(node: CodeblockNode) -> String {
+		let result = visitChidren(of: node).joined()
+
+		return result
+	}
+
 	func visit(node: LinebreakNode) -> String {
 		"<br/>"
 	}
@@ -63,5 +73,29 @@ final class HTMLVisitor: IVisitor {
 	func visit(node: TaskNode) -> String {
 		let text = visitChidren(of: node).joined()
 		return "<p>\(text)</p>"
+	}
+
+	func visit(node: OrderedListNode) -> String {
+		let result = visitChidren(of: node).joined()
+
+		return "<ol style=\"margin-left: 40px;\">\(result)</ol>"
+	}
+
+	func visit(node: OrderedListItemNode) -> String {
+		let result = visitChidren(of: node).joined()
+
+		return "<li>\(result)</li>"
+	}
+
+	func visit(node: UnorderedListNode) -> String {
+		let result = visitChidren(of: node).joined()
+
+		return "<ul>\(result)</ul>"
+	}
+
+	func visit(node: UnorderedListItemNode) -> String {
+		let result = visitChidren(of: node).joined()
+
+		return "<li>\(result)</li>"
 	}
 }

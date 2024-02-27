@@ -21,8 +21,14 @@ public protocol IVisitor {
 	func visit(node: ImageNode) -> Result
 	func visit(node: EscapedCharNode) -> Result
 	func visit(node: InlineCodeNode) -> Result
+	func visit(node: CodelineNode) -> Result
 	func visit(node: LinebreakNode) -> Result
 	func visit(node: TaskNode) -> Result
+	func visit(node: CodeblockNode) -> Result
+	func visit(node: OrderedListNode) -> Result
+	func visit(node: OrderedListItemNode) -> Result
+	func visit(node: UnorderedListNode) -> Result
+	func visit(node: UnorderedListItemNode) -> Result
 }
 
 extension IVisitor {
@@ -52,6 +58,18 @@ extension IVisitor {
 			case let child as LinebreakNode:
 				return visit(node: child)
 			case let child as TaskNode:
+				return visit(node: child)
+			case let child as CodelineNode:
+				return visit(node: child)
+			case let child as CodeblockNode:
+				return visit(node: child)
+			case let child as OrderedListNode:
+				return visit(node: child)
+			case let child as OrderedListItemNode:
+				return visit(node: child)
+			case let child as UnorderedListNode:
+				return visit(node: child)
+			case let child as UnorderedListItemNode:
 				return visit(node: child)
 			default:
 				return nil

@@ -140,8 +140,44 @@ final class AttributedTextVisitor: IVisitor {
 		return String.linebreak
 	}
 
+	func visit(node: CodeblockNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
+	}
+
+	func visit(node: CodelineNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
+	}
+
 	func visit(node: TaskNode) -> NSMutableAttributedString {
 		return visitChidren(of: node).joined()
+	}
+
+	func visit(node: OrderedListNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
+	}
+
+	func visit(node: OrderedListItemNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
+	}
+
+	func visit(node: UnorderedListNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
+	}
+
+	func visit(node: UnorderedListItemNode) -> NSMutableAttributedString {
+		let result = NSMutableAttributedString()
+
+		return result
 	}
 }
 
