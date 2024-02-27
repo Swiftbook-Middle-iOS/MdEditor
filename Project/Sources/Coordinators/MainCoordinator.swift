@@ -14,6 +14,7 @@ class MainCoordinator: BaseCoordinator {
 	var navigationController: UINavigationController
 	var fileExplorer = FileExplorer()
 	var recentFileManager = StubRecentFileManager()
+	var htmlConverter = MarkdownToHtmlConverter()
 
 	// MARK: Initialization
 	init(
@@ -61,7 +62,7 @@ class MainCoordinator: BaseCoordinator {
 	private func openAboutAppScreen() {
 		let viewController: UIViewController
 		do {
-			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).assembly()
+			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).htmlAssembly(converter: htmlConverter)
 		} catch AboutAppAssemblerError.couldNotFindUrl {
 			showError(message: L10n.FileBrowser.invalidAssetsUrlError)
 			return
@@ -69,18 +70,7 @@ class MainCoordinator: BaseCoordinator {
 			showError(message: L10n.FileBrowser.loadError(DefaultFileNames.aboutFileName, DefaultFileNames.baseAssetsPath))
 			return
 		}
-
-//		do {
-//			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).pdfAssembly(
-//				markdownTextFileName: "test.md",
-//				pdfAuthor: "Sasha",
-//				pdfTitle: "pdfTitle"
-//			)
-//		} catch {
-//			showError(message: L10n.FileBrowser.loadError(Endpoints.aboutFileName, Endpoints.baseAssetsPath))
-//			return
-//		}
-
+		
 		navigationController.pushViewController(viewController, animated: true)
 	}
 

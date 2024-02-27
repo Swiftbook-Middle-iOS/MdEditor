@@ -8,7 +8,11 @@
 import Foundation
 import PDFKit
 
-public final class MarkdownToPdfConverter {
+public protocol IMarkdownToPdfConverter {
+	func convert(markdownText: String, pdfAuthor: String, pdfTitle: String) -> Data
+}
+
+public final class MarkdownToPdfConverter: IMarkdownToPdfConverter {
 	private let lexer = Lexer()
 	private let parser = Parser()
 

@@ -7,7 +7,11 @@
 
 import Foundation
 
-public final class MarkdownToHtmlConverter {
+public protocol IMarkdownToHtmlConverter {
+	func convert(markdownText: String) -> String
+}
+
+public final class MarkdownToHtmlConverter: IMarkdownToHtmlConverter {
 	private let markdownToDocument = MarkdownToDocument()
 
 	public init() {}
