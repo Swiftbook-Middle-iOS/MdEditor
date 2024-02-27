@@ -1,8 +1,8 @@
 # This is a Header
 ## Header lvl 2
 ###### header lvl 6
-**paragraph** ***bitaliic*** *italic*
-this is still a 
+
+this is a text line with an **aimeg** ![[imageUrl.jpg|5000]]
 
 > This is a blockquote.
 
@@ -16,7 +16,7 @@ console.log("Hello, world!");
 - [*] **задача 2**
 - [ ]     задача 2
 
-- This is the first unordered list item
+- This is the first unordered list item with an image ![[imageUrl.jpg|5000]]
 - This is the second unordered list item
 - This is the third unordered list item
 
@@ -29,6 +29,8 @@ console.log("Hello, world!");
 3. This is the third ordered list item
 
 ***
+
+![[imageUrl.jpg|5000]]
 
 paragraph
 

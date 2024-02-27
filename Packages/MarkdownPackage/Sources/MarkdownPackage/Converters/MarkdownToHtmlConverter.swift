@@ -14,6 +14,7 @@ public final class MarkdownToHtmlConverter {
 
 	public func convert(markdownText: String) -> String {
 		let document = markdownToDocument.convert(markdownText: markdownText)
+		print(document)
 
 		let visitor = HTMLVisitor()
 		let html = document.accept(visitor: visitor)

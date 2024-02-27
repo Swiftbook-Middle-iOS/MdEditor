@@ -62,7 +62,6 @@ class MainCoordinator: BaseCoordinator {
 		let viewController: UIViewController
 		do {
 			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).assembly()
-
 		} catch AboutAppAssemblerError.couldNotFindUrl {
 			showError(message: L10n.FileBrowser.invalidAssetsUrlError)
 			return

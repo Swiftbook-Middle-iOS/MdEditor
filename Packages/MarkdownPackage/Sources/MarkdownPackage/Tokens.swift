@@ -17,7 +17,6 @@ public enum Token {
 	case orderedListItem(level: Int, text: Text)
 	case textLine(text: Text)
 	case link(url: String, text: String)
-	case image(url: String, size: Int)
 	case lineBreak
 	case horizontalLine
 	case task(isDone: Bool, text: Text)
@@ -34,5 +33,6 @@ public struct Text {
 		case inlineCode(text: String)
 		case escapedChar(text: String)
 		case link(url: String, text: String)
+		case image(url: String, size: Int)
 	}
 }

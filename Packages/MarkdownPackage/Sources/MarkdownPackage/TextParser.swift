@@ -21,6 +21,7 @@ final class TextParser {
 			case inlineCode
 			case escapedChar
 			case link
+			case image
 		}
 
 		init(type: TextParser.PartRegex.PartType, pattern: String) {
@@ -31,12 +32,13 @@ final class TextParser {
 
 	private let partRegexes = [
 		PartRegex(type: .escapedChar, pattern: #"^\\([\\\`\*\_\{\}\[\]\<\>\(\)\+\-\.\!\|#]){1}"#),
-		PartRegex(type: .normal, pattern: #"^(.*?)(?=[\*`\\\[]|$)"#),
+		PartRegex(type: .normal, pattern: #"^(.*?)(?=[!\*`\\\[]|$)"#),
 		PartRegex(type: .boldItalic, pattern: #"^\*\*\*(.*?)\*\*\*"#),
 		PartRegex(type: .bold, pattern: #"^\*\*(.*?)\*\*"#),
 		PartRegex(type: .italic, pattern: #"^\*(.*?)\*"#),
 		PartRegex(type: .inlineCode, pattern: #"^`(.*?)`"#),
-		PartRegex(type: .link, pattern: #"(?<!\!)\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#)
+		PartRegex(type: .link, pattern: #"(?<!\!)\[((?:[^\]]|\](?=[^\[]*\]))+)\]\((\S+)\)"#),
+		PartRegex(type: .image, pattern: #"!\[\[\s*(.+?)\s*\|\s*(\d+)\s*\]\]"#)
 	]
 
 	func parse(rawText text: String) -> Text {
@@ -68,6 +70,10 @@ final class TextParser {
 						case .link:
 							if let group2 = Range(match.range(at: 2), in: text) {
 								parts.append(.link(url: String(text[group2]), text: extractedText))
+							}
+						case .image:
+							if let group2 = Range(match.range(at: 2), in: text) {
+								parts.append(.image(url: extractedText, size: Int(text[group2]) ?? 0))
 							}
 						}
 						range = NSRange(group0.upperBound..., in: text)

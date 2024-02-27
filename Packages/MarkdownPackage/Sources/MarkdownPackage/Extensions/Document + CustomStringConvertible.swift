@@ -79,3 +79,9 @@ extension BlockquoteNode: CustomStringConvertible {
 	}
 }
 
+extension ImageNode: CustomStringConvertible {
+	public var description: String {
+		"Image size \(size) link: \(url)"
+	}
+}
+

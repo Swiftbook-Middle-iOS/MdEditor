@@ -17,7 +17,6 @@ final class Parser {
 			var nodes = [INode?]()
 			nodes.append(parseHeader(tokens: &tokens))
 			nodes.append(parseBlockquote(tokens: &tokens))
-			nodes.append(parseImage(tokens: &tokens))
 			nodes.append(parseLinebreak(tokens: &tokens))
 			nodes.append(parseCodeblock(tokens: &tokens))
 			nodes.append(parseOrderedList(tokens: &tokens))
@@ -169,17 +168,6 @@ private extension Parser {
 		return nil
 	}
 
-	func parseImage(tokens: inout [Token]) -> ImageNode? {
-		guard let token = tokens.first else { return nil }
-
-		if case let .image(url, size) = token {
-			tokens.removeFirst()
-			return ImageNode(url: url, size: size)
-		}
-
-		return nil
-	}
-
 	func parseLinebreak(tokens: inout [Token]) -> LinebreakNode? {
 		guard let token = tokens.first else { return nil }
 
@@ -256,6 +244,8 @@ private extension Parser {
 				textNodes.append(EscapedCharNode(char: text))
 			case .link(let url, let text):
 				textNodes.append(LinkNode(url: url, text: text))
+			case .image(let url, let size):
+				textNodes.append(ImageNode(url: url, size: size))
 			}
 		}
 
