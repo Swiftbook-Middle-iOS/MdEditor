@@ -263,9 +263,18 @@ final class AttributedTextVisitor: IVisitor {
 	}
 
 	func visit(node: LineNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		let renderer = UIGraphicsImageRenderer(size: CGSize(width: MarkdownTheme.lineWidth, height: MarkdownTheme.lineHeight))
+		let image = renderer.image { ctx in
+			ctx.cgContext.setFillColor(MarkdownTheme.lineColor)
+			ctx.cgContext.fill(CGRect(x: 0, y: 0, width: MarkdownTheme.lineWidth, height: MarkdownTheme.lineHeight))
+		}
 
-		return result
+		let attachment = NSTextAttachment()
+		attachment.image = image
+		let attachmentString = NSMutableAttributedString(attachment: attachment)
+		attachmentString.append(NSAttributedString(string: "\n"))
+
+		return attachmentString
 	}
 }
 

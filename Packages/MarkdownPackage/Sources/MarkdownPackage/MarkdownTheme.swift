@@ -9,7 +9,13 @@ import UIKit
 
 struct MarkdownTheme {
 	static let headerSizes: [CGFloat] = [32, 28, 26, 24, 22, 20]
+
 	static let listIndent = 36
+
+	static let lineWidth = UIScreen.main.bounds.width
+	static let lineHeight: CGFloat = 2
+	static let lineColor = UIColor(red: 0.7, green: 0.4, blue: 0.8, alpha: 1.0).cgColor
+
 
 	enum TextSize: CGFloat {
 		case normal = 18

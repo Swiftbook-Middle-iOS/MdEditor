@@ -27,6 +27,7 @@ final class AboutAppTextViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		navigationController?.navigationBar.prefersLargeTitles = false
 		self.title = "Text View"
 		textView.attributedText = attributedText
 		setupView()
