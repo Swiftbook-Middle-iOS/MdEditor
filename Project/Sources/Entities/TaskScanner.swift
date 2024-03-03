@@ -37,7 +37,7 @@ private extension TaskScanner {
 	}
 
 	func taskNodeToRegularTask(taskNode: TaskNode) -> RegularTask {
-		let text = AttributedCoverter().convertTaskNode(node: taskNode)
+		let text = AttributedConverter().convertTaskNode(node: taskNode)
 		return RegularTask(title: text.string, completed: taskNode.isDone)
 	}
 }

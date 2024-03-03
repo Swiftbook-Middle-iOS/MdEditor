@@ -2,7 +2,7 @@
 ## Header lvl 2
 ###### header lvl 6
 
-this is a text line with an **aimeg** ![[imageUrl.jpg|5000]]
+this is a text line with ```inline code``` and an **aimeg** ![[imageUrl.jpg|5000]]
 
 > This is a blockquote. ```let inlineCode = InlineCode()``` *italic* text
 

@@ -137,6 +137,7 @@ private extension EditorHomeViewController {
 		view.backgroundColor = Theme.white
 		title = L10n.EditorHome.title
 		navigationController?.navigationBar.prefersLargeTitles = true
+		navigationController?.view.backgroundColor = Theme.white
 
 		view.addSubview(newDocumentButton)
 		view.addSubview(aboutButton)

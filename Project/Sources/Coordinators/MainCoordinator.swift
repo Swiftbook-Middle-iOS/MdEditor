@@ -14,7 +14,7 @@ class MainCoordinator: BaseCoordinator {
 	var navigationController: UINavigationController
 	var fileExplorer = FileExplorer()
 	var recentFileManager = StubRecentFileManager()
-	var htmlConverter = MarkdownToHtmlConverter()
+	var attributedConverter = AttributedConverter()
 
 	// MARK: Initialization
 	init(
@@ -62,7 +62,7 @@ class MainCoordinator: BaseCoordinator {
 	private func openAboutAppScreen() {
 		let viewController: UIViewController
 		do {
-			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).htmlAssembly(converter: htmlConverter)
+			viewController = try AboutAppAssembler(fileExplorer: fileExplorer).attributedAssembly(converter: attributedConverter)
 		} catch AboutAppAssemblerError.couldNotFindUrl {
 			showError(message: L10n.FileBrowser.invalidAssetsUrlError)
 			return

@@ -9,6 +9,9 @@ import UIKit
 
 final class AttributedTextVisitor: IVisitor {
 
+	private var orderedListCounters: [Int] = []
+	private var unorderedListCounters: [Int] = []
+
 	func visit(node: Document) -> [NSMutableAttributedString] {
 		visitChidren(of: node)
 	}
@@ -51,7 +54,7 @@ final class AttributedTextVisitor: IVisitor {
 	func visit(node: TextNode) -> NSMutableAttributedString {
 		let attributes: [NSMutableAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.black,
-			.font: UIFont.systemFont(ofSize: 18)
+			.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
 		]
 
 		let result = NSMutableAttributedString(string: node.text, attributes: attributes)
@@ -63,7 +66,7 @@ final class AttributedTextVisitor: IVisitor {
 
 		let attributes: [NSMutableAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
-			.font: UIFont.boldSystemFont(ofSize: 18)
+			.font: UIFont.boldSystemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
 		]
 		let text = NSMutableAttributedString(string: node.text, attributes: attributes)
 
@@ -79,7 +82,7 @@ final class AttributedTextVisitor: IVisitor {
 
 		let attributes: [NSMutableAttributedString.Key: Any] = [
 			.foregroundColor: UIColor.blue,
-			.font: UIFont.italicSystemFont(ofSize: 18)
+			.font: UIFont.italicSystemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
 		]
 		let text = NSMutableAttributedString(string: node.text, attributes: attributes)
 
@@ -98,7 +101,7 @@ final class AttributedTextVisitor: IVisitor {
 		if let fontDescriptor = UIFontDescriptor
 			.preferredFontDescriptor(withTextStyle: .body)
 			.withSymbolicTraits([.traitItalic, .traitBold]) {
-			font = UIFont(descriptor: fontDescriptor, size: 18)
+			font = UIFont(descriptor: fontDescriptor, size: MarkdownTheme.TextSize.normal.rawValue)
 		} else {
 			font = UIFont.boldSystemFont(ofSize: 18)
 		}
@@ -123,13 +126,25 @@ final class AttributedTextVisitor: IVisitor {
 	}
 
 	func visit(node: EscapedCharNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
-
-		return result
+		NSMutableAttributedString(string: node.char)
 	}
 
 	func visit(node: InlineCodeNode) -> NSMutableAttributedString {
 		let result = NSMutableAttributedString()
+		let attributes: [NSAttributedString.Key: Any] = [
+				.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.code.rawValue),
+				.foregroundColor: UIColor.darkGray,
+				.backgroundColor: UIColor(white: 0.95, alpha: 1),
+				.paragraphStyle: {
+					let style = NSMutableParagraphStyle()
+					style.paragraphSpacingBefore = 2
+					style.paragraphSpacing = 2
+					return style
+				}()
+		]
+
+		let code = NSMutableAttributedString(string: node.code, attributes: attributes)
+		result.append(code)
 
 		return result
 	}
@@ -139,43 +154,101 @@ final class AttributedTextVisitor: IVisitor {
 	}
 
 	func visit(node: CodeblockNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
-
-		return result
+		visitChidren(of: node).joined()
 	}
 
 	func visit(node: CodelineNode) -> NSMutableAttributedString {
 		let result = NSMutableAttributedString()
+		let attributes: [NSAttributedString.Key: Any] = [
+				.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.code.rawValue),
+				.foregroundColor: UIColor.darkGray,
+				.backgroundColor: UIColor(white: 0.95, alpha: 1),
+				.paragraphStyle: {
+					let style = NSMutableParagraphStyle()
+					style.paragraphSpacingBefore = 2
+					style.paragraphSpacing = 2
+					return style
+				}()
+		]
+
+		let code = NSMutableAttributedString(string: node.code, attributes: attributes)
+		result.append(code)
+		result.append(String.linebreak)
 
 		return result
 	}
 
 	func visit(node: TaskNode) -> NSMutableAttributedString {
-		return visitChidren(of: node).joined()
+		let code = makeMarkdownCode(node.isDone ? String("[X] ") : String("[ ] "))
+		let task = visitChidren(of: node).joined()
+		if node.isDone {
+			task.addAttribute(
+				NSAttributedString.Key.strikethroughStyle,
+				value: NSUnderlineStyle.single.rawValue,
+				range: NSRange(location: 0, length: task.length)
+			)
+		}
+		code.append(task)
+		code.append(String.linebreak)
+		return code
 	}
 
 	func visit(node: OrderedListNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		orderedListCounters.append(0)
+		let result = visitChidren(of: node).joined()
+		orderedListCounters.removeLast()
 
 		return result
 	}
 
 	func visit(node: OrderedListItemNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		// Определение текущего индекса
+		if let lastIndex = orderedListCounters.indices.last {
+			orderedListCounters[lastIndex] += 1
+		}
 
-		return result
+		let number = orderedListCounters.last ?? 1
+		let listItemPrefix = "\t \(number)."
+
+		// Отступ слева
+		let paragraphStyle = NSMutableParagraphStyle()
+		let tabStop = NSTextTab(textAlignment: .left, location: CGFloat(MarkdownTheme.listIndent * (orderedListCounters.count - 1)))
+		paragraphStyle.tabStops = []
+		paragraphStyle.addTabStop(tabStop)
+
+		// Сбор контента в NSMutableAttributedString
+		let content = visitChidren(of: node).joined()
+		let fullText = NSMutableAttributedString(string: listItemPrefix)
+		fullText.append(content)
+		fullText.append(String.linebreak)
+		fullText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: fullText.length))
+
+		return fullText
 	}
 
 	func visit(node: UnorderedListNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		unorderedListCounters.append(0)
+		let result = visitChidren(of: node).joined()
+		unorderedListCounters.removeLast()
 
 		return result
 	}
 
 	func visit(node: UnorderedListItemNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		// Отступ слева
+		let paragraphStyle = NSMutableParagraphStyle()
+		let tabStop = NSTextTab(textAlignment: .left, location: CGFloat(MarkdownTheme.listIndent * (unorderedListCounters.count - 1)))
+		paragraphStyle.tabStops = []
+		paragraphStyle.addTabStop(tabStop)
 
-		return result
+		// Сбор контента в NSMutableAttributedString
+		let fullText = NSMutableAttributedString(string: "\t")
+		let content = visitChidren(of: node).joined()
+		fullText.append(content)
+		fullText.append(String.linebreak)
+		fullText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: fullText.length))
+
+		return fullText
 	}
 
 	func visit(node: LinkNode) -> NSMutableAttributedString {

@@ -41,7 +41,7 @@ final class AboutAppAssembler {
 		}
 	}
 
-	func attributedAssembly(converter: IAttributedCoverter) throws -> UIViewController {
+	func attributedAssembly(converter: IAttributedConverter) throws -> UIViewController {
 		guard let assetsUrl = Endpoints.assets else {
 			throw AboutAppAssemblerError.couldNotFindUrl
 		}

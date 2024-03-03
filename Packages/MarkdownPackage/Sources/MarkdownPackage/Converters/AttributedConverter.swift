@@ -11,7 +11,7 @@ public protocol IAttributedConverter {
 	func convertMdText(_ markdownText: String) -> [NSMutableAttributedString]
 }
 
-public final class AttributedCoverter: IAttributedConverter {
+public final class AttributedConverter: IAttributedConverter {
 	private let markdownToDocument = MarkdownToDocument()
 	private let visitor = AttributedTextVisitor()
 
