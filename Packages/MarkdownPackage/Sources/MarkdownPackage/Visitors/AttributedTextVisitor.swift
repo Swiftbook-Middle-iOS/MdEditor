@@ -13,12 +13,12 @@ final class AttributedTextVisitor: IVisitor {
 	private var unorderedListCounters: [Int] = []
 
 	func visit(node: Document) -> [NSMutableAttributedString] {
-		visitChidren(of: node)
+		visitChildren(of: node)
 	}
 
 	func visit(node: HeaderNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode(String(repeating: "#", count: node.level) + " ")
-		let text = visitChidren(of: node).joined()
+		let text = visitChildren(of: node).joined()
 
 		let result = NSMutableAttributedString()
 		result.append(code)
@@ -32,7 +32,7 @@ final class AttributedTextVisitor: IVisitor {
 	}
 
 	func visit(node: ParagraphNode) -> NSMutableAttributedString {
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 		result.append(String.linebreak)
 		result.append(String.linebreak)
 		return result
@@ -40,7 +40,7 @@ final class AttributedTextVisitor: IVisitor {
 
 	func visit(node: BlockquoteNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode(String(repeating: ">", count: node.level) + " ")
-		let text = visitChidren(of: node).joined()
+		let text = visitChildren(of: node).joined()
 
 		let result = NSMutableAttributedString()
 		result.append(code)
@@ -53,7 +53,7 @@ final class AttributedTextVisitor: IVisitor {
 
 	func visit(node: TextNode) -> NSMutableAttributedString {
 		let attributes: [NSMutableAttributedString.Key: Any] = [
-			.foregroundColor: UIColor.black,
+			.foregroundColor: MarkdownTheme.Colors.textColor,
 			.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
 		]
 
@@ -154,7 +154,7 @@ final class AttributedTextVisitor: IVisitor {
 	}
 
 	func visit(node: CodeblockNode) -> NSMutableAttributedString {
-		visitChidren(of: node).joined()
+		visitChildren(of: node).joined()
 	}
 
 	func visit(node: CodelineNode) -> NSMutableAttributedString {
@@ -180,7 +180,7 @@ final class AttributedTextVisitor: IVisitor {
 
 	func visit(node: TaskNode) -> NSMutableAttributedString {
 		let code = makeMarkdownCode(node.isDone ? String("[X] ") : String("[ ] "))
-		let task = visitChidren(of: node).joined()
+		let task = visitChildren(of: node).joined()
 		if node.isDone {
 			task.addAttribute(
 				NSAttributedString.Key.strikethroughStyle,
@@ -195,7 +195,7 @@ final class AttributedTextVisitor: IVisitor {
 
 	func visit(node: OrderedListNode) -> NSMutableAttributedString {
 		orderedListCounters.append(0)
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 		orderedListCounters.removeLast()
 
 		return result
@@ -217,7 +217,7 @@ final class AttributedTextVisitor: IVisitor {
 		paragraphStyle.addTabStop(tabStop)
 
 		// Сбор контента в NSMutableAttributedString
-		let content = visitChidren(of: node).joined()
+		let content = visitChildren(of: node).joined()
 		let fullText = NSMutableAttributedString(string: listItemPrefix)
 		fullText.append(content)
 		fullText.append(String.linebreak)
@@ -228,7 +228,7 @@ final class AttributedTextVisitor: IVisitor {
 
 	func visit(node: UnorderedListNode) -> NSMutableAttributedString {
 		unorderedListCounters.append(0)
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 		unorderedListCounters.removeLast()
 
 		return result
@@ -243,7 +243,9 @@ final class AttributedTextVisitor: IVisitor {
 
 		// Сбор контента в NSMutableAttributedString
 		let fullText = NSMutableAttributedString(string: "\t")
-		let content = visitChidren(of: node).joined()
+		let prefix = makeMarkdownCode("– ")
+		let content = visitChildren(of: node).joined()
+		fullText.append(prefix)
 		fullText.append(content)
 		fullText.append(String.linebreak)
 		fullText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: fullText.length))
@@ -259,13 +261,17 @@ final class AttributedTextVisitor: IVisitor {
 			result.append(NSMutableAttributedString(string: "[Invalid link]"))
 		}
 
+		let attributes: [NSMutableAttributedString.Key: Any] = [
+			.font: UIFont.boldSystemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
+		]
+		result.addAttributes(attributes, range: NSRange(location: 0, length: result.length))
 		return result
 	}
 
 	func visit(node: LineNode) -> NSMutableAttributedString {
 		let renderer = UIGraphicsImageRenderer(size: CGSize(width: MarkdownTheme.lineWidth, height: MarkdownTheme.lineHeight))
 		let image = renderer.image { ctx in
-			ctx.cgContext.setFillColor(MarkdownTheme.lineColor)
+			ctx.cgContext.setFillColor(MarkdownTheme.Colors.lineColor)
 			ctx.cgContext.fill(CGRect(x: 0, y: 0, width: MarkdownTheme.lineWidth, height: MarkdownTheme.lineHeight))
 		}
 

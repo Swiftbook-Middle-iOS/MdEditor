@@ -34,7 +34,7 @@ public protocol IVisitor {
 }
 
 extension IVisitor {
-	func visitChidren(of node: INode) -> [Result] {
+	func visitChildren(of node: INode) -> [Result] {
 		return node.children.compactMap { childNode in
 			switch childNode {
 			case let child as HeaderNode:

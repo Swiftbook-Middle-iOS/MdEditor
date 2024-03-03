@@ -10,21 +10,21 @@ import Foundation
 final class HTMLVisitor: IVisitor {
 
 	func visit(node: Document) -> [String] {
-		visitChidren(of: node)
+		visitChildren(of: node)
 	}
 
 	func visit(node: HeaderNode) -> String {
-		let text = visitChidren(of: node).joined()
+		let text = visitChildren(of: node).joined()
 		return "<h\(node.level)>\(text)</h\(node.level)>"
 	}
 
 	func visit(node: ParagraphNode) -> String {
-		let text = visitChidren(of: node).joined(separator: " ")
+		let text = visitChildren(of: node).joined(separator: " ")
 		return "<p>\(text)</p>"
 	}
 
 	func visit(node: BlockquoteNode) -> String {
-		let text = visitChidren(of: node).joined()
+		let text = visitChildren(of: node).joined()
 		return "<blockquote><p>\(text)</p></blockquote>"
 	}
 
@@ -61,7 +61,7 @@ final class HTMLVisitor: IVisitor {
 	}
 
 	func visit(node: CodeblockNode) -> String {
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 
 		return result
 	}
@@ -71,30 +71,30 @@ final class HTMLVisitor: IVisitor {
 	}
 
 	func visit(node: TaskNode) -> String {
-		let text = visitChidren(of: node).joined()
+		let text = visitChildren(of: node).joined()
 		return "<p>\(text)</p>"
 	}
 
 	func visit(node: OrderedListNode) -> String {
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 
 		return "<ol style=\"margin-left: 40px;\">\(result)</ol>"
 	}
 
 	func visit(node: OrderedListItemNode) -> String {
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 
 		return "<li>\(result)</li>"
 	}
 
 	func visit(node: UnorderedListNode) -> String {
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 
 		return "<ul>\(result)</ul>"
 	}
 
 	func visit(node: UnorderedListItemNode) -> String {
-		let result = visitChidren(of: node).joined()
+		let result = visitChildren(of: node).joined()
 
 		return "<li>\(result)</li>"
 	}
