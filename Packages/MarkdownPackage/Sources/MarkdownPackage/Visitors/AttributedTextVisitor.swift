@@ -23,9 +23,7 @@ final class AttributedTextVisitor: IVisitor {
 		result.append(String.linebreak)
 		result.append(String.linebreak)
 
-		let sizes: [CGFloat] = [32, 28, 26, 24, 22, 20]
-
-		result.addAttribute(.font, value: UIFont.systemFont(ofSize: sizes[node.level - 1]), range: NSRange(0..<result.length))
+		result.addAttribute(.font, value: UIFont.systemFont(ofSize: MarkdownTheme.getHeaderFontSize(for: node.level)), range: NSRange(0..<result.length))
 
 		return result
 	}

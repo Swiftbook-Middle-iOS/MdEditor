@@ -7,11 +7,11 @@
 
 import Foundation
 
-public protocol IAttributedCoverter {
+public protocol IAttributedConverter {
 	func convertMdText(_ markdownText: String) -> [NSMutableAttributedString]
 }
 
-public final class AttributedCoverter: IAttributedCoverter {
+public final class AttributedCoverter: IAttributedConverter {
 	private let markdownToDocument = MarkdownToDocument()
 	private let visitor = AttributedTextVisitor()
 
