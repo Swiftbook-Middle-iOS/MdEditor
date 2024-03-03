@@ -11,6 +11,9 @@ struct MarkdownTheme {
 	enum Colors {
 		static let textColor = color(light: UIColor.black, dark: UIColor.white)
 		static let lineColor = UIColor(red: 0.7, green: 0.4, blue: 0.8, alpha: 1.0).cgColor
+		static let codeText = color(light: UIColor.darkGray, dark: UIColor.lightGray)
+		static let codeBackground = color(light: UIColor(white: 0.95, alpha: 1), dark: UIColor(white: 0.1, alpha: 1))
+		static let highlightedText = color(light: UIColor.blue, dark: UIColor(red: 0/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0))
 	}
 
 	enum TextSize: CGFloat {

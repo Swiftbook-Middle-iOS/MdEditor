@@ -65,7 +65,7 @@ final class AttributedTextVisitor: IVisitor {
 		let code = makeMarkdownCode("**")
 
 		let attributes: [NSMutableAttributedString.Key: Any] = [
-			.foregroundColor: UIColor.blue,
+			.foregroundColor: MarkdownTheme.Colors.highlightedText,
 			.font: UIFont.boldSystemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
 		]
 		let text = NSMutableAttributedString(string: node.text, attributes: attributes)
@@ -81,7 +81,7 @@ final class AttributedTextVisitor: IVisitor {
 		let code = makeMarkdownCode("*")
 
 		let attributes: [NSMutableAttributedString.Key: Any] = [
-			.foregroundColor: UIColor.blue,
+			.foregroundColor: MarkdownTheme.Colors.highlightedText,
 			.font: UIFont.italicSystemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
 		]
 		let text = NSMutableAttributedString(string: node.text, attributes: attributes)
@@ -133,8 +133,8 @@ final class AttributedTextVisitor: IVisitor {
 		let result = NSMutableAttributedString()
 		let attributes: [NSAttributedString.Key: Any] = [
 				.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.code.rawValue),
-				.foregroundColor: UIColor.darkGray,
-				.backgroundColor: UIColor(white: 0.95, alpha: 1),
+				.foregroundColor: MarkdownTheme.Colors.codeText,
+				.backgroundColor: MarkdownTheme.Colors.codeBackground,
 				.paragraphStyle: {
 					let style = NSMutableParagraphStyle()
 					style.paragraphSpacingBefore = 2
@@ -161,8 +161,8 @@ final class AttributedTextVisitor: IVisitor {
 		let result = NSMutableAttributedString()
 		let attributes: [NSAttributedString.Key: Any] = [
 				.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.code.rawValue),
-				.foregroundColor: UIColor.darkGray,
-				.backgroundColor: UIColor(white: 0.95, alpha: 1),
+				.foregroundColor: MarkdownTheme.Colors.codeText,
+				.backgroundColor: MarkdownTheme.Colors.codeBackground,
 				.paragraphStyle: {
 					let style = NSMutableParagraphStyle()
 					style.paragraphSpacingBefore = 2
