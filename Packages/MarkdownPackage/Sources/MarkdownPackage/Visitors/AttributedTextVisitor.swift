@@ -252,7 +252,12 @@ final class AttributedTextVisitor: IVisitor {
 	}
 
 	func visit(node: LinkNode) -> NSMutableAttributedString {
-		let result = NSMutableAttributedString()
+		let result = NSMutableAttributedString(string: node.text)
+		do {
+			try result.setAsLink(textToFind: node.text, linkURL: node.url)
+		} catch {
+			result.append(NSMutableAttributedString(string: "[Invalid link]"))
+		}
 
 		return result
 	}
