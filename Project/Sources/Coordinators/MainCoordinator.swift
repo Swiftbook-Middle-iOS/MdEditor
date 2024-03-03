@@ -70,7 +70,7 @@ class MainCoordinator: BaseCoordinator {
 			showError(message: L10n.FileBrowser.loadError(DefaultFileNames.aboutFileName, DefaultFileNames.baseAssetsPath))
 			return
 		}
-		
+
 		navigationController.pushViewController(viewController, animated: true)
 	}
 
