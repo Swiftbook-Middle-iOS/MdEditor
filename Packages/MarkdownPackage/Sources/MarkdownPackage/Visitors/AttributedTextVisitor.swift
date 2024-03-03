@@ -219,6 +219,13 @@ final class AttributedTextVisitor: IVisitor {
 		// Сбор контента в NSMutableAttributedString
 		let content = visitChildren(of: node).joined()
 		let fullText = NSMutableAttributedString(string: listItemPrefix)
+		fullText.addAttributes(
+			[
+			.foregroundColor: MarkdownTheme.Colors.textColor,
+			 .font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.code.rawValue)
+			],
+			range: NSRange(0..<fullText.length)
+		)
 		fullText.append(content)
 		fullText.append(String.linebreak)
 		fullText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: fullText.length))
