@@ -36,17 +36,6 @@ final class PDFViewController: UIViewController {
 		pdfView.document = PDFDocument(data: data)
 
 		setupView()
-		let printController = UIPrintInteractionController.shared
-		printController.printingItem = data
-		printController.present(animated: true) { _, completed, error in
-			if completed {
-				print("Completed")
-			} else if let error = error {
-				print(error.localizedDescription)
-			} else {
-				print("Cancelled")
-			}
-		}
 	}
 
 	// MARK: Private methods

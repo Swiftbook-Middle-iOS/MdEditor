@@ -103,7 +103,7 @@ final class AttributedTextVisitor: IVisitor {
 			.withSymbolicTraits([.traitItalic, .traitBold]) {
 			font = UIFont(descriptor: fontDescriptor, size: MarkdownTheme.TextSize.normal.rawValue)
 		} else {
-			font = UIFont.boldSystemFont(ofSize: 18)
+			font = UIFont.boldSystemFont(ofSize: MarkdownTheme.TextSize.normal.rawValue)
 		}
 
 		let attributes: [NSMutableAttributedString.Key: Any] = [
@@ -135,12 +135,6 @@ final class AttributedTextVisitor: IVisitor {
 				.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.code.rawValue),
 				.foregroundColor: MarkdownTheme.Colors.codeText,
 				.backgroundColor: MarkdownTheme.Colors.codeBackground,
-				.paragraphStyle: {
-					let style = NSMutableParagraphStyle()
-					style.paragraphSpacingBefore = 2
-					style.paragraphSpacing = 2
-					return style
-				}()
 		]
 
 		let code = NSMutableAttributedString(string: node.code, attributes: attributes)
@@ -163,12 +157,6 @@ final class AttributedTextVisitor: IVisitor {
 				.font: UIFont.systemFont(ofSize: MarkdownTheme.TextSize.code.rawValue),
 				.foregroundColor: MarkdownTheme.Colors.codeText,
 				.backgroundColor: MarkdownTheme.Colors.codeBackground,
-				.paragraphStyle: {
-					let style = NSMutableParagraphStyle()
-					style.paragraphSpacingBefore = 2
-					style.paragraphSpacing = 2
-					return style
-				}()
 		]
 
 		let code = NSMutableAttributedString(string: node.code, attributes: attributes)
