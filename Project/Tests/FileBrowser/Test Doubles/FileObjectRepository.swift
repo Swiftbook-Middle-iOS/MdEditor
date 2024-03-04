@@ -10,23 +10,41 @@ import Foundation
 @testable import MdEditor
 
 final class FileObjectRepository {
-	static var stubFileIetms = [makeStubFolder(), makeStubFile()]
+	static var stubFileIetms = [makeStubFolder(), makeStubMdFile(), makeStubTxtFile()]
 
-	private static func makeStubFolder() -> File {
-		let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
-		let folderPath = temporaryDirectoryURL.deletingLastPathComponent()
-
-		let stubFolder = File(name: "Folder", path: folderPath, type: .dir, size: 0, creationDate: Date(), modificationDate: Date())
-
-		return stubFolder
+	private static func makeStubFolder() -> File? {
+		guard let assetsFolderUrl = Endpoints.assets else {
+			return nil
+		}
+		switch File.parse(url: assetsFolderUrl) {
+		case .success(let folder):
+			return folder
+		case .failure:
+			return nil
+		}
 	}
 
-	private static func makeStubFile() -> File {
-		let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
-		let filePath = temporaryDirectoryURL.deletingLastPathComponent()
+	private static func makeStubMdFile() -> File? {
+		guard let assetsFolderUrl = Endpoints.aboutMd else {
+			return nil
+		}
+		switch File.parse(url: assetsFolderUrl) {
+		case .success(let folder):
+			return folder
+		case .failure:
+			return nil
+		}
+	}
 
-		let stubFile = File(name: "File", path: filePath, type: .file, size: 0, creationDate: Date(), modificationDate: Date())
-
-		return stubFile
+	private static func makeStubTxtFile() -> File? {
+		guard let assetsFolderUrl = Endpoints.testTxt else {
+			return nil
+		}
+		switch File.parse(url: assetsFolderUrl) {
+		case .success(let folder):
+			return folder
+		case .failure:
+			return nil
+		}
 	}
 }

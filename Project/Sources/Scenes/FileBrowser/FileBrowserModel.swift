@@ -31,6 +31,6 @@ enum FileBrowserModel {
 
 	struct Response {
 		let files: [File]
-		let currentPath: URL
+		let currentPath: URL?
 	}
 }

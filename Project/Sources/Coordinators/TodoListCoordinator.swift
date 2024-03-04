@@ -7,9 +7,10 @@
 
 import UIKit
 import TaskManagerPackage
+import MarkdownPackage
 
 protocol ITodoListCoordinator: ICoordinator {
-	func showTodoListScene()
+	func showTodoListSceneWithScannedTasks()
 }
 
 final class TodoListCoordinator: ITodoListCoordinator {
@@ -26,10 +27,25 @@ final class TodoListCoordinator: ITodoListCoordinator {
 
 	// MARK: Public functions
 	func start() {
-		showTodoListScene()
+		showTodoListSceneWithScannedTasks()
 	}
 
-	func showTodoListScene() {
+	func showTodoListSceneWithScannedTasks() {
+		if case .success(let file) = File.parse(url: Endpoints.testMd) {
+			let markdownText = String(data: file.contentOfFile() ?? Data(), encoding: .utf8) ?? ""
+			let document = MarkdownToDocument().convert(markdownText: markdownText)
+			let taskRepository = TaskScanner(document: document)
+
+			taskManager.addTasks(tasks: taskRepository.getTasks())
+			let viewController = TodoListAssembler(taskManager: taskManager).assembly()
+			navigationController.setViewControllers([viewController], animated: true)
+		}
+	}
+
+	func showTodoListSceneWithStubTasks() {
+		let taskRepository = TaskRepositoryStub()
+
+		taskManager.addTasks(tasks: taskRepository.getTasks())
 		let viewController = TodoListAssembler(taskManager: taskManager).assembly()
 		navigationController.setViewControllers([viewController], animated: true)
 	}

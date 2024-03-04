@@ -42,7 +42,7 @@ final class FileBrowserPresenterTests: XCTestCase {
 
 	func test_present_withMappedFiles_mustBeCorrect() {
 		let sut = makeSut()
-		let response = FileBrowserModel.Response(files: stubFileItems, currentPath: URL(fileURLWithPath: "/"))
+		let response = FileBrowserModel.Response(files: stubFileItems.compactMap {$0}, currentPath: URL(fileURLWithPath: "/"))
 
 		sut.present(response: response)
 		let fileCount = viewController.receivedViewModel.items.filter {

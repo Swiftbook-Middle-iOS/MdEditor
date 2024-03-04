@@ -25,9 +25,8 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 	// MARK: Public methods
 	func present(response: FileBrowserModel.Response) {
 		var title = L10n.FileBrowser.defaultTitle
-		let lastComponent = response.currentPath.lastPathComponent
-
-		if !lastComponent.isEmpty && lastComponent != "/" {
+		if let lastComponent = response.currentPath?.lastPathComponent,
+			!lastComponent.isEmpty, lastComponent != "/" {
 			title = lastComponent
 		}
 
@@ -41,17 +40,16 @@ final class FileBrowserPresenter: IFileBrowserPresenter {
 	}
 
 	private func mapFileData(file: File) -> FileBrowserModel.ViewModel.ItemModel {
-		switch file.type {
-		case .file:
-			return .file(
-				FileBrowserModel.ViewModel.FileModel(
+		if file.isFolder {
+			return .dir(
+				FileBrowserModel.ViewModel.DirModel(
 					title: file.name,
 					attributes: file.description
 				)
 			)
-		case .dir:
-			return .dir(
-				FileBrowserModel.ViewModel.DirModel(
+		} else {
+			return .file(
+				FileBrowserModel.ViewModel.FileModel(
 					title: file.name,
 					attributes: file.description
 				)

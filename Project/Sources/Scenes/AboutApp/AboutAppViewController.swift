@@ -8,15 +8,24 @@
 
 import UIKit
 import WebKit
+import MarkdownPackage
 
 final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 
 	// MARK: Dependencies
-	var mdText: String! // swiftlint:disable:this implicitly_unwrapped_optional
-	var markdownCoverter: IMarkdownToHtmlConverter! // swiftlint:disable:this implicitly_unwrapped_optional
+	var htmlText: String
 
 	// MARK: Private properties
 	private var webView = WKWebView()
+
+	init(htmlText: String) {
+		self.htmlText = htmlText
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	// MARK: Lifecyle
 	override func viewDidLoad() {
@@ -24,8 +33,7 @@ final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 		webView.navigationDelegate = self
 		view = webView
 
-		let html = markdownCoverter.convert(mdText)
-		loadPage(html: html)
+		loadPage(html: htmlText)
 	}
 
 	// MARK: Private methods

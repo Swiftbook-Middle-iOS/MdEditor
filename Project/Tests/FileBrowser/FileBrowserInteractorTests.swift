@@ -13,77 +13,87 @@ final class FileBrowserInteractorTests: XCTestCase {
 
 	private var presenter: FileBrowserPresenterSpy!
 	private var fileExplorer: FileExplorerMock!
-	private let currentPath = URL(fileURLWithPath: NSTemporaryDirectory())
+	private var delegate: FileBrowserDelegateSpy!
 
 	override func setUp() {
 		super.setUp()
 		presenter = FileBrowserPresenterSpy()
 		fileExplorer = FileExplorerMock()
+		delegate = FileBrowserDelegateSpy()
 	}
 
-	func test_fetchData_withValidURL_mustBeCorrect() {
-		let sut = makeSut(newDirClosure: { _ in })
+	func test_fetchData_withNilFile_mustBeCorrect() {
+		let sut = makeSutWithNilFile()
 
 		sut.fetchData()
 
-		XCTAssertEqual(currentPath, fileExplorer.didScanPath, "File explorer не осуществил скнирование ожидаемой директории")
+		XCTAssertFalse(presenter.receivedFiles.isEmpty, "Не были сгенерированы файлы для корневой директории")
 		XCTAssertTrue(presenter.didCallPresent, "Не вызван presenter.present(:)")
 	}
 
-	func test_fetchData_withError_mustBeCorrect() {
-		let expectation = expectation(description: "Обработана ошибка при сканировании директории")
-		let sut = makeSutWithError {
-			expectation.fulfill()
-		}
+	func test_fetchData_withValidFile_mustBeCorrect() {
+		let sut = makeSutWithValidFiles()
 
-		sut.fetchData()
+		sut?.fetchData()
 
-		waitForExpectations(timeout: 0.1) { error in
-			XCTAssertNil(error, "Замыкание errorClosure не было вызвано")
-		}
-		XCTAssertFalse(presenter.didCallPresent, "Presenter.present(:) не должен быть вызван при ошибке FileExplorer")
-	}
-
-	func test_didSelectItem_fileSelected_mustBeCorrect() {
-		var newDirClosureCalled = false
-		let sut = makeSut(newDirClosure: { _ in newDirClosureCalled = true })
-		sut.fetchData()
-
-		sut.didSelectItem(at: 1)
-
-		XCTAssertFalse(newDirClosureCalled, "Замыкание newDirClosure не должно вызываться при выборе файла")
+		XCTAssertNotNil(fileExplorer.didGetFilesFromPath, "Не вызван метод contentsOfFolder(:)")
+		XCTAssertTrue(presenter.didCallPresent, "Не вызван presenter.present(:)")
 	}
 
 	func test_didSelectItem_folderSelected_mustBeCorrect() {
-		var newDirClosureCalled = false
-		let sut = makeSut(newDirClosure: { _ in newDirClosureCalled = true })
-		sut.fetchData()
+		let sut = makeSutWithValidFiles()
+		sut?.fetchData()
 
-		sut.didSelectItem(at: 0)
+		sut?.didSelectItem(at: 0)
 
-		XCTAssertTrue(newDirClosureCalled, "Замыкание newDirClosure должно вызываться при выборе новой директории")
+		XCTAssertTrue(delegate.didCallOpenFolder, "Метод openFolder не вызван у делегата при выборе папки")
+	}
+
+	func test_didSelectItem_mdFileSelected_mustBeCorrect() {
+		let sut = makeSutWithValidFiles()
+		sut?.fetchData()
+
+		sut?.didSelectItem(at: 1)
+
+		XCTAssertTrue(delegate.didCallOpenFile, "Метод openFile не вызван у делегата при выборе md файла")
+	}
+
+	func test_didSelectItem_nonMdFileSelected_mustBeCorrect() {
+		let sut = makeSutWithValidFiles()
+		sut?.fetchData()
+
+		sut?.didSelectItem(at: 2)
+
+		XCTAssertFalse(delegate.didCallOpenFile, "Метод openFile вызван у делегата при выборе .txt файла")
 	}
 }
 
 private extension FileBrowserInteractorTests {
-	func makeSut(newDirClosure: @escaping ((URL) -> Void)) -> FileBrowserInteractor {
+	func makeSutWithNilFile() -> FileBrowserInteractor {
 		FileBrowserInteractor(
 			fileExplorer: fileExplorer,
-			currentPath: currentPath,
-			presenter: presenter,
-			newDirClosure: newDirClosure
+			currentFile: nil,
+			presenter: presenter
 		)
 	}
 
-	func makeSutWithError(errorClosure: (() -> Void)?) -> FileBrowserInteractor {
-		fileExplorer.shouldThrowError = true
+	func makeSutWithValidFiles() -> FileBrowserInteractor? {
+		guard let assetsFolderUrl = Endpoints.assets else {
+			return nil
+		}
 
-		return FileBrowserInteractor(
-			fileExplorer: fileExplorer,
-			currentPath: currentPath,
-			presenter: presenter,
-			newDirClosure: { _ in },
-			errorClosure: errorClosure
-		)
+		switch File.parse(url: assetsFolderUrl) {
+		case .success(let folder):
+			let interactor = FileBrowserInteractor(
+				fileExplorer: fileExplorer,
+				currentFile: folder,
+				presenter: presenter
+			)
+			interactor.delegate = delegate
+
+			return interactor
+		case .failure:
+			return nil
+		}
 	}
 }

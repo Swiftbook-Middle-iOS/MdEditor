@@ -15,19 +15,15 @@ final class AppCoordinator: BaseCoordinator {
 	private var window: UIWindow?
 	private var taskManager: ITaskManager
 	private var fileExplorer: IFileExplorer
-	private var markdownConverter: IMarkdownToHtmlConverter
 
 	init(
 		window: UIWindow?,
-		taskManager: ITaskManager,
-		fileExplorer: IFileExplorer,
-		markdownConverter: IMarkdownToHtmlConverter
+		fileExplorer: IFileExplorer
 	) {
 		self.navigationController = UINavigationController()
 		self.window = window
-		self.taskManager = taskManager
 		self.fileExplorer = fileExplorer
-		self.markdownConverter = markdownConverter
+		self.taskManager = OrderedTaskManager(taskManager: TaskManager())
 	}
 
 	// MARK: Public properties
@@ -35,6 +31,12 @@ final class AppCoordinator: BaseCoordinator {
 #if DEBUG
 		if CommandLine.arguments.contains(CommandLineArguments.skipLogin.rawValue) {
 			runTodoListFlow()
+
+			window?.rootViewController = navigationController
+			window?.makeKeyAndVisible()
+			return
+		} else if CommandLine.arguments.contains(CommandLineArguments.skipLoginForEditor.rawValue) {
+			runEditorFlow()
 
 			window?.rootViewController = navigationController
 			window?.makeKeyAndVisible()
@@ -48,8 +50,9 @@ final class AppCoordinator: BaseCoordinator {
 		let coordinator = LoginCoordinator(navigationController: navigationController)
 		addDependency(coordinator)
 
-		coordinator.finishFlow = { [weak self] in
+		coordinator.finishFlow = { [weak self, weak coordinator] in
 			guard let self = self else { return }
+			guard let coordinator = coordinator else { return }
 			self.runEditorFlow()
 			self.removeDependency(coordinator)
 		}
@@ -63,18 +66,30 @@ final class AppCoordinator: BaseCoordinator {
 	func runTodoListFlow() {
 		let coordinator = TodoListCoordinator(navigationController: navigationController, taskManager: taskManager)
 		addDependency(coordinator)
-
+#if DEBUG
+		if CommandLine.arguments.contains(CommandLineArguments.enableTesting.rawValue) {
+			coordinator.showTodoListSceneWithStubTasks()
+			return
+		}
+#endif
 		coordinator.start()
 	}
 
 	func runEditorFlow() {
-		let coordinator = EditorCoordinator(
-			navigationController: navigationController,
-			fileExplorer: fileExplorer,
-			markdownConverter: markdownConverter
+		let coordinator = MainCoordinator(
+			navigationController: navigationController
 		)
 		addDependency(coordinator)
 
 		coordinator.start()
+	}
+
+	private func buildOrderedStubTaskManager() -> ITaskManager {
+		let taskManager = TaskManager()
+		let repository = TaskRepositoryStub()
+		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
+		orderedTaskManager.addTasks(tasks: repository.getTasks())
+
+		return orderedTaskManager
 	}
 }

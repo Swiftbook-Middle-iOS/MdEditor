@@ -6,7 +6,7 @@ enum ProjectSettings {
 	public static var appVersionName: String { "1.0.0" }
 	public static var appVersionBuild: Int { 1 }
 	public static var developmentTeam: String { "Swiftbook Middle iOS Team 3" }
-	public static var targetVersion: String { "16.0" }
+	public static var targetVersion: String { "15.0" }
 	public static var bundleId: String { "\(organizationName).\(projectName)" }
 }
 
@@ -43,7 +43,8 @@ let target = Target(
 	resources: ["Resources/**", .folderReference(path: "Assets", tags: [], inclusionCondition: nil)],
 	scripts: myScripts,
 	dependencies: [
-		.package(product: "TaskManagerPackage")
+		.package(product: "TaskManagerPackage"),
+		.package(product: "MarkdownPackage")
 	]
 )
 
@@ -89,7 +90,8 @@ let project = Project(
 		developmentRegion: "en"
 	),
 	packages: [
-		.local(path: .relativeToManifest("../Packages/TaskManagerPackage"))
+		.local(path: .relativeToManifest("../Packages/TaskManagerPackage")),
+		.local(path: .relativeToManifest("../Packages/MarkdownPackage"))
 	],
 	settings: .settings(
 		base: [

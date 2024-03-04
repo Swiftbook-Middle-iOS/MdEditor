@@ -20,20 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 		appCoordinator = AppCoordinator(
 			window: window,
-			taskManager: buildTaskManager(),
-			fileExplorer: FileExplorer(),
-			markdownConverter: MarkdownToHtmlConverter()
+			fileExplorer: FileExplorer()
 		)
 		appCoordinator.start()
 		self.window = window
-	}
-
-	private func buildTaskManager() -> ITaskManager {
-		let taskManager = TaskManager()
-		let repository = TaskRepositoryStub()
-		let orderedTaskManager = OrderedTaskManager(taskManager: taskManager)
-		orderedTaskManager.addTasks(tasks: repository.getTasks())
-
-		return orderedTaskManager
 	}
 }

@@ -9,27 +9,43 @@
 import Foundation
 
 protocol IEditorHomeInteractor {
-	func openDocumentSelected()
-	func aboutAppSelected()
+	func menuItemSelected(item: EditorHomeModel.Request.MenuItemSelected)
+	func fetchData()
+}
+
+protocol IMainMenuDelegate: AnyObject {
+	func openFileBroweser()
+	func showAbout()
 }
 
 final class EditorHomeInteractor: IEditorHomeInteractor {
+
 	// MARK: Dependencies
-	var openFileClosure: (() -> Void)?
-	var aboutAppClosure: (() -> Void)?
+	private let recentFileManager: IRecentFileManager
+	private let presenter: IEditorHomePresenter
+	weak var delegate: IMainMenuDelegate?
 
 	// MARK: Initialization
-	init(openFileClosure: (() -> Void)? = nil, aboutAppClosure: (() -> Void)?) {
-		self.openFileClosure = openFileClosure
-		self.aboutAppClosure = aboutAppClosure
+	init(recentFileManager: IRecentFileManager, presenter: IEditorHomePresenter) {
+		self.recentFileManager = recentFileManager
+		self.presenter = presenter
 	}
 
 	// MARK: IEditorHomeInteractor
-	func openDocumentSelected() {
-		openFileClosure?()
+	func fetchData() {
+		let recentFiles = recentFileManager.getRecentFiles()
+		let response = EditorHomeModel.Response(recentFiles: recentFiles)
+		presenter.present(response: response)
 	}
 
-	func aboutAppSelected() {
-		aboutAppClosure?()
+	func menuItemSelected(item: EditorHomeModel.Request.MenuItemSelected) {
+		switch item {
+		case .newFile:
+			return
+		case .openFile:
+			delegate?.openFileBroweser()
+		case .aboutApp:
+			delegate?.showAbout()
+		}
 	}
 }
