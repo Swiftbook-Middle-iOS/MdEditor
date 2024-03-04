@@ -15,7 +15,10 @@ final class TodoListUITest: XCTestCase {
 	private let app = XCUIApplication()
 	
 	override func setUp() async throws {
-		app.launchArguments = [CommandLineArguments.skipLogin.rawValue]
+		app.launchArguments = [
+			CommandLineArguments.skipLogin.rawValue,
+			CommandLineArguments.enableTesting.rawValue
+		]
 		todoListScreen = TodoListScreenObject(app: app)
 	}
 	

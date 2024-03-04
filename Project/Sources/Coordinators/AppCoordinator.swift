@@ -66,7 +66,12 @@ final class AppCoordinator: BaseCoordinator {
 	func runTodoListFlow() {
 		let coordinator = TodoListCoordinator(navigationController: navigationController, taskManager: taskManager)
 		addDependency(coordinator)
-
+#if DEBUG
+		if CommandLine.arguments.contains(CommandLineArguments.enableTesting.rawValue) {
+			coordinator.showTodoListSceneWithStubTasks()
+		}
+		return
+#endif
 		coordinator.start()
 	}
 
