@@ -14,7 +14,6 @@ final class FileBrowserInteractorTests: XCTestCase {
 	private var presenter: FileBrowserPresenterSpy!
 	private var fileExplorer: FileExplorerMock!
 	private var delegate: FileBrowserDelegateSpy!
-	private let currentPath = URL(fileURLWithPath: NSTemporaryDirectory())
 
 	override func setUp() {
 		super.setUp()
@@ -47,16 +46,25 @@ final class FileBrowserInteractorTests: XCTestCase {
 
 		sut?.didSelectItem(at: 0)
 
-		XCTAssertTrue(delegate.didCallOpenFile, "Метод openFile не вызван у делегата при выборе папки")
+		XCTAssertTrue(delegate.didCallOpenFolder, "Метод openFolder не вызван у делегата при выборе папки")
 	}
 
-	func test_didSelectItem_fileSelected_mustBeCorrect() {
+	func test_didSelectItem_mdFileSelected_mustBeCorrect() {
 		let sut = makeSutWithValidFiles()
 		sut?.fetchData()
 
 		sut?.didSelectItem(at: 1)
 
-		XCTAssertFalse(delegate.didCallOpenFile, "Метод openFile вызван у делегата при выборе файла")
+		XCTAssertTrue(delegate.didCallOpenFile, "Метод openFile не вызван у делегата при выборе md файла")
+	}
+
+	func test_didSelectItem_nonMdFileSelected_mustBeCorrect() {
+		let sut = makeSutWithValidFiles()
+		sut?.fetchData()
+
+		sut?.didSelectItem(at: 2)
+
+		XCTAssertFalse(delegate.didCallOpenFile, "Метод openFile вызван у делегата при выборе .txt файла")
 	}
 }
 
@@ -70,7 +78,7 @@ private extension FileBrowserInteractorTests {
 	}
 
 	func makeSutWithValidFiles() -> FileBrowserInteractor? {
-		guard let assetsFolderUrl = Bundle.main.resourceURL else {
+		guard let assetsFolderUrl = Endpoints.assets else {
 			return nil
 		}
 

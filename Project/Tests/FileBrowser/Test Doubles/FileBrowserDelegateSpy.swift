@@ -10,9 +10,15 @@ import Foundation
 @testable import MdEditor
 
 class FileBrowserDelegateSpy: IFileBrowserDelegate {
+	
+	private(set) var didCallOpenFolder = false
 	private(set) var didCallOpenFile = false
 
 	func openFolder(at file: File) {
+		didCallOpenFolder = true
+	}
+
+	func openFile(at location: URL) {
 		didCallOpenFile = true
 	}
 }

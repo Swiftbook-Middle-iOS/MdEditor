@@ -1,5 +1,5 @@
 //
-//  AboutAppTextViewController.swift
+//  AttributedTextViewController.swift
 //  MdEditor
 //
 //  Created by Александр Мамлыго on /252/2567 BE.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class AboutAppTextViewController: UIViewController {
+final class AttributedTextViewController: UIViewController {
 
 	// MARK: Private properties
 	private let textView = UITextView()

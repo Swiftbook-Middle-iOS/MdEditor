@@ -10,7 +10,7 @@ import Foundation
 @testable import MdEditor
 
 final class FileObjectRepository {
-	static var stubFileIetms = [makeStubFolder(), makeStubFile()]
+	static var stubFileIetms = [makeStubFolder(), makeStubMdFile(), makeStubTxtFile()]
 
 	private static func makeStubFolder() -> File? {
 		guard let assetsFolderUrl = Endpoints.assets else {
@@ -24,8 +24,20 @@ final class FileObjectRepository {
 		}
 	}
 
-	private static func makeStubFile() -> File? {
+	private static func makeStubMdFile() -> File? {
 		guard let assetsFolderUrl = Endpoints.aboutMd else {
+			return nil
+		}
+		switch File.parse(url: assetsFolderUrl) {
+		case .success(let folder):
+			return folder
+		case .failure:
+			return nil
+		}
+	}
+
+	private static func makeStubTxtFile() -> File? {
+		guard let assetsFolderUrl = Endpoints.testTxt else {
 			return nil
 		}
 		switch File.parse(url: assetsFolderUrl) {

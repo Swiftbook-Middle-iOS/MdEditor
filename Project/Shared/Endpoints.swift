@@ -12,10 +12,12 @@ enum DefaultFileNames: String {
 	case baseAssetsPath = "Assets"
 	case aboutFileName = "Assets/about.md"
 	case testFileName = "Assets/test.md"
+	case testTxtFileName = "Assets/test.txt"
 }
 
 enum Endpoints {
 	static var assets = Bundle.main.resourceURL?.appendingPathComponent(DefaultFileNames.baseAssetsPath.rawValue)
 	static var testMd = Bundle.main.resourceURL?.appendingPathComponent(DefaultFileNames.testFileName.rawValue)
+	static var testTxt = Bundle.main.resourceURL?.appendingPathComponent(DefaultFileNames.testTxtFileName.rawValue)
 	static var aboutMd = Bundle.main.resourceURL?.appendingPathComponent(DefaultFileNames.aboutFileName.rawValue)
 }

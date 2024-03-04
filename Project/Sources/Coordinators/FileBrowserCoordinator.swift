@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MarkdownPackage
 
 protocol IFileBrowserCoordinator: ICoordinator {
 	var finishFlow: (() -> Void)? { get set }
@@ -63,5 +64,16 @@ extension FileBrowserCoordinator: UINavigationControllerDelegate {
 extension FileBrowserCoordinator: IFileBrowserDelegate {
 	func openFolder(at file: File) {
 		showFileManagerScene(for: file)
+	}
+
+	func openFile(at location: URL) {
+		if case let .success(file) = File.parse(url: location) {
+			let mdText = String(data: file.contentOfFile() ?? Data(), encoding: .utf8) ?? ""
+
+			let converted = AttributedConverter().convertMdText(mdText)
+
+			let viewController = TextViewController(attributedText: converted.joined())
+			navigationController.pushViewController(viewController, animated: true)
+		}
 	}
 }

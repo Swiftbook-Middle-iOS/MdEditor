@@ -55,7 +55,7 @@ final class AboutAppAssembler {
 			let fileContent = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8)
 			let text = converter.convertMdText(fileContent ?? "")
 
-			return AboutAppTextViewController(attributedText: text.joined())
+			return TextViewController(attributedText: text.joined())
 		case .failure(let error):
 			throw error
 		}

@@ -18,6 +18,7 @@ protocol IFileBrowserInteractor {
 
 protocol IFileBrowserDelegate: AnyObject {
 	func openFolder(at file: File)
+	func openFile(at location: URL)
 }
 
 /// Имплементация FileBrowserInteractor для просмотра файлов в одной конкретной директории
@@ -72,6 +73,8 @@ final class FileBrowserInteractor: IFileBrowserInteractor {
 		let item = currentFiles[index]
 		if item.isFolder {
 			delegate?.openFolder(at: item)
+		} else if item.ext == "md" {
+			delegate?.openFile(at: item.url)
 		}
 	}
 
