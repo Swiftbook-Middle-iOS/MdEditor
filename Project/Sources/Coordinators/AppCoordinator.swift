@@ -69,8 +69,8 @@ final class AppCoordinator: BaseCoordinator {
 #if DEBUG
 		if CommandLine.arguments.contains(CommandLineArguments.enableTesting.rawValue) {
 			coordinator.showTodoListSceneWithStubTasks()
+			return
 		}
-		return
 #endif
 		coordinator.start()
 	}

@@ -29,7 +29,7 @@ final class AboutAppAssembler {
 		switch fileExplorer.contentsOfFolder(at: assetsUrl) {
 		case .success(let files):
 			let file = files.first { file in
-				file.name == "test.md"
+				file.name == "about.md"
 			}
 
 			let fileContent = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8)
@@ -49,13 +49,13 @@ final class AboutAppAssembler {
 		switch fileExplorer.contentsOfFolder(at: assetsUrl) {
 		case .success(let files):
 			let file = files.first { file in
-				file.name == "test.md"
+				file.name == "about.md"
 			}
 
 			let fileContent = String(data: file?.contentOfFile() ?? Data(), encoding: .utf8)
 			let text = converter.convertMdText(fileContent ?? "")
 
-			return TextViewController(attributedText: text.joined())
+			return AttributedTextViewController(attributedText: text.joined())
 		case .failure(let error):
 			throw error
 		}

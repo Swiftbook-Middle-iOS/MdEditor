@@ -38,7 +38,8 @@ class MainCoordinator: BaseCoordinator {
 		let coordinator = FileBrowserCoordinator(
 			navigationController: navigationController,
 			topViewController: topViewController,
-			fileExplorer: fileExplorer
+			fileExplorer: fileExplorer,
+			attributedConverter: attributedConverter
 		)
 
 		addDependency(coordinator)

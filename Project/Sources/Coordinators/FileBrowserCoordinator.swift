@@ -19,14 +19,21 @@ class FileBrowserCoordinator: NSObject, IFileBrowserCoordinator {
 	private let navigationController: UINavigationController
 	private var topViewController: UIViewController?
 	private var fileExplorer: IFileExplorer
+	private var attributedConverter: IAttributedConverter
 
 	// MARK: Internal properties
 	var finishFlow: (() -> Void)?
 
-	init(navigationController: UINavigationController, topViewController: UIViewController?, fileExplorer: IFileExplorer) {
+	init(
+		navigationController: UINavigationController,
+		topViewController: UIViewController?,
+		fileExplorer: IFileExplorer,
+		attributedConverter: IAttributedConverter
+	) {
 		self.navigationController = navigationController
 		self.topViewController = topViewController
 		self.fileExplorer = fileExplorer
+		self.attributedConverter = attributedConverter
 
 		super.init()
 
@@ -69,10 +76,9 @@ extension FileBrowserCoordinator: IFileBrowserDelegate {
 	func openFile(at location: URL) {
 		if case let .success(file) = File.parse(url: location) {
 			let mdText = String(data: file.contentOfFile() ?? Data(), encoding: .utf8) ?? ""
+			let converted = attributedConverter.convertMdText(mdText)
 
-			let converted = AttributedConverter().convertMdText(mdText)
-
-			let viewController = TextViewController(attributedText: converted.joined())
+			let viewController = AttributedTextViewController(attributedText: converted.joined())
 			navigationController.pushViewController(viewController, animated: true)
 		}
 	}
