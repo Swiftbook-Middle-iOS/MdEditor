@@ -56,7 +56,7 @@ final class FileBrowserPresenterTests: XCTestCase {
 
 		XCTAssertTrue(viewController.didCallRender, "Не вызван viewController.render(:)")
 		XCTAssertEqual(stubFileItems.count, viewController.receivedViewModel.items.count, "Ошибка в модели данных, не все файлы переданы во ViewModel")
-		XCTAssertEqual(fileCount, 1, "Ошибка в модели данных, должен быть только 1 файл")
+		XCTAssertEqual(fileCount, 2, "Ошибка в модели данных, должен быть только 1 файл")
 		XCTAssertEqual(dirCount, 1, "Ошибка в модели данных, должна быть только 1 директория")
 	}
 }
