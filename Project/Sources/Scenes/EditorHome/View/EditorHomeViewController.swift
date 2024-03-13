@@ -71,7 +71,10 @@ final class EditorHomeViewController: UIViewController {
 
 	@objc
 	func aboutAppTapped() {
-		interactor?.menuItemSelected(item: .aboutApp)
+		DispatchQueue.main.async { [weak self] in
+			guard let self = self else { return }
+			self.interactor?.menuItemSelected(item: .aboutApp)
+		}
 	}
 }
 

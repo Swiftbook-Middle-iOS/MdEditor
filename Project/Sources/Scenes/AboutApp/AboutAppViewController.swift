@@ -32,8 +32,10 @@ final class AboutAppViewController: UIViewController, WKNavigationDelegate {
 		super.viewDidLoad()
 		webView.navigationDelegate = self
 		view = webView
-
-		loadPage(html: htmlText)
+		DispatchQueue.main.async { [weak self] in
+			guard let self = self else { return }
+			self.loadPage(html: self.htmlText)
+		}
 	}
 
 	// MARK: Private methods

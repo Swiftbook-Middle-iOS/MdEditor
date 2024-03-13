@@ -14,7 +14,7 @@ protocol IEditorHomeInteractor {
 }
 
 protocol IMainMenuDelegate: AnyObject {
-	func openFileBroweser()
+	func openFileBrowser()
 	func showAbout()
 }
 
@@ -43,7 +43,7 @@ final class EditorHomeInteractor: IEditorHomeInteractor {
 		case .newFile:
 			return
 		case .openFile:
-			delegate?.openFileBroweser()
+			delegate?.openFileBrowser()
 		case .aboutApp:
 			delegate?.showAbout()
 		}
