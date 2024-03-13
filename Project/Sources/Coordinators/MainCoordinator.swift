@@ -14,7 +14,7 @@ class MainCoordinator: BaseCoordinator {
 	var navigationController: UINavigationController
 	var fileExplorer = FileExplorer()
 	var recentFileManager = StubRecentFileManager()
-	var attributedConverter = AttributedConverter()
+	var attributedConverter = MainQueueAttributedConverterDecorator(decoratee: AttributedConverter())
 
 	// MARK: Initialization
 	init(
@@ -89,7 +89,7 @@ class MainCoordinator: BaseCoordinator {
 }
 
 extension MainCoordinator: IMainMenuDelegate {
-	func openFileBroweser() {
+	func openFileBrowser() {
 		openBrowserScreen()
 	}
 
